@@ -473,6 +473,9 @@ for s in data["sites"]:
     s["src"]  = s.pop("_src", "")
     s["hh"]   = s.pop("_hh", None)
     s["ind"]  = s.pop("_ind", None)
+    s["lat"]  = s.pop("_lat", None)
+    s["lon"]  = s.pop("_lon", None)
+    s["pc"]   = s.pop("_pc", "")
 data["partners"] = sorted({s["p"] for s in data["sites"] if s["p"]})
 data["provenance"] = {"kobo_sites": int(len(ko_q2)), "iom_sites": int(len(zn)),
                       "quarter": QLABEL, "window": [Q_START, Q_END]}
@@ -581,6 +584,16 @@ data["priorityGaps"] = {
                    "quarter: no matched-site baseline or risk layer is loaded yet. "
                    "Scores are shown out of the 75 active points."),
     "rows": gap_rows[:40]}
+
+# ------------------------------------------------------------------- map geometry
+# Pre-converted from the UNDP Admin2 + CCCM catchment shapefiles (tools/convert_maps.py).
+if os.path.exists(os.path.join("data", "geo.json")):
+    data["geo"] = json.load(open(os.path.join("data", "geo.json"), encoding="utf-8"))
+    print(f"  map geometry embedded: {len(data['geo']['districts'])} districts, "
+          f"{len(data['geo']['catchments'])} catchments")
+else:
+    data["geo"] = None
+    print("  WARNING: data/geo.json absent — Map tab will show a not-available note")
 
 json.dump(data, open("dashboard_data.json", "w", encoding="utf-8"), ensure_ascii=False)
 

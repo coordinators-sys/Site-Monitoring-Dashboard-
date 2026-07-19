@@ -438,7 +438,9 @@ def transform(df):
                       "_hh":_num(row.get(cmap["hh"] or "")),"_ind":_num(row.get(cmap["ind"] or "")),
                       "_partner":str(row.get(cmap["partner"] or "","")).strip(),
                       "_code":str(row.get("_site_id","")).strip(),
-                      "_src":str(row.get("__source","")).strip()})
+                      "_src":str(row.get("__source","")).strip(),
+                      "_lat":_num(row.get("_lat")),"_lon":_num(row.get("_lon")),
+                      "_pc":str(row.get("_dist_pcode","")).strip().upper()})
     print(f"Scored sites: {len(sites)} | review-queue rows: {len(review)}")
     return sites, review, present
 

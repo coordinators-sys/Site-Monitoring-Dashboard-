@@ -128,6 +128,14 @@ main{padding:26px 0 60px}
 .draft-banner{background:#fdf3e7;border:1px solid #e8b97a;border-left:4px solid #d97b1f;border-radius:var(--radius-s);
   padding:10px 14px;font-size:12.5px;color:#7a4a10;margin-bottom:14px}
 
+/* map */
+.map-layer.active{background:var(--teal);color:#fff;border-color:var(--teal-d)}
+#somMap .dist{stroke:#fff;stroke-width:.35;transition:opacity .15s}
+#somMap .dist:hover{opacity:.82;stroke:var(--ink);stroke-width:.6}
+#somMap .ca-poly{fill:none;stroke:var(--teal-d);stroke-width:.5;stroke-dasharray:1.2 .8;pointer-events:none}
+#somMap .site-pt{stroke:#fff;stroke-width:.35;cursor:pointer}
+#somMap .site-pt:hover{stroke:var(--ink);stroke-width:.8}
+
 /* ---------- Filters ---------- */
 .filters{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);margin-bottom:16px}
 .filters .fl-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:end}
@@ -261,6 +269,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
 <nav class="tabs">
   <div class="wrap" id="tabBar">
     <button class="tab active" data-view="overview">Overview</button>
+    <button class="tab" data-view="map">Map</button>
     <button class="tab" data-view="severity">Severity by District</button>
     <button class="tab" data-view="explorer">Site Explorer</button>
     <button class="tab" data-view="sectors">Sector Deep-Dive</button>
@@ -460,6 +469,35 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
         <h3 style="margin-bottom:6px">Operational Breakdowns <span class="hint">count of sites, unless noted</span></h3>
         <div id="sdBreakdowns" class="grid" style="gap:16px;margin-top:10px"></div>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ MAP ============ -->
+  <section class="view" id="view-map">
+    <div class="sec-head">
+      <h2>Geographic Prioritisation</h2>
+      <p>District severity choropleth with assessed-site locations. Grey districts were
+      not assessed this quarter. Site-level detail is
+      <span class="draft-chip">DRAFT · live rebuild · pending IM validation</span></p>
+    </div>
+    <div class="card p">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase">Layers</span>
+        <button class="btn sm map-layer active" data-layer="sev">District severity</button>
+        <button class="btn sm map-layer" data-layer="cov">Assessment coverage</button>
+        <button class="btn sm map-layer" data-layer="sites">Site points</button>
+        <button class="btn sm map-layer" data-layer="ca">Catchment areas</button>
+        <div style="flex:1"></div>
+        <span id="mapHint" style="font-size:11.5px;color:var(--muted)">hover a district or site · scroll to zoom · drag to pan</span>
+      </div>
+      <div id="mapWrap" style="position:relative;background:#eef4f6;border:1px solid var(--line);border-radius:10px;overflow:hidden">
+        <svg id="somMap" style="display:block;width:100%;height:640px;cursor:grab"></svg>
+      </div>
+      <div class="legend" id="mapLegend" style="margin-top:10px"></div>
+      <p style="margin:8px 0 0;font-size:11px;color:var(--muted)">
+        Boundaries: UNDP/OCHA Somalia Admin 2 · Catchments: CCCM 2025 CA shapefiles v01.
+        Kahda and Daynile are monitored as separate sub-districts but render on the Banadir
+        Admin-2 polygon. The boundaries shown do not imply official endorsement.</p>
     </div>
   </section>
 

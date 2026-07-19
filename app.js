@@ -406,6 +406,115 @@ function renderSD(){
   $('#sdBreakdowns').innerHTML=(extra+cards)|| '<p style="color:var(--muted);font-size:12.5px">No operational breakdown tables for this sector.</p>';
 }
 
+/* ================= MAP ================= */
+const MAPST={fill:'sev',sites:true,ca:false};
+function renderMap(){
+  const geo=DATA.geo, svgEl=$('#somMap');
+  if(!svgEl) return;
+  if(!geo){ $('#mapWrap').innerHTML='<p style="padding:30px;color:var(--muted)">Map geometry not available in this build.</p>'; return; }
+  const alias=geo.pcodeAlias||{};
+  // district aggregates from draft site records (pcode-joined, alias applied)
+  const agg={};
+  DATA.sites.forEach(s=>{
+    const pc=(alias[s.pc]||s.pc||'').toUpperCase(); if(!pc) return;
+    (agg[pc]=agg[pc]||{n:0,sev:0}); agg[pc].n++; agg[pc].sev+=s.v;
+  });
+  // bounds
+  let x0=99,x1=-99,y0=99,y1=-99;
+  geo.districts.forEach(d=>d.rings.forEach(r=>r.forEach(([x,y])=>{
+    if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y;})));
+  const pad=.3, VB0=[x0-pad,-(y1+pad),(x1-x0)+2*pad,(y1-y0)+2*pad];
+  let vb=VB0.slice();
+  const setVB=()=>svgEl.setAttribute('viewBox',vb.join(' '));
+  const path=rings=>rings.map(r=>'M'+r.map(([x,y])=>`${x} ${-y}`).join('L')+'Z').join('');
+  const sevColor=v=>v>=55?'var(--s-crit)':v>=40?'var(--s-high)':v>=25?'var(--s-mod)':'var(--s-low)';
+  const covColor=n=>n>=200?'#1f6b72':n>=50?'#2f8f97':n>=10?'#6fb3b9':n>=1?'#b7d8db':'#d5dbd9';
+  const NA='#d5dbd9';
+  const distFill=pc=>{
+    const a=agg[pc];
+    if(MAPST.fill==='cov') return covColor(a?a.n:0);
+    return a?sevColor(a.sev/a.n):NA;
+  };
+  let html='<g id="gDist">';
+  geo.districts.forEach((d,i)=>{
+    const a=agg[d.pc];
+    const t=a?`<b>${d.n}</b> · ${d.r}<br>${a.n} sites assessed · avg severity ${(a.sev/a.n).toFixed(1)}%`
+             :`<b>${d.n}</b> · ${d.r}<br>Not assessed this quarter`;
+    html+=`<path class="dist" data-i="${i}" d="${path(d.rings)}" fill="${distFill(d.pc)}" data-t="${t.replace(/"/g,'&quot;')}"/>`;
+  });
+  html+='</g><g id="gCA" style="display:none">';
+  geo.catchments.forEach(c=>{
+    html+=`<path class="ca-poly" d="${path(c.rings)}"/>`;
+  });
+  html+='</g><g id="gSites">';
+  DATA.sites.forEach((s,i)=>{
+    if(s.lat==null||s.lon==null) return;
+    if(s.lat<-2||s.lat>12.5||s.lon<40||s.lon>52) return;   // drop out-of-country GPS noise
+    html+=`<circle class="site-pt" data-si="${i}" cx="${s.lon}" cy="${-s.lat}" r=".055"
+      fill="${s.b==='Severe'?'var(--s-crit)':s.b==='High'?'var(--s-high)':s.b==='Moderate'?'var(--s-mod)':'var(--s-low)'}"/>`;
+  });
+  html+='</g>';
+  svgEl.innerHTML=html; setVB();
+  // tooltips
+  $$('#somMap .dist').forEach(p=>tip(p,()=>p.dataset.t));
+  $$('#somMap .site-pt').forEach(c=>{
+    const s=DATA.sites[+c.dataset.si];
+    tip(c,()=>`<b>${s.s}</b>${s.code&&s.code!==s.s?' · <span style="font-family:monospace;font-size:10px">'+s.code+'</span>':''}
+      <br>${s.d} · ${s.c||'—'} · ${s.p||'—'}
+      <br>HH ${s.hh!=null?fmt(Math.round(s.hh)):'—'} · Individuals ${s.ind!=null?fmt(Math.round(s.ind)):'—'}
+      <br>Severity <b>${s.v}%</b> (${s.b}) · <i>draft — pending validation</i><br><u>Click to open in Site Explorer</u>`);
+    c.addEventListener('click',()=>{
+      EX={...EX,region:'',district:'',band:'',sector:'',partner:'',search:s.code||s.s,page:0};
+      $('#fSearch').value=EX.search;
+      ['fRegion','fDistrict','fBand','fSector','fPartner'].forEach(id=>{const e=$('#'+id);if(e)e.value='';});
+      renderExplorer();
+      $$('.tab').forEach(x=>x.classList.remove('active'));
+      document.querySelector('.tab[data-view=explorer]').classList.add('active');
+      $$('.view').forEach(v=>v.classList.remove('active'));
+      $('#view-explorer').classList.add('active');
+      window.scrollTo({top:0});
+    });
+  });
+  // zoom + pan on the viewBox
+  svgEl.onwheel=e=>{
+    e.preventDefault();
+    const k=e.deltaY>0?1.2:1/1.2, r=svgEl.getBoundingClientRect();
+    const mx=vb[0]+vb[2]*(e.clientX-r.left)/r.width, my=vb[1]+vb[3]*(e.clientY-r.top)/r.height;
+    const w=Math.min(VB0[2]*1.2,Math.max(VB0[2]/40,vb[2]*k)), h=w*vb[3]/vb[2];
+    vb=[mx-(mx-vb[0])*w/vb[2], my-(my-vb[1])*h/vb[3], w, h]; setVB();
+  };
+  let drag=null;
+  svgEl.onpointerdown=e=>{drag=[e.clientX,e.clientY,vb[0],vb[1]];svgEl.setPointerCapture(e.pointerId);svgEl.style.cursor='grabbing';};
+  svgEl.onpointermove=e=>{
+    if(!drag) return;
+    const r=svgEl.getBoundingClientRect();
+    vb[0]=drag[2]-(e.clientX-drag[0])*vb[2]/r.width;
+    vb[1]=drag[3]-(e.clientY-drag[1])*vb[3]/r.height; setVB();
+  };
+  svgEl.onpointerup=()=>{drag=null;svgEl.style.cursor='grab';};
+  // layer buttons
+  $$('.map-layer').forEach(b=>{
+    const L=b.dataset.layer;
+    b.classList.toggle('active',L===MAPST.fill||(L==='sites'&&MAPST.sites)||(L==='ca'&&MAPST.ca));
+    b.onclick=()=>{
+      if(L==='sev'||L==='cov'){MAPST.fill=L;
+        $$('#somMap .dist').forEach((p,j)=>p.setAttribute('fill',distFill(geo.districts[+p.dataset.i].pc)));
+        $$('.map-layer').forEach(x=>{if(['sev','cov'].includes(x.dataset.layer))x.classList.toggle('active',x.dataset.layer===L);});
+      }else if(L==='sites'){MAPST.sites=!MAPST.sites;$('#gSites').style.display=MAPST.sites?'':'none';b.classList.toggle('active',MAPST.sites);}
+      else if(L==='ca'){MAPST.ca=!MAPST.ca;$('#gCA').style.display=MAPST.ca?'':'none';b.classList.toggle('active',MAPST.ca);}
+      renderMapLegend();
+    };
+  });
+  renderMapLegend();
+}
+function renderMapLegend(){
+  const it=(c,l)=>`<span class="it"><span class="dot" style="background:${c}"></span>${l}</span>`;
+  $('#mapLegend').innerHTML = MAPST.fill==='sev'
+    ? it('var(--s-crit)','Severe ≥55%')+it('var(--s-high)','High 40–55%')+it('var(--s-mod)','Moderate 25–40%')
+      +it('var(--s-low)','Low <25%')+it('#d5dbd9','Not assessed')
+    : it('#1f6b72','200+ sites')+it('#2f8f97','50–199')+it('#6fb3b9','10–49')+it('#b7d8db','1–9')+it('#d5dbd9','None');
+}
+
 /* ================= PRIORITY GAPS ================= */
 function renderGaps(){
   const g=DATA.priorityGaps; if(!g||!$('#gapsTable')) return;
@@ -470,7 +579,7 @@ function renderQuality(){
  ['severity view',renderSeverityView],['filter options',populateSelects],
  ['explorer wiring',wireExplorer],['explorer table',renderExplorer],
  ['sector tabs',renderSDTabs],['sector deep-dive',renderSD],['branding',renderBrand],
- ['priority gaps',renderGaps],['data quality',renderQuality]
+ ['priority gaps',renderGaps],['data quality',renderQuality],['map',renderMap]
 ].forEach(([label,fn])=>{
   try{ fn(); }
   catch(e){ console.error('[dashboard] "'+label+'" failed:',e); }
