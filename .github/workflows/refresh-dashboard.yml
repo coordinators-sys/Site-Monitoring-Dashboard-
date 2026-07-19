@@ -30,6 +30,13 @@ jobs:
           KOBO_API_TOKEN: ${{ secrets.KOBO_API_TOKEN }}
         run: python fetch_kobo_cache.py --refresh
 
+      - name: Fetch Zite Manager (IOM) submissions
+        env:
+          ZITE_API_URL: ${{ vars.ZITE_API_URL }}
+          ZITE_REPORT_ID: ${{ vars.ZITE_REPORT_ID }}
+          ZITE_FULL_KEY: ${{ secrets.ZITE_FULL_KEY }}
+        run: python fetch_zite_cache.py --refresh
+
       - name: Build + score + aggregate
         env:
           ZITE_API_URL: ${{ vars.ZITE_API_URL }}
