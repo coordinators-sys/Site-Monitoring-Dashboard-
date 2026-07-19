@@ -9,7 +9,7 @@
   "source": "Kobo",
   "hh": 1000.0,
   "individuals": 5000.0,
-  "severity": 46,
+  "severity": 49,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -23,7 +23,7 @@
    "Health": "R",
    "FSL": "K",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -36,7 +36,7 @@
   "source": "Kobo",
   "hh": 210.0,
   "individuals": 1260.0,
-  "severity": 48,
+  "severity": 47,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -63,7 +63,7 @@
   "source": "Kobo",
   "hh": 351.0,
   "individuals": 1885.0,
-  "severity": 40,
+  "severity": 46,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -77,7 +77,7 @@
    "Health": "R",
    "FSL": "K",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -90,7 +90,7 @@
   "source": "Kobo",
   "hh": 250.0,
   "individuals": 1500.0,
-  "severity": 33,
+  "severity": 37,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -104,7 +104,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -117,7 +117,7 @@
   "source": "Kobo",
   "hh": 200.0,
   "individuals": 1200.0,
-  "severity": 34,
+  "severity": 38,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -131,7 +131,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -144,8 +144,8 @@
   "source": "Kobo",
   "hh": 540.0,
   "individuals": 3240.0,
-  "severity": 23,
-  "band": "Low",
+  "severity": 29,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -158,7 +158,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -171,7 +171,7 @@
   "source": "Kobo",
   "hh": 50.0,
   "individuals": 300.0,
-  "severity": 34,
+  "severity": 38,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -185,7 +185,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -198,7 +198,7 @@
   "source": "Kobo",
   "hh": 88.0,
   "individuals": 528.0,
-  "severity": 45,
+  "severity": 51,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -212,7 +212,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -225,8 +225,8 @@
   "source": "Kobo",
   "hh": 70.0,
   "individuals": 420.0,
-  "severity": 38,
-  "band": "Moderate",
+  "severity": 43,
+  "band": "High",
   "scores": {
    "CCCM": "G",
    "Protection": "Y",
@@ -239,7 +239,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -252,7 +252,7 @@
   "source": "Kobo",
   "hh": 60.0,
   "individuals": 360.0,
-  "severity": 43,
+  "severity": 47,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -266,7 +266,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -279,7 +279,7 @@
   "source": "Kobo",
   "hh": 100.0,
   "individuals": 600.0,
-  "severity": 44,
+  "severity": 48,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -293,7 +293,7 @@
    "Health": "R",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -306,7 +306,7 @@
   "source": "Kobo",
   "hh": 100.0,
   "individuals": 600.0,
-  "severity": 41,
+  "severity": 45,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -320,7 +320,7 @@
    "Health": "R",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -333,7 +333,7 @@
   "source": "Kobo",
   "hh": 175.0,
   "individuals": 1050.0,
-  "severity": 43,
+  "severity": 48,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -347,7 +347,7 @@
    "Health": "R",
    "FSL": "R",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -360,8 +360,8 @@
   "source": "Kobo",
   "hh": 125.0,
   "individuals": 750.0,
-  "severity": 37,
-  "band": "Moderate",
+  "severity": 41,
+  "band": "High",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -374,7 +374,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -387,8 +387,8 @@
   "source": "Kobo",
   "hh": 50.0,
   "individuals": 300.0,
-  "severity": 38,
-  "band": "Moderate",
+  "severity": 43,
+  "band": "High",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -401,7 +401,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -414,7 +414,7 @@
   "source": "Kobo",
   "hh": 285.0,
   "individuals": 1710.0,
-  "severity": 33,
+  "severity": 39,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -428,7 +428,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -441,8 +441,8 @@
   "source": "Kobo",
   "hh": 87.0,
   "individuals": 522.0,
-  "severity": 35,
-  "band": "Moderate",
+  "severity": 41,
+  "band": "High",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -455,7 +455,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -468,7 +468,7 @@
   "source": "Kobo",
   "hh": 50.0,
   "individuals": 300.0,
-  "severity": 40,
+  "severity": 46,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -482,7 +482,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -495,7 +495,7 @@
   "source": "Kobo",
   "hh": 130.0,
   "individuals": 780.0,
-  "severity": 34,
+  "severity": 38,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -509,7 +509,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -522,8 +522,8 @@
   "source": "Kobo",
   "hh": 150.0,
   "individuals": 900.0,
-  "severity": 39,
-  "band": "Moderate",
+  "severity": 43,
+  "band": "High",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -536,7 +536,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -549,8 +549,8 @@
   "source": "Kobo",
   "hh": 100.0,
   "individuals": 600.0,
-  "severity": 37,
-  "band": "Moderate",
+  "severity": 42,
+  "band": "High",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -563,7 +563,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -576,8 +576,8 @@
   "source": "Kobo",
   "hh": 170.0,
   "individuals": 1020.0,
-  "severity": 33,
-  "band": "Moderate",
+  "severity": 40,
+  "band": "High",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -590,7 +590,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -603,8 +603,8 @@
   "source": "Kobo",
   "hh": 50.0,
   "individuals": 300.0,
-  "severity": 37,
-  "band": "Moderate",
+  "severity": 42,
+  "band": "High",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -617,7 +617,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -684,8 +684,8 @@
   "source": "Kobo",
   "hh": 50.0,
   "individuals": 300.0,
-  "severity": 52,
-  "band": "High",
+  "severity": 58,
+  "band": "Severe",
   "scores": {
    "CCCM": "Y",
    "Protection": "R",
@@ -698,7 +698,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -711,7 +711,7 @@
   "source": "Kobo",
   "hh": 100.0,
   "individuals": 200.0,
-  "severity": 61,
+  "severity": 68,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -725,7 +725,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -738,7 +738,7 @@
   "source": "Kobo",
   "hh": 13.0,
   "individuals": 78.0,
-  "severity": 74,
+  "severity": 80,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -752,7 +752,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -765,7 +765,7 @@
   "source": "Kobo",
   "hh": 10.0,
   "individuals": 60.0,
-  "severity": 77,
+  "severity": 82,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -779,7 +779,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -792,7 +792,7 @@
   "source": "Kobo",
   "hh": 30.0,
   "individuals": 180.0,
-  "severity": 81,
+  "severity": 87,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -806,7 +806,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -819,7 +819,7 @@
   "source": "Kobo",
   "hh": 11.0,
   "individuals": 66.0,
-  "severity": 81,
+  "severity": 87,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -833,7 +833,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -846,7 +846,7 @@
   "source": "Kobo",
   "hh": 480.0,
   "individuals": 2880.0,
-  "severity": 48,
+  "severity": 51,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -860,7 +860,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -873,7 +873,7 @@
   "source": "Kobo",
   "hh": 11.0,
   "individuals": 66.0,
-  "severity": 82,
+  "severity": 88,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -887,7 +887,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -900,7 +900,7 @@
   "source": "Kobo",
   "hh": 14.0,
   "individuals": 84.0,
-  "severity": 77,
+  "severity": 83,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -914,7 +914,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -927,7 +927,7 @@
   "source": "Kobo",
   "hh": 42.0,
   "individuals": 191.0,
-  "severity": 79,
+  "severity": 85,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -941,7 +941,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -954,7 +954,7 @@
   "source": "Kobo",
   "hh": 12.0,
   "individuals": 72.0,
-  "severity": 75,
+  "severity": 81,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -968,7 +968,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -981,7 +981,7 @@
   "source": "Kobo",
   "hh": 25.0,
   "individuals": 150.0,
-  "severity": 75,
+  "severity": 81,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -995,7 +995,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1008,7 +1008,7 @@
   "source": "Kobo",
   "hh": 15.0,
   "individuals": 90.0,
-  "severity": 79,
+  "severity": 87,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1022,7 +1022,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1035,7 +1035,7 @@
   "source": "Kobo",
   "hh": 44.0,
   "individuals": 158.0,
-  "severity": 77,
+  "severity": 83,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1049,7 +1049,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1062,7 +1062,7 @@
   "source": "Kobo",
   "hh": 123.0,
   "individuals": 506.0,
-  "severity": 75,
+  "severity": 81,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1076,7 +1076,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1089,7 +1089,7 @@
   "source": "Kobo",
   "hh": 41.0,
   "individuals": 140.0,
-  "severity": 77,
+  "severity": 83,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1103,7 +1103,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1116,7 +1116,7 @@
   "source": "Kobo",
   "hh": 13.0,
   "individuals": 78.0,
-  "severity": 75,
+  "severity": 81,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1130,7 +1130,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1143,7 +1143,7 @@
   "source": "Kobo",
   "hh": 20.0,
   "individuals": 120.0,
-  "severity": 75,
+  "severity": 81,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1157,7 +1157,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1170,7 +1170,7 @@
   "source": "Kobo",
   "hh": 51.0,
   "individuals": 246.0,
-  "severity": 83,
+  "severity": 89,
   "band": "Severe",
   "scores": {
    "CCCM": "K",
@@ -1184,7 +1184,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1197,7 +1197,7 @@
   "source": "Kobo",
   "hh": 10.0,
   "individuals": 60.0,
-  "severity": 75,
+  "severity": 81,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1211,7 +1211,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1224,7 +1224,7 @@
   "source": "Kobo",
   "hh": 9.0,
   "individuals": 54.0,
-  "severity": 82,
+  "severity": 88,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1238,7 +1238,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1251,7 +1251,7 @@
   "source": "Kobo",
   "hh": 5.0,
   "individuals": 30.0,
-  "severity": 77,
+  "severity": 83,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1265,7 +1265,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1278,7 +1278,7 @@
   "source": "Kobo",
   "hh": 7.0,
   "individuals": 42.0,
-  "severity": 82,
+  "severity": 88,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1292,7 +1292,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1305,7 +1305,7 @@
   "source": "Kobo",
   "hh": 14.0,
   "individuals": 84.0,
-  "severity": 77,
+  "severity": 84,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1319,7 +1319,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1332,7 +1332,7 @@
   "source": "Kobo",
   "hh": 74.0,
   "individuals": 260.0,
-  "severity": 75,
+  "severity": 81,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1346,7 +1346,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1359,7 +1359,7 @@
   "source": "Kobo",
   "hh": 30.0,
   "individuals": 180.0,
-  "severity": 75,
+  "severity": 81,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1373,7 +1373,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1386,7 +1386,7 @@
   "source": "Kobo",
   "hh": 6.0,
   "individuals": 36.0,
-  "severity": 77,
+  "severity": 83,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1400,7 +1400,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1467,8 +1467,8 @@
   "source": "Kobo",
   "hh": 67.0,
   "individuals": 268.0,
-  "severity": 39,
-  "band": "Moderate",
+  "severity": 42,
+  "band": "High",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -1481,7 +1481,7 @@
    "Health": "Y",
    "FSL": "R",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -1494,7 +1494,7 @@
   "source": "Kobo",
   "hh": 85.0,
   "individuals": 387.0,
-  "severity": 25,
+  "severity": 32,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -1508,7 +1508,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1521,7 +1521,7 @@
   "source": "Kobo",
   "hh": 44.0,
   "individuals": 194.0,
-  "severity": 84,
+  "severity": 90,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1535,7 +1535,7 @@
    "Health": "K",
    "FSL": "K",
    "Nutrition": "K",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1548,7 +1548,7 @@
   "source": "Kobo",
   "hh": 93.0,
   "individuals": 422.0,
-  "severity": 31,
+  "severity": 34,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -1562,7 +1562,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -1575,7 +1575,7 @@
   "source": "Kobo",
   "hh": 81.0,
   "individuals": 335.0,
-  "severity": 58,
+  "severity": 63,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1589,7 +1589,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1602,7 +1602,7 @@
   "source": "Kobo",
   "hh": 84.0,
   "individuals": 369.0,
-  "severity": 79,
+  "severity": 86,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1616,7 +1616,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1629,8 +1629,8 @@
   "source": "Kobo",
   "hh": 104.0,
   "individuals": 466.0,
-  "severity": 20,
-  "band": "Low",
+  "severity": 28,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -1643,7 +1643,7 @@
    "Health": "G",
    "FSL": "R",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1656,7 +1656,7 @@
   "source": "Kobo",
   "hh": 54.0,
   "individuals": 221.0,
-  "severity": 74,
+  "severity": 81,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1670,7 +1670,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1683,7 +1683,7 @@
   "source": "Kobo",
   "hh": 25.0,
   "individuals": 150.0,
-  "severity": 74,
+  "severity": 81,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1697,7 +1697,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1710,7 +1710,7 @@
   "source": "Kobo",
   "hh": 68.0,
   "individuals": 329.0,
-  "severity": 75,
+  "severity": 81,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1724,7 +1724,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1737,7 +1737,7 @@
   "source": "Kobo",
   "hh": 39.0,
   "individuals": 148.0,
-  "severity": 72,
+  "severity": 78,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1751,7 +1751,7 @@
    "Health": "R",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1764,7 +1764,7 @@
   "source": "Kobo",
   "hh": 52.0,
   "individuals": 204.0,
-  "severity": 75,
+  "severity": 81,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1778,7 +1778,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1791,7 +1791,7 @@
   "source": "Kobo",
   "hh": 71.0,
   "individuals": 297.0,
-  "severity": 74,
+  "severity": 80,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1805,7 +1805,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1818,7 +1818,7 @@
   "source": "Kobo",
   "hh": 86.0,
   "individuals": 331.0,
-  "severity": 79,
+  "severity": 84,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1832,7 +1832,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1845,7 +1845,7 @@
   "source": "Kobo",
   "hh": 93.0,
   "individuals": 430.0,
-  "severity": 70,
+  "severity": 75,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1859,7 +1859,7 @@
    "Health": "R",
    "FSL": "R",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1872,7 +1872,7 @@
   "source": "Kobo",
   "hh": 58.0,
   "individuals": 274.0,
-  "severity": 79,
+  "severity": 85,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1886,7 +1886,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1899,7 +1899,7 @@
   "source": "Kobo",
   "hh": 36.0,
   "individuals": 137.0,
-  "severity": 75,
+  "severity": 81,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1913,7 +1913,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1926,7 +1926,7 @@
   "source": "Kobo",
   "hh": 16.0,
   "individuals": 96.0,
-  "severity": 75,
+  "severity": 81,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1940,7 +1940,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1953,7 +1953,7 @@
   "source": "Kobo",
   "hh": 15.0,
   "individuals": 90.0,
-  "severity": 82,
+  "severity": 88,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1967,7 +1967,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -1980,7 +1980,7 @@
   "source": "Kobo",
   "hh": 21.0,
   "individuals": 83.0,
-  "severity": 73,
+  "severity": 78,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -1994,7 +1994,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -2007,7 +2007,7 @@
   "source": "Kobo",
   "hh": 28.0,
   "individuals": 107.0,
-  "severity": 79,
+  "severity": 85,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -2021,7 +2021,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -2034,7 +2034,7 @@
   "source": "Kobo",
   "hh": 59.0,
   "individuals": 217.0,
-  "severity": 75,
+  "severity": 81,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -2048,7 +2048,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -2061,7 +2061,7 @@
   "source": "Kobo",
   "hh": 22.0,
   "individuals": 114.0,
-  "severity": 82,
+  "severity": 88,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -2075,7 +2075,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -2790,7 +2790,7 @@
   "source": "Kobo",
   "hh": 100.0,
   "individuals": 430.0,
-  "severity": 61,
+  "severity": 66,
   "band": "Severe",
   "scores": {
    "CCCM": "G",
@@ -2804,7 +2804,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -2844,7 +2844,7 @@
   "source": "Kobo",
   "hh": 80.0,
   "individuals": 480.0,
-  "severity": 48,
+  "severity": 53,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -2858,7 +2858,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -2871,8 +2871,8 @@
   "source": "Kobo",
   "hh": 83.0,
   "individuals": 498.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 26,
+  "band": "Moderate",
   "scores": {
    "CCCM": "R",
    "Protection": "Y",
@@ -2885,7 +2885,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -2898,8 +2898,8 @@
   "source": "Kobo",
   "hh": 571.0,
   "individuals": 3426.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -2979,7 +2979,7 @@
   "source": "Kobo",
   "hh": 5682.0,
   "individuals": 34092.0,
-  "severity": 40,
+  "severity": 43,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -2993,7 +2993,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -3006,7 +3006,7 @@
   "source": "Kobo",
   "hh": 486.0,
   "individuals": 2916.0,
-  "severity": 28,
+  "severity": 33,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -3020,7 +3020,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -3033,8 +3033,8 @@
   "source": "Kobo",
   "hh": 3831.0,
   "individuals": 22390.0,
-  "severity": 50,
-  "band": "High",
+  "severity": 55,
+  "band": "Severe",
   "scores": {
    "CCCM": "R",
    "Protection": "K",
@@ -3047,7 +3047,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -3222,7 +3222,7 @@
   "source": "Kobo",
   "hh": 568.0,
   "individuals": 3408.0,
-  "severity": 33,
+  "severity": 35,
   "band": "Moderate",
   "scores": {
    "CCCM": "R",
@@ -3236,7 +3236,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -3411,8 +3411,8 @@
   "source": "Kobo",
   "hh": 250.0,
   "individuals": 2625.0,
-  "severity": 54,
-  "band": "High",
+  "severity": 61,
+  "band": "Severe",
   "scores": {
    "CCCM": "Y",
    "Protection": "R",
@@ -3425,7 +3425,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -3438,8 +3438,8 @@
   "source": "Kobo",
   "hh": 70.0,
   "individuals": 420.0,
-  "severity": 54,
-  "band": "High",
+  "severity": 59,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "R",
@@ -3452,7 +3452,7 @@
    "Health": "R",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -3465,7 +3465,7 @@
   "source": "Kobo",
   "hh": 260.0,
   "individuals": 1380.0,
-  "severity": 52,
+  "severity": 54,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -3492,7 +3492,7 @@
   "source": "Kobo",
   "hh": 150.0,
   "individuals": 900.0,
-  "severity": 26,
+  "severity": 29,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -3506,7 +3506,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -3519,7 +3519,7 @@
   "source": "Kobo",
   "hh": 110.0,
   "individuals": 660.0,
-  "severity": 40,
+  "severity": 43,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -3533,7 +3533,7 @@
    "Health": "Y",
    "FSL": "R",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -3546,7 +3546,7 @@
   "source": "Kobo",
   "hh": 55.0,
   "individuals": 330.0,
-  "severity": 29,
+  "severity": 35,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -3560,7 +3560,7 @@
    "Health": "Y",
    "FSL": "R",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -5814,7 +5814,7 @@
   "source": "Kobo",
   "hh": 149.0,
   "individuals": 691.0,
-  "severity": 13,
+  "severity": 19,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -5828,7 +5828,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -5841,8 +5841,8 @@
   "source": "Kobo",
   "hh": 97.0,
   "individuals": 458.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 30,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -5855,7 +5855,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -5895,7 +5895,7 @@
   "source": "Kobo",
   "hh": 163.0,
   "individuals": 778.0,
-  "severity": 13,
+  "severity": 14,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -5922,7 +5922,7 @@
   "source": "Kobo",
   "hh": 165.0,
   "individuals": 990.0,
-  "severity": 8,
+  "severity": 10,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -6003,7 +6003,7 @@
   "source": "Kobo",
   "hh": 182.0,
   "individuals": 844.0,
-  "severity": 16,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -6084,7 +6084,7 @@
   "source": "Kobo",
   "hh": 131.0,
   "individuals": 592.0,
-  "severity": 17,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -6111,7 +6111,7 @@
   "source": "Kobo",
   "hh": 86.0,
   "individuals": 513.0,
-  "severity": 49,
+  "severity": 53,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -6125,7 +6125,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -6138,7 +6138,7 @@
   "source": "Kobo",
   "hh": 134.0,
   "individuals": 820.0,
-  "severity": 58,
+  "severity": 60,
   "band": "Severe",
   "scores": {
    "CCCM": "Y",
@@ -6152,7 +6152,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "Y",
-   "Education": "Y"
+   "Education": "R"
   }
  },
  {
@@ -6165,7 +6165,7 @@
   "source": "Kobo",
   "hh": 65.0,
   "individuals": 390.0,
-  "severity": 68,
+  "severity": 69,
   "band": "Severe",
   "scores": {
    "CCCM": "Y",
@@ -6219,7 +6219,7 @@
   "source": "Kobo",
   "hh": 147.0,
   "individuals": 723.0,
-  "severity": 12,
+  "severity": 13,
   "band": "Low",
   "scores": {
    "CCCM": "R",
@@ -6246,7 +6246,7 @@
   "source": "Kobo",
   "hh": 98.0,
   "individuals": 420.0,
-  "severity": 18,
+  "severity": 19,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -6327,7 +6327,7 @@
   "source": "Kobo",
   "hh": 108.0,
   "individuals": 537.0,
-  "severity": 16,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -6354,7 +6354,7 @@
   "source": "Kobo",
   "hh": 190.0,
   "individuals": 1152.0,
-  "severity": 45,
+  "severity": 49,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -6368,7 +6368,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -6381,8 +6381,8 @@
   "source": "Kobo",
   "hh": 200.0,
   "individuals": 1216.0,
-  "severity": 50,
-  "band": "High",
+  "severity": 55,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "R",
@@ -6395,7 +6395,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -6408,8 +6408,8 @@
   "source": "Kobo",
   "hh": 213.0,
   "individuals": 1264.0,
-  "severity": 52,
-  "band": "High",
+  "severity": 57,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "K",
@@ -6422,7 +6422,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -6435,7 +6435,7 @@
   "source": "Kobo",
   "hh": 280.0,
   "individuals": 1669.0,
-  "severity": 49,
+  "severity": 53,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -6449,7 +6449,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -6462,7 +6462,7 @@
   "source": "Kobo",
   "hh": 170.0,
   "individuals": 1041.0,
-  "severity": 43,
+  "severity": 48,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -6476,7 +6476,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -6489,7 +6489,7 @@
   "source": "Kobo",
   "hh": 312.0,
   "individuals": 1886.0,
-  "severity": 48,
+  "severity": 53,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -6503,7 +6503,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -6516,7 +6516,7 @@
   "source": "Kobo",
   "hh": 270.0,
   "individuals": 1620.0,
-  "severity": 67,
+  "severity": 70,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -6530,7 +6530,7 @@
    "Health": "K",
    "FSL": "Y",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -6543,7 +6543,7 @@
   "source": "Kobo",
   "hh": 271.0,
   "individuals": 1626.0,
-  "severity": 32,
+  "severity": 33,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -6570,7 +6570,7 @@
   "source": "Kobo",
   "hh": 65.0,
   "individuals": 390.0,
-  "severity": 64,
+  "severity": 65,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -9189,7 +9189,7 @@
   "source": "Kobo",
   "hh": 149.0,
   "individuals": 733.0,
-  "severity": 21,
+  "severity": 23,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -9203,7 +9203,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -9270,7 +9270,7 @@
   "source": "Kobo",
   "hh": 109.0,
   "individuals": 554.0,
-  "severity": 18,
+  "severity": 22,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -9284,7 +9284,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -9297,8 +9297,8 @@
   "source": "Kobo",
   "hh": 120.0,
   "individuals": 566.0,
-  "severity": 20,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -9311,7 +9311,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -9405,7 +9405,7 @@
   "source": "Kobo",
   "hh": 190.0,
   "individuals": 950.0,
-  "severity": 21,
+  "severity": 23,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -9419,7 +9419,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -9459,7 +9459,7 @@
   "source": "Kobo",
   "hh": 97.0,
   "individuals": 593.0,
-  "severity": 42,
+  "severity": 43,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -9473,7 +9473,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "Y"
+   "Education": "R"
   }
  },
  {
@@ -9486,7 +9486,7 @@
   "source": "Kobo",
   "hh": 151.0,
   "individuals": 966.0,
-  "severity": 42,
+  "severity": 43,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -9500,7 +9500,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "Y"
+   "Education": "R"
   }
  },
  {
@@ -9513,7 +9513,7 @@
   "source": "Kobo",
   "hh": 402.0,
   "individuals": 2435.0,
-  "severity": 48,
+  "severity": 49,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -9527,7 +9527,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "Y"
+   "Education": "R"
   }
  },
  {
@@ -9540,7 +9540,7 @@
   "source": "Kobo",
   "hh": 199.0,
   "individuals": 1248.0,
-  "severity": 60,
+  "severity": 61,
   "band": "Severe",
   "scores": {
    "CCCM": "Y",
@@ -9554,7 +9554,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "Y"
+   "Education": "R"
   }
  },
  {
@@ -9648,8 +9648,8 @@
   "source": "Kobo",
   "hh": 98.0,
   "individuals": 577.0,
-  "severity": 54,
-  "band": "High",
+  "severity": 56,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "K",
@@ -9662,7 +9662,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "Y"
+   "Education": "R"
   }
  },
  {
@@ -9675,7 +9675,7 @@
   "source": "Kobo",
   "hh": 260.0,
   "individuals": 1592.0,
-  "severity": 40,
+  "severity": 44,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -9689,7 +9689,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -9702,8 +9702,8 @@
   "source": "Kobo",
   "hh": 111.0,
   "individuals": 678.0,
-  "severity": 37,
-  "band": "Moderate",
+  "severity": 42,
+  "band": "High",
   "scores": {
    "CCCM": "G",
    "Protection": "Y",
@@ -9716,7 +9716,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -9743,7 +9743,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "Y"
+   "Education": "R"
   }
  },
  {
@@ -9770,7 +9770,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "Y"
+   "Education": "R"
   }
  },
  {
@@ -9797,7 +9797,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "Y"
+   "Education": "R"
   }
  },
  {
@@ -9810,8 +9810,8 @@
   "source": "Kobo",
   "hh": 189.0,
   "individuals": 1161.0,
-  "severity": 50,
-  "band": "High",
+  "severity": 55,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "R",
@@ -9824,7 +9824,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -11052,8 +11052,8 @@
   "source": "Kobo",
   "hh": 120.0,
   "individuals": 720.0,
-  "severity": 20,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -11066,7 +11066,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -11079,7 +11079,7 @@
   "source": "Kobo",
   "hh": 120.0,
   "individuals": 720.0,
-  "severity": 17,
+  "severity": 22,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -11093,7 +11093,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -11187,8 +11187,8 @@
   "source": "Kobo",
   "hh": 163.0,
   "individuals": 735.0,
-  "severity": 21,
-  "band": "Low",
+  "severity": 27,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -11201,7 +11201,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -11214,8 +11214,8 @@
   "source": "Kobo",
   "hh": 185.0,
   "individuals": 925.0,
-  "severity": 21,
-  "band": "Low",
+  "severity": 27,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -11228,7 +11228,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -11268,7 +11268,7 @@
   "source": "Kobo",
   "hh": 76.0,
   "individuals": 265.0,
-  "severity": 31,
+  "severity": 36,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -11282,7 +11282,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -11322,7 +11322,7 @@
   "source": "Kobo",
   "hh": 237.0,
   "individuals": 886.0,
-  "severity": 13,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -11336,7 +11336,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -11430,7 +11430,7 @@
   "source": "Kobo",
   "hh": 250.0,
   "individuals": 1500.0,
-  "severity": 56,
+  "severity": 62,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -11444,7 +11444,7 @@
    "Health": "K",
    "FSL": "Y",
    "Nutrition": "K",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -11862,8 +11862,8 @@
   "source": "Kobo",
   "hh": 82.0,
   "individuals": 315.0,
-  "severity": 23,
-  "band": "Low",
+  "severity": 27,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -11876,7 +11876,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -11889,8 +11889,8 @@
   "source": "Kobo",
   "hh": 108.0,
   "individuals": 479.0,
-  "severity": 23,
-  "band": "Low",
+  "severity": 29,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -11903,7 +11903,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -11916,8 +11916,8 @@
   "source": "Kobo",
   "hh": 145.0,
   "individuals": 548.0,
-  "severity": 21,
-  "band": "Low",
+  "severity": 27,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -11930,7 +11930,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -11943,7 +11943,7 @@
   "source": "Kobo",
   "hh": 45.0,
   "individuals": 167.0,
-  "severity": 30,
+  "severity": 36,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -11957,7 +11957,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -12024,7 +12024,7 @@
   "source": "Kobo",
   "hh": 95.0,
   "individuals": 393.0,
-  "severity": 36,
+  "severity": 37,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -12402,8 +12402,8 @@
   "source": "Zite/IOM",
   "hh": 71.0,
   "individuals": 426.0,
-  "severity": 36,
-  "band": "Moderate",
+  "severity": 42,
+  "band": "High",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -12416,7 +12416,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -13185,8 +13185,8 @@
   "source": "Zite/IOM",
   "hh": 90.0,
   "individuals": 335.0,
-  "severity": 34,
-  "band": "Moderate",
+  "severity": 40,
+  "band": "High",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -13199,7 +13199,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -13212,7 +13212,7 @@
   "source": "Zite/IOM",
   "hh": 35.0,
   "individuals": 140.0,
-  "severity": 40,
+  "severity": 45,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -13226,7 +13226,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -13320,8 +13320,8 @@
   "source": "Zite/IOM",
   "hh": 40.0,
   "individuals": 179.0,
-  "severity": 37,
-  "band": "Moderate",
+  "severity": 40,
+  "band": "High",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -13334,7 +13334,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -13401,8 +13401,8 @@
   "source": "Zite/IOM",
   "hh": 70.0,
   "individuals": 420.0,
-  "severity": 35,
-  "band": "Moderate",
+  "severity": 41,
+  "band": "High",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -13415,7 +13415,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -13455,7 +13455,7 @@
   "source": "Zite/IOM",
   "hh": 45.0,
   "individuals": 172.0,
-  "severity": 20,
+  "severity": 21,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -13482,8 +13482,8 @@
   "source": "Zite/IOM",
   "hh": 60.0,
   "individuals": 224.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -13509,7 +13509,7 @@
   "source": "Zite/IOM",
   "hh": 45.0,
   "individuals": 158.0,
-  "severity": 27,
+  "severity": 29,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -13536,8 +13536,8 @@
   "source": "Zite/IOM",
   "hh": 120.0,
   "individuals": 651.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 26,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -13550,7 +13550,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -13563,7 +13563,7 @@
   "source": "Zite/IOM",
   "hh": 343.0,
   "individuals": 1734.0,
-  "severity": 12,
+  "severity": 14,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -13590,8 +13590,8 @@
   "source": "Zite/IOM",
   "hh": 63.0,
   "individuals": 325.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 27,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -13604,7 +13604,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -13617,7 +13617,7 @@
   "source": "Zite/IOM",
   "hh": 268.0,
   "individuals": 884.0,
-  "severity": 28,
+  "severity": 29,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -13644,7 +13644,7 @@
   "source": "Zite/IOM",
   "hh": 68.0,
   "individuals": 368.0,
-  "severity": 17,
+  "severity": 19,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -13698,7 +13698,7 @@
   "source": "Zite/IOM",
   "hh": 43.0,
   "individuals": 228.0,
-  "severity": 16,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -13752,7 +13752,7 @@
   "source": "Zite/IOM",
   "hh": 125.0,
   "individuals": 879.0,
-  "severity": 17,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -13779,7 +13779,7 @@
   "source": "Zite/IOM",
   "hh": 131.0,
   "individuals": 728.0,
-  "severity": 16,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -13806,7 +13806,7 @@
   "source": "Zite/IOM",
   "hh": 68.0,
   "individuals": 373.0,
-  "severity": 16,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -13860,7 +13860,7 @@
   "source": "Zite/IOM",
   "hh": 54.0,
   "individuals": 295.0,
-  "severity": 17,
+  "severity": 19,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -13887,7 +13887,7 @@
   "source": "Zite/IOM",
   "hh": 35.0,
   "individuals": 210.0,
-  "severity": 16,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -13914,7 +13914,7 @@
   "source": "Zite/IOM",
   "hh": 66.0,
   "individuals": 365.0,
-  "severity": 17,
+  "severity": 19,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -13941,7 +13941,7 @@
   "source": "Zite/IOM",
   "hh": 20.0,
   "individuals": 102.0,
-  "severity": 16,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -13968,7 +13968,7 @@
   "source": "Zite/IOM",
   "hh": 48.0,
   "individuals": 260.0,
-  "severity": 15,
+  "severity": 16,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -13995,7 +13995,7 @@
   "source": "Zite/IOM",
   "hh": 110.0,
   "individuals": 466.0,
-  "severity": 9,
+  "severity": 12,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -14009,7 +14009,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -14022,7 +14022,7 @@
   "source": "Zite/IOM",
   "hh": 40.0,
   "individuals": 165.0,
-  "severity": 15,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -14036,7 +14036,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -15210,7 +15210,7 @@
   "source": "Zite/IOM",
   "hh": 33.0,
   "individuals": 141.0,
-  "severity": 42,
+  "severity": 47,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -15224,7 +15224,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -15237,7 +15237,7 @@
   "source": "Zite/IOM",
   "hh": 51.0,
   "individuals": 183.0,
-  "severity": 41,
+  "severity": 47,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -15251,7 +15251,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -15264,8 +15264,8 @@
   "source": "Zite/IOM",
   "hh": 102.0,
   "individuals": 510.0,
-  "severity": 53,
-  "band": "High",
+  "severity": 55,
+  "band": "Severe",
   "scores": {
    "CCCM": "Y",
    "Protection": "R",
@@ -15318,7 +15318,7 @@
   "source": "Zite/IOM",
   "hh": 80.0,
   "individuals": 400.0,
-  "severity": 50,
+  "severity": 52,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -15372,7 +15372,7 @@
   "source": "Zite/IOM",
   "hh": 35.0,
   "individuals": 175.0,
-  "severity": 58,
+  "severity": 64,
   "band": "Severe",
   "scores": {
    "CCCM": "Y",
@@ -15386,7 +15386,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -15426,7 +15426,7 @@
   "source": "Zite/IOM",
   "hh": 91.0,
   "individuals": 371.0,
-  "severity": 44,
+  "severity": 48,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -15440,7 +15440,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -15453,7 +15453,7 @@
   "source": "Zite/IOM",
   "hh": 51.0,
   "individuals": 259.0,
-  "severity": 40,
+  "severity": 44,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -15467,7 +15467,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -15507,8 +15507,8 @@
   "source": "Zite/IOM",
   "hh": 53.0,
   "individuals": 204.0,
-  "severity": 51,
-  "band": "High",
+  "severity": 58,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "R",
@@ -15521,7 +15521,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -15534,8 +15534,8 @@
   "source": "Zite/IOM",
   "hh": 21.0,
   "individuals": 97.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 28,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "Y",
@@ -15548,7 +15548,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -15588,8 +15588,8 @@
   "source": "Zite/IOM",
   "hh": 52.0,
   "individuals": 228.0,
-  "severity": 54,
-  "band": "High",
+  "severity": 55,
+  "band": "Severe",
   "scores": {
    "CCCM": "Y",
    "Protection": "R",
@@ -15669,7 +15669,7 @@
   "source": "Zite/IOM",
   "hh": 96.0,
   "individuals": 366.0,
-  "severity": 35,
+  "severity": 37,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -15696,7 +15696,7 @@
   "source": "Zite/IOM",
   "hh": 44.0,
   "individuals": 182.0,
-  "severity": 30,
+  "severity": 35,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -15710,7 +15710,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -15723,7 +15723,7 @@
   "source": "Zite/IOM",
   "hh": 81.0,
   "individuals": 300.0,
-  "severity": 29,
+  "severity": 32,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -15737,7 +15737,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -15750,8 +15750,8 @@
   "source": "Zite/IOM",
   "hh": 44.0,
   "individuals": 191.0,
-  "severity": 53,
-  "band": "High",
+  "severity": 55,
+  "band": "Severe",
   "scores": {
    "CCCM": "Y",
    "Protection": "R",
@@ -15777,7 +15777,7 @@
   "source": "Zite/IOM",
   "hh": 22.0,
   "individuals": 88.0,
-  "severity": 40,
+  "severity": 43,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -15791,7 +15791,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -15831,7 +15831,7 @@
   "source": "Zite/IOM",
   "hh": 63.0,
   "individuals": 225.0,
-  "severity": 59,
+  "severity": 60,
   "band": "Severe",
   "scores": {
    "CCCM": "Y",
@@ -15966,8 +15966,8 @@
   "source": "Zite/IOM",
   "hh": 69.0,
   "individuals": 275.0,
-  "severity": 51,
-  "band": "High",
+  "severity": 55,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -15980,7 +15980,7 @@
    "Health": "R",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -16020,7 +16020,7 @@
   "source": "Zite/IOM",
   "hh": 54.0,
   "individuals": 201.0,
-  "severity": 61,
+  "severity": 63,
   "band": "Severe",
   "scores": {
    "CCCM": "Y",
@@ -16128,7 +16128,7 @@
   "source": "Zite/IOM",
   "hh": 18.0,
   "individuals": 64.0,
-  "severity": 45,
+  "severity": 49,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -16142,7 +16142,7 @@
    "Health": "K",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -16209,7 +16209,7 @@
   "source": "Zite/IOM",
   "hh": 45.0,
   "individuals": 216.0,
-  "severity": 51,
+  "severity": 54,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -16223,7 +16223,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -16236,7 +16236,7 @@
   "source": "Zite/IOM",
   "hh": 82.0,
   "individuals": 360.0,
-  "severity": 55,
+  "severity": 57,
   "band": "Severe",
   "scores": {
    "CCCM": "Y",
@@ -16290,7 +16290,7 @@
   "source": "Zite/IOM",
   "hh": 126.0,
   "individuals": 536.0,
-  "severity": 32,
+  "severity": 35,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -16304,7 +16304,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -16317,7 +16317,7 @@
   "source": "Zite/IOM",
   "hh": 33.0,
   "individuals": 132.0,
-  "severity": 34,
+  "severity": 39,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -16331,7 +16331,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -16344,8 +16344,8 @@
   "source": "Zite/IOM",
   "hh": 66.0,
   "individuals": 302.0,
-  "severity": 53,
-  "band": "High",
+  "severity": 55,
+  "band": "Severe",
   "scores": {
    "CCCM": "Y",
    "Protection": "R",
@@ -16371,8 +16371,8 @@
   "source": "Zite/IOM",
   "hh": 56.0,
   "individuals": 221.0,
-  "severity": 37,
-  "band": "Moderate",
+  "severity": 40,
+  "band": "High",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -16385,7 +16385,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -16425,7 +16425,7 @@
   "source": "Zite/IOM",
   "hh": 48.0,
   "individuals": 240.0,
-  "severity": 61,
+  "severity": 63,
   "band": "Severe",
   "scores": {
    "CCCM": "Y",
@@ -16452,7 +16452,7 @@
   "source": "Zite/IOM",
   "hh": 64.0,
   "individuals": 233.0,
-  "severity": 13,
+  "severity": 14,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -16479,7 +16479,7 @@
   "source": "Zite/IOM",
   "hh": 71.0,
   "individuals": 258.0,
-  "severity": 23,
+  "severity": 24,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -16506,7 +16506,7 @@
   "source": "Zite/IOM",
   "hh": 60.0,
   "individuals": 229.0,
-  "severity": 26,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -16533,7 +16533,7 @@
   "source": "Zite/IOM",
   "hh": 80.0,
   "individuals": 281.0,
-  "severity": 14,
+  "severity": 15,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -16560,7 +16560,7 @@
   "source": "Zite/IOM",
   "hh": 39.0,
   "individuals": 148.0,
-  "severity": 25,
+  "severity": 26,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -16587,7 +16587,7 @@
   "source": "Zite/IOM",
   "hh": 160.0,
   "individuals": 593.0,
-  "severity": 23,
+  "severity": 24,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -16641,7 +16641,7 @@
   "source": "Zite/IOM",
   "hh": 74.0,
   "individuals": 277.0,
-  "severity": 14,
+  "severity": 15,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -16668,7 +16668,7 @@
   "source": "Zite/IOM",
   "hh": 96.0,
   "individuals": 350.0,
-  "severity": 25,
+  "severity": 26,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -16695,7 +16695,7 @@
   "source": "Zite/IOM",
   "hh": 50.0,
   "individuals": 165.0,
-  "severity": 23,
+  "severity": 24,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -16722,7 +16722,7 @@
   "source": "Zite/IOM",
   "hh": 182.0,
   "individuals": 587.0,
-  "severity": 30,
+  "severity": 32,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -16749,7 +16749,7 @@
   "source": "Zite/IOM",
   "hh": 122.0,
   "individuals": 592.0,
-  "severity": 18,
+  "severity": 20,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -16776,8 +16776,8 @@
   "source": "Zite/IOM",
   "hh": 210.0,
   "individuals": 1004.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 27,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -16790,7 +16790,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -16803,7 +16803,7 @@
   "source": "Zite/IOM",
   "hh": 108.0,
   "individuals": 473.0,
-  "severity": 29,
+  "severity": 30,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -16830,7 +16830,7 @@
   "source": "Zite/IOM",
   "hh": 51.0,
   "individuals": 246.0,
-  "severity": 30,
+  "severity": 32,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -16857,7 +16857,7 @@
   "source": "Zite/IOM",
   "hh": 145.0,
   "individuals": 762.0,
-  "severity": 25,
+  "severity": 27,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -16884,7 +16884,7 @@
   "source": "Zite/IOM",
   "hh": 99.0,
   "individuals": 526.0,
-  "severity": 44,
+  "severity": 47,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -16898,7 +16898,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -16911,7 +16911,7 @@
   "source": "Zite/IOM",
   "hh": 107.0,
   "individuals": 570.0,
-  "severity": 45,
+  "severity": 47,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -16925,7 +16925,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -16938,7 +16938,7 @@
   "source": "Zite/IOM",
   "hh": 371.0,
   "individuals": 1732.0,
-  "severity": 13,
+  "severity": 14,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -16965,7 +16965,7 @@
   "source": "Zite/IOM",
   "hh": 83.0,
   "individuals": 270.0,
-  "severity": 32,
+  "severity": 34,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -16979,7 +16979,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -16992,7 +16992,7 @@
   "source": "Zite/IOM",
   "hh": 57.0,
   "individuals": 293.0,
-  "severity": 45,
+  "severity": 47,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -17006,7 +17006,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -17019,8 +17019,8 @@
   "source": "Zite/IOM",
   "hh": 90.0,
   "individuals": 449.0,
-  "severity": 23,
-  "band": "Low",
+  "severity": 27,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -17033,7 +17033,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -17046,7 +17046,7 @@
   "source": "Zite/IOM",
   "hh": 74.0,
   "individuals": 350.0,
-  "severity": 31,
+  "severity": 34,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -17060,7 +17060,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -17073,7 +17073,7 @@
   "source": "Zite/IOM",
   "hh": 138.0,
   "individuals": 697.0,
-  "severity": 18,
+  "severity": 23,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -17087,7 +17087,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -17100,7 +17100,7 @@
   "source": "Zite/IOM",
   "hh": 100.0,
   "individuals": 507.0,
-  "severity": 40,
+  "severity": 43,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -17114,7 +17114,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -17127,7 +17127,7 @@
   "source": "Zite/IOM",
   "hh": 51.0,
   "individuals": 306.0,
-  "severity": 45,
+  "severity": 48,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -17141,7 +17141,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -17154,7 +17154,7 @@
   "source": "Zite/IOM",
   "hh": 59.0,
   "individuals": 304.0,
-  "severity": 29,
+  "severity": 31,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -17181,8 +17181,8 @@
   "source": "Zite/IOM",
   "hh": 27.0,
   "individuals": 121.0,
-  "severity": 23,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -17208,7 +17208,7 @@
   "source": "Zite/IOM",
   "hh": 73.0,
   "individuals": 438.0,
-  "severity": 46,
+  "severity": 49,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -17222,7 +17222,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -17235,7 +17235,7 @@
   "source": "Zite/IOM",
   "hh": 56.0,
   "individuals": 292.0,
-  "severity": 29,
+  "severity": 30,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -17262,8 +17262,8 @@
   "source": "Zite/IOM",
   "hh": 61.0,
   "individuals": 295.0,
-  "severity": 23,
-  "band": "Low",
+  "severity": 27,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -17276,7 +17276,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -17343,7 +17343,7 @@
   "source": "Zite/IOM",
   "hh": 92.0,
   "individuals": 507.0,
-  "severity": 16,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -17370,7 +17370,7 @@
   "source": "Zite/IOM",
   "hh": 118.0,
   "individuals": 708.0,
-  "severity": 16,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -17397,7 +17397,7 @@
   "source": "Zite/IOM",
   "hh": 73.0,
   "individuals": 403.0,
-  "severity": 14,
+  "severity": 15,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -17532,7 +17532,7 @@
   "source": "Zite/IOM",
   "hh": 124.0,
   "individuals": 687.0,
-  "severity": 17,
+  "severity": 19,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -17613,7 +17613,7 @@
   "source": "Zite/IOM",
   "hh": 78.0,
   "individuals": 443.0,
-  "severity": 27,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -17694,7 +17694,7 @@
   "source": "Zite/IOM",
   "hh": 172.0,
   "individuals": 974.0,
-  "severity": 16,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -17748,7 +17748,7 @@
   "source": "Zite/IOM",
   "hh": 84.0,
   "individuals": 454.0,
-  "severity": 17,
+  "severity": 19,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -17802,7 +17802,7 @@
   "source": "Zite/IOM",
   "hh": 52.0,
   "individuals": 312.0,
-  "severity": 16,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -17829,7 +17829,7 @@
   "source": "Zite/IOM",
   "hh": 77.0,
   "individuals": 446.0,
-  "severity": 16,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -17910,7 +17910,7 @@
   "source": "Zite/IOM",
   "hh": 93.0,
   "individuals": 373.0,
-  "severity": 29,
+  "severity": 30,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -17937,7 +17937,7 @@
   "source": "Zite/IOM",
   "hh": 58.0,
   "individuals": 247.0,
-  "severity": 32,
+  "severity": 35,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -17951,7 +17951,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -17991,7 +17991,7 @@
   "source": "Zite/IOM",
   "hh": 109.0,
   "individuals": 654.0,
-  "severity": 19,
+  "severity": 21,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -18005,7 +18005,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -18018,7 +18018,7 @@
   "source": "Zite/IOM",
   "hh": 82.0,
   "individuals": 331.0,
-  "severity": 31,
+  "severity": 33,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -18045,7 +18045,7 @@
   "source": "Zite/IOM",
   "hh": 62.0,
   "individuals": 276.0,
-  "severity": 32,
+  "severity": 34,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -18059,7 +18059,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -18072,7 +18072,7 @@
   "source": "Zite/IOM",
   "hh": 101.0,
   "individuals": 416.0,
-  "severity": 49,
+  "severity": 52,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -18086,7 +18086,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -18099,8 +18099,8 @@
   "source": "Zite/IOM",
   "hh": 33.0,
   "individuals": 135.0,
-  "severity": 49,
-  "band": "High",
+  "severity": 56,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -18113,7 +18113,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -18126,7 +18126,7 @@
   "source": "Zite/IOM",
   "hh": 43.0,
   "individuals": 166.0,
-  "severity": 45,
+  "severity": 48,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -18140,7 +18140,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -18180,7 +18180,7 @@
   "source": "Zite/IOM",
   "hh": 59.0,
   "individuals": 260.0,
-  "severity": 14,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -18194,7 +18194,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -18288,7 +18288,7 @@
   "source": "Zite/IOM",
   "hh": 85.0,
   "individuals": 510.0,
-  "severity": 45,
+  "severity": 50,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -18302,7 +18302,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -18369,7 +18369,7 @@
   "source": "Zite/IOM",
   "hh": 70.0,
   "individuals": 420.0,
-  "severity": 43,
+  "severity": 49,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -18383,7 +18383,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -18423,7 +18423,7 @@
   "source": "Zite/IOM",
   "hh": 300.0,
   "individuals": 1800.0,
-  "severity": 70,
+  "severity": 72,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -18437,7 +18437,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -18477,7 +18477,7 @@
   "source": "Zite/IOM",
   "hh": 95.0,
   "individuals": 570.0,
-  "severity": 21,
+  "severity": 22,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -18504,7 +18504,7 @@
   "source": "Zite/IOM",
   "hh": 75.0,
   "individuals": 450.0,
-  "severity": 29,
+  "severity": 33,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -18518,7 +18518,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -18531,7 +18531,7 @@
   "source": "Zite/IOM",
   "hh": 58.0,
   "individuals": 345.0,
-  "severity": 36,
+  "severity": 38,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -18545,7 +18545,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -18693,7 +18693,7 @@
   "source": "Zite/IOM",
   "hh": 85.0,
   "individuals": 425.0,
-  "severity": 47,
+  "severity": 48,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -18720,8 +18720,8 @@
   "source": "Zite/IOM",
   "hh": 116.0,
   "individuals": 478.0,
-  "severity": 53,
-  "band": "High",
+  "severity": 55,
+  "band": "Severe",
   "scores": {
    "CCCM": "Y",
    "Protection": "Y",
@@ -18747,7 +18747,7 @@
   "source": "Zite/IOM",
   "hh": 50.0,
   "individuals": 199.0,
-  "severity": 51,
+  "severity": 53,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -18774,7 +18774,7 @@
   "source": "Zite/IOM",
   "hh": 94.0,
   "individuals": 375.0,
-  "severity": 45,
+  "severity": 47,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -18801,7 +18801,7 @@
   "source": "Zite/IOM",
   "hh": 81.0,
   "individuals": 405.0,
-  "severity": 48,
+  "severity": 49,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -18828,7 +18828,7 @@
   "source": "Zite/IOM",
   "hh": 65.0,
   "individuals": 332.0,
-  "severity": 50,
+  "severity": 51,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -18855,7 +18855,7 @@
   "source": "Zite/IOM",
   "hh": 61.0,
   "individuals": 232.0,
-  "severity": 56,
+  "severity": 58,
   "band": "Severe",
   "scores": {
    "CCCM": "Y",
@@ -18882,8 +18882,8 @@
   "source": "Zite/IOM",
   "hh": 241.0,
   "individuals": 1270.0,
-  "severity": 21,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -18896,7 +18896,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -18909,8 +18909,8 @@
   "source": "Zite/IOM",
   "hh": 189.0,
   "individuals": 1323.0,
-  "severity": 23,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -18963,7 +18963,7 @@
   "source": "Zite/IOM",
   "hh": 219.0,
   "individuals": 1059.0,
-  "severity": 30,
+  "severity": 33,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -18977,7 +18977,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -18990,7 +18990,7 @@
   "source": "Zite/IOM",
   "hh": 41.0,
   "individuals": 220.0,
-  "severity": 30,
+  "severity": 31,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -19017,7 +19017,7 @@
   "source": "Zite/IOM",
   "hh": 64.0,
   "individuals": 317.0,
-  "severity": 31,
+  "severity": 33,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -19044,7 +19044,7 @@
   "source": "Zite/IOM",
   "hh": 96.0,
   "individuals": 453.0,
-  "severity": 33,
+  "severity": 38,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -19058,7 +19058,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -19071,7 +19071,7 @@
   "source": "Zite/IOM",
   "hh": 113.0,
   "individuals": 566.0,
-  "severity": 27,
+  "severity": 31,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -19085,7 +19085,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19098,7 +19098,7 @@
   "source": "Zite/IOM",
   "hh": 60.0,
   "individuals": 300.0,
-  "severity": 27,
+  "severity": 29,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -19112,7 +19112,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19125,7 +19125,7 @@
   "source": "Zite/IOM",
   "hh": 65.0,
   "individuals": 300.0,
-  "severity": 25,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -19139,7 +19139,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19152,7 +19152,7 @@
   "source": "Zite/IOM",
   "hh": 70.0,
   "individuals": 375.0,
-  "severity": 28,
+  "severity": 29,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -19179,7 +19179,7 @@
   "source": "Zite/IOM",
   "hh": 115.0,
   "individuals": 595.0,
-  "severity": 26,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -19193,7 +19193,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19206,7 +19206,7 @@
   "source": "Zite/IOM",
   "hh": 98.0,
   "individuals": 588.0,
-  "severity": 22,
+  "severity": 24,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -19220,7 +19220,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19233,7 +19233,7 @@
   "source": "Zite/IOM",
   "hh": 64.0,
   "individuals": 239.0,
-  "severity": 61,
+  "severity": 65,
   "band": "Severe",
   "scores": {
    "CCCM": "G",
@@ -19247,7 +19247,7 @@
    "Health": "K",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19260,7 +19260,7 @@
   "source": "Zite/IOM",
   "hh": 46.0,
   "individuals": 208.0,
-  "severity": 46,
+  "severity": 52,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -19274,7 +19274,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -19287,7 +19287,7 @@
   "source": "Zite/IOM",
   "hh": 29.0,
   "individuals": 118.0,
-  "severity": 57,
+  "severity": 62,
   "band": "Severe",
   "scores": {
    "CCCM": "G",
@@ -19301,7 +19301,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -19314,7 +19314,7 @@
   "source": "Zite/IOM",
   "hh": 89.0,
   "individuals": 445.0,
-  "severity": 64,
+  "severity": 69,
   "band": "Severe",
   "scores": {
    "CCCM": "G",
@@ -19328,7 +19328,7 @@
    "Health": "K",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -19341,7 +19341,7 @@
   "source": "Zite/IOM",
   "hh": 20.0,
   "individuals": 100.0,
-  "severity": 11,
+  "severity": 14,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -19355,7 +19355,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19368,8 +19368,8 @@
   "source": "Zite/IOM",
   "hh": 77.0,
   "individuals": 302.0,
-  "severity": 51,
-  "band": "High",
+  "severity": 57,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -19382,7 +19382,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -19395,7 +19395,7 @@
   "source": "Zite/IOM",
   "hh": 49.0,
   "individuals": 202.0,
-  "severity": 14,
+  "severity": 16,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -19409,7 +19409,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19422,7 +19422,7 @@
   "source": "Zite/IOM",
   "hh": 106.0,
   "individuals": 460.0,
-  "severity": 46,
+  "severity": 51,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -19436,7 +19436,7 @@
    "Health": "R",
    "FSL": "K",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -19449,8 +19449,8 @@
   "source": "Zite/IOM",
   "hh": 65.0,
   "individuals": 291.0,
-  "severity": 54,
-  "band": "High",
+  "severity": 60,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -19463,7 +19463,7 @@
    "Health": "K",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -19476,7 +19476,7 @@
   "source": "Zite/IOM",
   "hh": 80.0,
   "individuals": 284.0,
-  "severity": 15,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -19490,7 +19490,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19503,7 +19503,7 @@
   "source": "Zite/IOM",
   "hh": 39.0,
   "individuals": 158.0,
-  "severity": 10,
+  "severity": 12,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -19517,7 +19517,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19530,7 +19530,7 @@
   "source": "Zite/IOM",
   "hh": 136.0,
   "individuals": 542.0,
-  "severity": 58,
+  "severity": 63,
   "band": "Severe",
   "scores": {
    "CCCM": "G",
@@ -19544,7 +19544,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -19557,7 +19557,7 @@
   "source": "Zite/IOM",
   "hh": 57.0,
   "individuals": 227.0,
-  "severity": 47,
+  "severity": 53,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -19571,7 +19571,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -19584,8 +19584,8 @@
   "source": "Zite/IOM",
   "hh": 52.0,
   "individuals": 199.0,
-  "severity": 54,
-  "band": "High",
+  "severity": 58,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -19598,7 +19598,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19611,7 +19611,7 @@
   "source": "Zite/IOM",
   "hh": 77.0,
   "individuals": 306.0,
-  "severity": 13,
+  "severity": 15,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -19625,7 +19625,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19638,7 +19638,7 @@
   "source": "Zite/IOM",
   "hh": 112.0,
   "individuals": 498.0,
-  "severity": 9,
+  "severity": 11,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -19665,8 +19665,8 @@
   "source": "Zite/IOM",
   "hh": 42.0,
   "individuals": 190.0,
-  "severity": 53,
-  "band": "High",
+  "severity": 59,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -19679,7 +19679,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -19692,7 +19692,7 @@
   "source": "Zite/IOM",
   "hh": 59.0,
   "individuals": 226.0,
-  "severity": 49,
+  "severity": 54,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -19706,7 +19706,7 @@
    "Health": "K",
    "FSL": "K",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19719,7 +19719,7 @@
   "source": "Zite/IOM",
   "hh": 45.0,
   "individuals": 177.0,
-  "severity": 57,
+  "severity": 60,
   "band": "Severe",
   "scores": {
    "CCCM": "G",
@@ -19733,7 +19733,7 @@
    "Health": "K",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19746,7 +19746,7 @@
   "source": "Zite/IOM",
   "hh": 56.0,
   "individuals": 241.0,
-  "severity": 43,
+  "severity": 47,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -19760,7 +19760,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19773,7 +19773,7 @@
   "source": "Zite/IOM",
   "hh": 76.0,
   "individuals": 308.0,
-  "severity": 47,
+  "severity": 50,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -19787,7 +19787,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19800,7 +19800,7 @@
   "source": "Zite/IOM",
   "hh": 37.0,
   "individuals": 148.0,
-  "severity": 41,
+  "severity": 47,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -19814,7 +19814,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -19827,7 +19827,7 @@
   "source": "Zite/IOM",
   "hh": 87.0,
   "individuals": 376.0,
-  "severity": 43,
+  "severity": 48,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -19841,7 +19841,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -19854,8 +19854,8 @@
   "source": "Zite/IOM",
   "hh": 71.0,
   "individuals": 282.0,
-  "severity": 54,
-  "band": "High",
+  "severity": 58,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -19868,7 +19868,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19881,7 +19881,7 @@
   "source": "Zite/IOM",
   "hh": 48.0,
   "individuals": 195.0,
-  "severity": 49,
+  "severity": 50,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -19908,8 +19908,8 @@
   "source": "Zite/IOM",
   "hh": 62.0,
   "individuals": 271.0,
-  "severity": 51,
-  "band": "High",
+  "severity": 56,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -19922,7 +19922,7 @@
    "Health": "K",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -19935,7 +19935,7 @@
   "source": "Zite/IOM",
   "hh": 79.0,
   "individuals": 309.0,
-  "severity": 43,
+  "severity": 46,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -19949,7 +19949,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -19962,7 +19962,7 @@
   "source": "Zite/IOM",
   "hh": 64.0,
   "individuals": 240.0,
-  "severity": 9,
+  "severity": 11,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -19989,8 +19989,8 @@
   "source": "Zite/IOM",
   "hh": 69.0,
   "individuals": 284.0,
-  "severity": 50,
-  "band": "High",
+  "severity": 56,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -20003,7 +20003,7 @@
    "Health": "R",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -20016,7 +20016,7 @@
   "source": "Zite/IOM",
   "hh": 81.0,
   "individuals": 313.0,
-  "severity": 16,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -20070,8 +20070,8 @@
   "source": "Zite/IOM",
   "hh": 46.0,
   "individuals": 209.0,
-  "severity": 54,
-  "band": "High",
+  "severity": 57,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -20084,7 +20084,7 @@
    "Health": "K",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -20097,8 +20097,8 @@
   "source": "Zite/IOM",
   "hh": 146.0,
   "individuals": 642.0,
-  "severity": 51,
-  "band": "High",
+  "severity": 57,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -20111,7 +20111,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -20799,7 +20799,7 @@
   "source": "Zite/IOM",
   "hh": 684.0,
   "individuals": 4104.0,
-  "severity": 73,
+  "severity": 75,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -20826,7 +20826,7 @@
   "source": "Zite/IOM",
   "hh": 85.0,
   "individuals": 510.0,
-  "severity": 45,
+  "severity": 44,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -20853,7 +20853,7 @@
   "source": "Zite/IOM",
   "hh": 380.0,
   "individuals": 2280.0,
-  "severity": 70,
+  "severity": 72,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -20988,7 +20988,7 @@
   "source": "Zite/IOM",
   "hh": 3235.0,
   "individuals": 19410.0,
-  "severity": 36,
+  "severity": 38,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -21002,7 +21002,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -21042,7 +21042,7 @@
   "source": "Zite/IOM",
   "hh": 70.0,
   "individuals": 420.0,
-  "severity": 36,
+  "severity": 38,
   "band": "Moderate",
   "scores": {
    "CCCM": "R",
@@ -21069,7 +21069,7 @@
   "source": "Zite/IOM",
   "hh": 80.0,
   "individuals": 480.0,
-  "severity": 56,
+  "severity": 60,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -21083,7 +21083,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -21096,7 +21096,7 @@
   "source": "Zite/IOM",
   "hh": 758.0,
   "individuals": 4548.0,
-  "severity": 58,
+  "severity": 63,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -21110,7 +21110,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -21150,7 +21150,7 @@
   "source": "Zite/IOM",
   "hh": 340.0,
   "individuals": 2040.0,
-  "severity": 65,
+  "severity": 69,
   "band": "Severe",
   "scores": {
    "CCCM": "Y",
@@ -21164,7 +21164,7 @@
    "Health": "R",
    "FSL": "R",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -21204,8 +21204,8 @@
   "source": "Zite/IOM",
   "hh": 115.0,
   "individuals": 690.0,
-  "severity": 54,
-  "band": "High",
+  "severity": 58,
+  "band": "Severe",
   "scores": {
    "CCCM": "R",
    "Protection": "R",
@@ -21218,7 +21218,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -21231,7 +21231,7 @@
   "source": "Zite/IOM",
   "hh": 600.0,
   "individuals": 3600.0,
-  "severity": 59,
+  "severity": 62,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -21245,7 +21245,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -21285,7 +21285,7 @@
   "source": "Zite/IOM",
   "hh": 362.0,
   "individuals": 2172.0,
-  "severity": 57,
+  "severity": 61,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -21299,7 +21299,7 @@
    "Health": "Y",
    "FSL": "R",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -21339,7 +21339,7 @@
   "source": "Zite/IOM",
   "hh": 61.0,
   "individuals": 390.0,
-  "severity": 23,
+  "severity": 24,
   "band": "Low",
   "scores": {
    "CCCM": "R",
@@ -21393,7 +21393,7 @@
   "source": "Zite/IOM",
   "hh": 380.0,
   "individuals": 2280.0,
-  "severity": 67,
+  "severity": 69,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -21407,7 +21407,7 @@
    "Health": "R",
    "FSL": "R",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -21420,8 +21420,8 @@
   "source": "Zite/IOM",
   "hh": 77.0,
   "individuals": 462.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "R",
    "Protection": "G",
@@ -21501,8 +21501,8 @@
   "source": "Zite/IOM",
   "hh": 88.0,
   "individuals": 528.0,
-  "severity": 39,
-  "band": "Moderate",
+  "severity": 42,
+  "band": "High",
   "scores": {
    "CCCM": "R",
    "Protection": "G",
@@ -21515,7 +21515,7 @@
    "Health": "Y",
    "FSL": "K",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -21528,7 +21528,7 @@
   "source": "Zite/IOM",
   "hh": 110.0,
   "individuals": 660.0,
-  "severity": 58,
+  "severity": 61,
   "band": "Severe",
   "scores": {
    "CCCM": "Y",
@@ -21542,7 +21542,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -21582,7 +21582,7 @@
   "source": "Zite/IOM",
   "hh": 105.0,
   "individuals": 630.0,
-  "severity": 57,
+  "severity": 59,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -21636,7 +21636,7 @@
   "source": "Zite/IOM",
   "hh": 110.0,
   "individuals": 660.0,
-  "severity": 40,
+  "severity": 43,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -21650,7 +21650,7 @@
    "Health": "G",
    "FSL": "K",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -21717,7 +21717,7 @@
   "source": "Zite/IOM",
   "hh": 106.0,
   "individuals": 636.0,
-  "severity": 62,
+  "severity": 65,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -21731,7 +21731,7 @@
    "Health": "Y",
    "FSL": "K",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -21798,7 +21798,7 @@
   "source": "Zite/IOM",
   "hh": 55.0,
   "individuals": 330.0,
-  "severity": 74,
+  "severity": 78,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -21812,7 +21812,7 @@
    "Health": "Y",
    "FSL": "K",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -21825,7 +21825,7 @@
   "source": "Zite/IOM",
   "hh": 101.0,
   "individuals": 606.0,
-  "severity": 30,
+  "severity": 32,
   "band": "Moderate",
   "scores": {
    "CCCM": "R",
@@ -21906,7 +21906,7 @@
   "source": "Zite/IOM",
   "hh": 180.0,
   "individuals": 647.0,
-  "severity": 4,
+  "severity": 6,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -21933,7 +21933,7 @@
   "source": "Zite/IOM",
   "hh": 58.0,
   "individuals": 218.0,
-  "severity": 6,
+  "severity": 8,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -21960,7 +21960,7 @@
   "source": "Zite/IOM",
   "hh": 88.0,
   "individuals": 283.0,
-  "severity": 6,
+  "severity": 8,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -21987,7 +21987,7 @@
   "source": "Zite/IOM",
   "hh": 91.0,
   "individuals": 343.0,
-  "severity": 5,
+  "severity": 7,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22014,7 +22014,7 @@
   "source": "Zite/IOM",
   "hh": 82.0,
   "individuals": 492.0,
-  "severity": 5,
+  "severity": 7,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22041,7 +22041,7 @@
   "source": "Zite/IOM",
   "hh": 61.0,
   "individuals": 203.0,
-  "severity": 9,
+  "severity": 11,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22068,7 +22068,7 @@
   "source": "Zite/IOM",
   "hh": 82.0,
   "individuals": 309.0,
-  "severity": 6,
+  "severity": 8,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22095,7 +22095,7 @@
   "source": "Zite/IOM",
   "hh": 55.0,
   "individuals": 215.0,
-  "severity": 7,
+  "severity": 9,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22122,7 +22122,7 @@
   "source": "Zite/IOM",
   "hh": 50.0,
   "individuals": 189.0,
-  "severity": 6,
+  "severity": 8,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22149,7 +22149,7 @@
   "source": "Zite/IOM",
   "hh": 64.0,
   "individuals": 302.0,
-  "severity": 6,
+  "severity": 8,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22176,7 +22176,7 @@
   "source": "Zite/IOM",
   "hh": 82.0,
   "individuals": 437.0,
-  "severity": 49,
+  "severity": 51,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -22190,7 +22190,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -22203,7 +22203,7 @@
   "source": "Zite/IOM",
   "hh": 43.0,
   "individuals": 219.0,
-  "severity": 41,
+  "severity": 44,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -22217,7 +22217,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -22230,7 +22230,7 @@
   "source": "Zite/IOM",
   "hh": 128.0,
   "individuals": 636.0,
-  "severity": 30,
+  "severity": 34,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -22244,7 +22244,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -22257,7 +22257,7 @@
   "source": "Zite/IOM",
   "hh": 69.0,
   "individuals": 373.0,
-  "severity": 15,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -22271,7 +22271,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -22284,7 +22284,7 @@
   "source": "Zite/IOM",
   "hh": 60.0,
   "individuals": 360.0,
-  "severity": 16,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22311,7 +22311,7 @@
   "source": "Zite/IOM",
   "hh": 91.0,
   "individuals": 546.0,
-  "severity": 14,
+  "severity": 15,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22338,7 +22338,7 @@
   "source": "Zite/IOM",
   "hh": 59.0,
   "individuals": 321.0,
-  "severity": 19,
+  "severity": 21,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22352,7 +22352,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -22365,7 +22365,7 @@
   "source": "Zite/IOM",
   "hh": 50.0,
   "individuals": 300.0,
-  "severity": 16,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22392,7 +22392,7 @@
   "source": "Zite/IOM",
   "hh": 59.0,
   "individuals": 354.0,
-  "severity": 17,
+  "severity": 19,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22419,7 +22419,7 @@
   "source": "Zite/IOM",
   "hh": 95.0,
   "individuals": 525.0,
-  "severity": 16,
+  "severity": 19,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22433,7 +22433,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -22446,7 +22446,7 @@
   "source": "Zite/IOM",
   "hh": 32.0,
   "individuals": 192.0,
-  "severity": 14,
+  "severity": 15,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22473,7 +22473,7 @@
   "source": "Zite/IOM",
   "hh": 62.0,
   "individuals": 335.0,
-  "severity": 14,
+  "severity": 15,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22500,7 +22500,7 @@
   "source": "Zite/IOM",
   "hh": 67.0,
   "individuals": 396.0,
-  "severity": 17,
+  "severity": 19,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22527,7 +22527,7 @@
   "source": "Zite/IOM",
   "hh": 30.0,
   "individuals": 166.0,
-  "severity": 16,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22554,7 +22554,7 @@
   "source": "Zite/IOM",
   "hh": 48.0,
   "individuals": 259.0,
-  "severity": 16,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22581,7 +22581,7 @@
   "source": "Zite/IOM",
   "hh": 28.0,
   "individuals": 145.0,
-  "severity": 16,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22608,7 +22608,7 @@
   "source": "Zite/IOM",
   "hh": 36.0,
   "individuals": 204.0,
-  "severity": 16,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22635,7 +22635,7 @@
   "source": "Zite/IOM",
   "hh": 37.0,
   "individuals": 196.0,
-  "severity": 14,
+  "severity": 16,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22662,7 +22662,7 @@
   "source": "Zite/IOM",
   "hh": 39.0,
   "individuals": 214.0,
-  "severity": 15,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22689,7 +22689,7 @@
   "source": "Zite/IOM",
   "hh": 51.0,
   "individuals": 268.0,
-  "severity": 17,
+  "severity": 19,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -22905,7 +22905,7 @@
   "source": "Zite/IOM",
   "hh": 120.0,
   "individuals": 720.0,
-  "severity": 68,
+  "severity": 71,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -22919,7 +22919,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -22959,7 +22959,7 @@
   "source": "Zite/IOM",
   "hh": 113.0,
   "individuals": 433.0,
-  "severity": 75,
+  "severity": 83,
   "band": "Severe",
   "scores": {
    "CCCM": "G",
@@ -22973,7 +22973,7 @@
    "Health": "K",
    "FSL": "K",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -22986,7 +22986,7 @@
   "source": "Zite/IOM",
   "hh": 160.0,
   "individuals": 880.0,
-  "severity": 20,
+  "severity": 22,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -23013,7 +23013,7 @@
   "source": "Zite/IOM",
   "hh": 132.0,
   "individuals": 488.0,
-  "severity": 25,
+  "severity": 27,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -23040,7 +23040,7 @@
   "source": "Zite/IOM",
   "hh": 67.0,
   "individuals": 243.0,
-  "severity": 68,
+  "severity": 75,
   "band": "Severe",
   "scores": {
    "CCCM": "G",
@@ -23054,7 +23054,7 @@
    "Health": "K",
    "FSL": "K",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -23067,7 +23067,7 @@
   "source": "Zite/IOM",
   "hh": 121.0,
   "individuals": 497.0,
-  "severity": 45,
+  "severity": 52,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -23081,7 +23081,7 @@
    "Health": "K",
    "FSL": "K",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -23202,8 +23202,8 @@
   "source": "Zite/IOM",
   "hh": 53.0,
   "individuals": 182.0,
-  "severity": 23,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -23229,7 +23229,7 @@
   "source": "Zite/IOM",
   "hh": 73.0,
   "individuals": 334.0,
-  "severity": 31,
+  "severity": 33,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -23256,7 +23256,7 @@
   "source": "Zite/IOM",
   "hh": 67.0,
   "individuals": 368.0,
-  "severity": 26,
+  "severity": 29,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -23270,7 +23270,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -23283,7 +23283,7 @@
   "source": "Zite/IOM",
   "hh": 77.0,
   "individuals": 343.0,
-  "severity": 32,
+  "severity": 37,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -23297,7 +23297,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -23310,7 +23310,7 @@
   "source": "Zite/IOM",
   "hh": 48.0,
   "individuals": 288.0,
-  "severity": 30,
+  "severity": 34,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -23324,7 +23324,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -23337,7 +23337,7 @@
   "source": "Zite/IOM",
   "hh": 56.0,
   "individuals": 191.0,
-  "severity": 16,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -23364,7 +23364,7 @@
   "source": "Zite/IOM",
   "hh": 49.0,
   "individuals": 198.0,
-  "severity": 16,
+  "severity": 19,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -23378,7 +23378,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -23391,7 +23391,7 @@
   "source": "Zite/IOM",
   "hh": 88.0,
   "individuals": 375.0,
-  "severity": 9,
+  "severity": 12,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -23405,7 +23405,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -23418,7 +23418,7 @@
   "source": "Zite/IOM",
   "hh": 129.0,
   "individuals": 554.0,
-  "severity": 11,
+  "severity": 14,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -23432,7 +23432,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -23445,7 +23445,7 @@
   "source": "Zite/IOM",
   "hh": 70.0,
   "individuals": 311.0,
-  "severity": 7,
+  "severity": 9,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -23472,7 +23472,7 @@
   "source": "Zite/IOM",
   "hh": 33.0,
   "individuals": 120.0,
-  "severity": 9,
+  "severity": 10,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -23634,7 +23634,7 @@
   "source": "Zite/IOM",
   "hh": 53.0,
   "individuals": 318.0,
-  "severity": 49,
+  "severity": 51,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -23648,7 +23648,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -23985,7 +23985,7 @@
   "source": "Zite/IOM",
   "hh": 90.0,
   "individuals": 540.0,
-  "severity": 32,
+  "severity": 34,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -23999,7 +23999,7 @@
    "Health": "Y",
    "FSL": "R",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -24255,7 +24255,7 @@
   "source": "Zite/IOM",
   "hh": 430.0,
   "individuals": 2580.0,
-  "severity": 68,
+  "severity": 70,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -24269,7 +24269,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -24282,7 +24282,7 @@
   "source": "Zite/IOM",
   "hh": 370.0,
   "individuals": 2220.0,
-  "severity": 58,
+  "severity": 60,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -24336,7 +24336,7 @@
   "source": "Zite/IOM",
   "hh": 6413.0,
   "individuals": 38190.0,
-  "severity": 55,
+  "severity": 56,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -24390,7 +24390,7 @@
   "source": "Zite/IOM",
   "hh": 280.0,
   "individuals": 1680.0,
-  "severity": 65,
+  "severity": 69,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -24404,7 +24404,7 @@
    "Health": "Y",
    "FSL": "R",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -24417,7 +24417,7 @@
   "source": "Zite/IOM",
   "hh": 96.0,
   "individuals": 576.0,
-  "severity": 61,
+  "severity": 65,
   "band": "Severe",
   "scores": {
    "CCCM": "R",
@@ -24431,7 +24431,7 @@
    "Health": "Y",
    "FSL": "R",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "R"
   }
  },
  {
@@ -24660,7 +24660,7 @@
   "source": "Zite/IOM",
   "hh": 60.0,
   "individuals": 360.0,
-  "severity": 22,
+  "severity": 24,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -24687,7 +24687,7 @@
   "source": "Zite/IOM",
   "hh": 52.0,
   "individuals": 186.0,
-  "severity": 55,
+  "severity": 56,
   "band": "Severe",
   "scores": {
    "CCCM": "Y",
@@ -24714,7 +24714,7 @@
   "source": "Zite/IOM",
   "hh": 373.0,
   "individuals": 1548.0,
-  "severity": 18,
+  "severity": 21,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -24728,7 +24728,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -24768,7 +24768,7 @@
   "source": "Zite/IOM",
   "hh": 71.0,
   "individuals": 355.0,
-  "severity": 58,
+  "severity": 59,
   "band": "Severe",
   "scores": {
    "CCCM": "Y",
@@ -24795,7 +24795,7 @@
   "source": "Zite/IOM",
   "hh": 115.0,
   "individuals": 575.0,
-  "severity": 19,
+  "severity": 21,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -24903,7 +24903,7 @@
   "source": "Zite/IOM",
   "hh": 132.0,
   "individuals": 790.0,
-  "severity": 26,
+  "severity": 27,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -24957,8 +24957,8 @@
   "source": "Zite/IOM",
   "hh": 73.0,
   "individuals": 438.0,
-  "severity": 23,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -24984,7 +24984,7 @@
   "source": "Zite/IOM",
   "hh": 136.0,
   "individuals": 564.0,
-  "severity": 21,
+  "severity": 23,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -25011,7 +25011,7 @@
   "source": "Zite/IOM",
   "hh": 154.0,
   "individuals": 599.0,
-  "severity": 16,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -25038,7 +25038,7 @@
   "source": "Zite/IOM",
   "hh": 97.0,
   "individuals": 400.0,
-  "severity": 12,
+  "severity": 14,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -25052,7 +25052,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -25065,7 +25065,7 @@
   "source": "Zite/IOM",
   "hh": 89.0,
   "individuals": 390.0,
-  "severity": 42,
+  "severity": 45,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -25079,7 +25079,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -25092,7 +25092,7 @@
   "source": "Zite/IOM",
   "hh": 40.0,
   "individuals": 240.0,
-  "severity": 47,
+  "severity": 49,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -25119,7 +25119,7 @@
   "source": "Zite/IOM",
   "hh": 55.0,
   "individuals": 330.0,
-  "severity": 45,
+  "severity": 47,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -25146,8 +25146,8 @@
   "source": "Zite/IOM",
   "hh": 137.0,
   "individuals": 592.0,
-  "severity": 54,
-  "band": "High",
+  "severity": 57,
+  "band": "Severe",
   "scores": {
    "CCCM": "G",
    "Protection": "Y",
@@ -25160,7 +25160,7 @@
    "Health": "R",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -25497,7 +25497,7 @@
   "source": "Zite/IOM",
   "hh": 90.0,
   "individuals": 540.0,
-  "severity": 41,
+  "severity": 45,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -25511,7 +25511,7 @@
    "Health": "G",
    "FSL": "R",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -25875,7 +25875,7 @@
   "source": "Zite/IOM",
   "hh": 93.0,
   "individuals": 558.0,
-  "severity": 30,
+  "severity": 33,
   "band": "Moderate",
   "scores": {
    "CCCM": "R",
@@ -25889,7 +25889,7 @@
    "Health": "Y",
    "FSL": "K",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -25902,7 +25902,7 @@
   "source": "Zite/IOM",
   "hh": 33.0,
   "individuals": 126.0,
-  "severity": 52,
+  "severity": 54,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -25929,7 +25929,7 @@
   "source": "Zite/IOM",
   "hh": 115.0,
   "individuals": 575.0,
-  "severity": 51,
+  "severity": 52,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -25956,7 +25956,7 @@
   "source": "Zite/IOM",
   "hh": 52.0,
   "individuals": 270.0,
-  "severity": 55,
+  "severity": 56,
   "band": "Severe",
   "scores": {
    "CCCM": "Y",
@@ -25983,7 +25983,7 @@
   "source": "Zite/IOM",
   "hh": 50.0,
   "individuals": 200.0,
-  "severity": 58,
+  "severity": 60,
   "band": "Severe",
   "scores": {
    "CCCM": "Y",
@@ -26010,8 +26010,8 @@
   "source": "Zite/IOM",
   "hh": 71.0,
   "individuals": 355.0,
-  "severity": 53,
-  "band": "High",
+  "severity": 55,
+  "band": "Severe",
   "scores": {
    "CCCM": "Y",
    "Protection": "R",
@@ -26037,7 +26037,7 @@
   "source": "Zite/IOM",
   "hh": 98.0,
   "individuals": 588.0,
-  "severity": 8,
+  "severity": 9,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -26064,7 +26064,7 @@
   "source": "Zite/IOM",
   "hh": 103.0,
   "individuals": 416.0,
-  "severity": 14,
+  "severity": 15,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -26091,7 +26091,7 @@
   "source": "Zite/IOM",
   "hh": 171.0,
   "individuals": 678.0,
-  "severity": 11,
+  "severity": 12,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -26145,7 +26145,7 @@
   "source": "Zite/IOM",
   "hh": 37.0,
   "individuals": 121.0,
-  "severity": 7,
+  "severity": 8,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -26199,7 +26199,7 @@
   "source": "Zite/IOM",
   "hh": 122.0,
   "individuals": 520.0,
-  "severity": 8,
+  "severity": 9,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -26226,7 +26226,7 @@
   "source": "Zite/IOM",
   "hh": 71.0,
   "individuals": 262.0,
-  "severity": 8,
+  "severity": 9,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -26253,7 +26253,7 @@
   "source": "Zite/IOM",
   "hh": 73.0,
   "individuals": 257.0,
-  "severity": 9,
+  "severity": 10,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -26307,7 +26307,7 @@
   "source": "Zite/IOM",
   "hh": 64.0,
   "individuals": 257.0,
-  "severity": 16,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -26361,7 +26361,7 @@
   "source": "Zite/IOM",
   "hh": 44.0,
   "individuals": 164.0,
-  "severity": 16,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -26388,7 +26388,7 @@
   "source": "Zite/IOM",
   "hh": 85.0,
   "individuals": 331.0,
-  "severity": 9,
+  "severity": 10,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -26415,7 +26415,7 @@
   "source": "Zite/IOM",
   "hh": 51.0,
   "individuals": 174.0,
-  "severity": 17,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -26442,7 +26442,7 @@
   "source": "Zite/IOM",
   "hh": 37.0,
   "individuals": 129.0,
-  "severity": 8,
+  "severity": 9,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -26523,7 +26523,7 @@
   "source": "Zite/IOM",
   "hh": 106.0,
   "individuals": 455.0,
-  "severity": 58,
+  "severity": 62,
   "band": "Severe",
   "scores": {
    "CCCM": "Y",
@@ -26537,7 +26537,7 @@
    "Health": "R",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -26550,7 +26550,7 @@
   "source": "Zite/IOM",
   "hh": 69.0,
   "individuals": 267.0,
-  "severity": 61,
+  "severity": 65,
   "band": "Severe",
   "scores": {
    "CCCM": "G",
@@ -26564,7 +26564,7 @@
    "Health": "K",
    "FSL": "R",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -27360,7 +27360,7 @@
   "source": "Zite/IOM",
   "hh": 95.0,
   "individuals": 570.0,
-  "severity": 28,
+  "severity": 31,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -27374,7 +27374,7 @@
    "Health": "G",
    "FSL": "K",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -27468,7 +27468,7 @@
   "source": "Zite/IOM",
   "hh": 6603.0,
   "individuals": 41844.0,
-  "severity": 32,
+  "severity": 33,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -27522,7 +27522,7 @@
   "source": "Zite/IOM",
   "hh": 83.0,
   "individuals": 408.0,
-  "severity": 47,
+  "severity": 48,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -27657,7 +27657,7 @@
   "source": "Zite/IOM",
   "hh": 112.0,
   "individuals": 672.0,
-  "severity": 42,
+  "severity": 43,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -27792,7 +27792,7 @@
   "source": "Zite/IOM",
   "hh": 55.0,
   "individuals": 320.0,
-  "severity": 44,
+  "severity": 45,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -27819,7 +27819,7 @@
   "source": "Zite/IOM",
   "hh": 70.0,
   "individuals": 350.0,
-  "severity": 51,
+  "severity": 54,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -27833,7 +27833,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -27900,7 +27900,7 @@
   "source": "Zite/IOM",
   "hh": 60.0,
   "individuals": 234.0,
-  "severity": 42,
+  "severity": 44,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -27927,8 +27927,8 @@
   "source": "Zite/IOM",
   "hh": 106.0,
   "individuals": 436.0,
-  "severity": 53,
-  "band": "High",
+  "severity": 57,
+  "band": "Severe",
   "scores": {
    "CCCM": "Y",
    "Protection": "Y",
@@ -27941,7 +27941,7 @@
    "Health": "Y",
    "FSL": "R",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -27954,7 +27954,7 @@
   "source": "Zite/IOM",
   "hh": 113.0,
   "individuals": 415.0,
-  "severity": 23,
+  "severity": 24,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -27981,7 +27981,7 @@
   "source": "Zite/IOM",
   "hh": 90.0,
   "individuals": 344.0,
-  "severity": 8,
+  "severity": 9,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -28008,7 +28008,7 @@
   "source": "Zite/IOM",
   "hh": 85.0,
   "individuals": 338.0,
-  "severity": 8,
+  "severity": 9,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -28710,7 +28710,7 @@
   "source": "Zite/IOM",
   "hh": 176.0,
   "individuals": 739.0,
-  "severity": 14,
+  "severity": 15,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -28764,7 +28764,7 @@
   "source": "Zite/IOM",
   "hh": 143.0,
   "individuals": 858.0,
-  "severity": 10,
+  "severity": 11,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -28791,7 +28791,7 @@
   "source": "Zite/IOM",
   "hh": 107.0,
   "individuals": 395.0,
-  "severity": 26,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -28818,7 +28818,7 @@
   "source": "Zite/IOM",
   "hh": 180.0,
   "individuals": 593.0,
-  "severity": 13,
+  "severity": 15,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -28845,7 +28845,7 @@
   "source": "Zite/IOM",
   "hh": 63.0,
   "individuals": 233.0,
-  "severity": 8,
+  "severity": 9,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -28872,7 +28872,7 @@
   "source": "Zite/IOM",
   "hh": 67.0,
   "individuals": 258.0,
-  "severity": 8,
+  "severity": 9,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -28899,7 +28899,7 @@
   "source": "Zite/IOM",
   "hh": 66.0,
   "individuals": 216.0,
-  "severity": 9,
+  "severity": 10,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -28926,8 +28926,8 @@
   "source": "Zite/IOM",
   "hh": 90.0,
   "individuals": 447.0,
-  "severity": 38,
-  "band": "Moderate",
+  "severity": 40,
+  "band": "High",
   "scores": {
    "CCCM": "R",
    "Protection": "G",
@@ -28940,7 +28940,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -28953,7 +28953,7 @@
   "source": "Zite/IOM",
   "hh": 76.0,
   "individuals": 246.0,
-  "severity": 27,
+  "severity": 30,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -28967,7 +28967,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -28980,7 +28980,7 @@
   "source": "Zite/IOM",
   "hh": 90.0,
   "individuals": 436.0,
-  "severity": 37,
+  "severity": 39,
   "band": "Moderate",
   "scores": {
    "CCCM": "R",
@@ -28994,7 +28994,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -29007,7 +29007,7 @@
   "source": "Zite/IOM",
   "hh": 53.0,
   "individuals": 212.0,
-  "severity": 27,
+  "severity": 29,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -29034,7 +29034,7 @@
   "source": "Zite/IOM",
   "hh": 21.0,
   "individuals": 99.0,
-  "severity": 40,
+  "severity": 42,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -29048,7 +29048,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -29061,7 +29061,7 @@
   "source": "Zite/IOM",
   "hh": 65.0,
   "individuals": 343.0,
-  "severity": 29,
+  "severity": 31,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -29088,7 +29088,7 @@
   "source": "Zite/IOM",
   "hh": 43.0,
   "individuals": 217.0,
-  "severity": 49,
+  "severity": 51,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -29102,7 +29102,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -29115,7 +29115,7 @@
   "source": "Zite/IOM",
   "hh": 16.0,
   "individuals": 88.0,
-  "severity": 41,
+  "severity": 42,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -29142,7 +29142,7 @@
   "source": "Zite/IOM",
   "hh": 63.0,
   "individuals": 324.0,
-  "severity": 31,
+  "severity": 34,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -29156,7 +29156,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -29169,7 +29169,7 @@
   "source": "Zite/IOM",
   "hh": 35.0,
   "individuals": 176.0,
-  "severity": 43,
+  "severity": 45,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -29183,7 +29183,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -29493,7 +29493,7 @@
   "source": "Zite/IOM",
   "hh": 105.0,
   "individuals": 525.0,
-  "severity": 33,
+  "severity": 35,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -29520,7 +29520,7 @@
   "source": "Zite/IOM",
   "hh": 135.0,
   "individuals": 810.0,
-  "severity": 35,
+  "severity": 38,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -29534,7 +29534,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -29736,7 +29736,7 @@
   "source": "Zite/IOM",
   "hh": 111.0,
   "individuals": 666.0,
-  "severity": 42,
+  "severity": 44,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -29763,8 +29763,8 @@
   "source": "Zite/IOM",
   "hh": 75.0,
   "individuals": 426.0,
-  "severity": 38,
-  "band": "Moderate",
+  "severity": 40,
+  "band": "High",
   "scores": {
    "CCCM": "G",
    "Protection": "K",
@@ -29817,7 +29817,7 @@
   "source": "Zite/IOM",
   "hh": 165.0,
   "individuals": 646.0,
-  "severity": 21,
+  "severity": 23,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -29871,7 +29871,7 @@
   "source": "Zite/IOM",
   "hh": 91.0,
   "individuals": 378.0,
-  "severity": 19,
+  "severity": 20,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -29898,7 +29898,7 @@
   "source": "Zite/IOM",
   "hh": 135.0,
   "individuals": 810.0,
-  "severity": 19,
+  "severity": 20,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -29925,7 +29925,7 @@
   "source": "Zite/IOM",
   "hh": 89.0,
   "individuals": 329.0,
-  "severity": 21,
+  "severity": 23,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -30033,7 +30033,7 @@
   "source": "Zite/IOM",
   "hh": 55.0,
   "individuals": 216.0,
-  "severity": 16,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -30060,7 +30060,7 @@
   "source": "Zite/IOM",
   "hh": 80.0,
   "individuals": 234.0,
-  "severity": 22,
+  "severity": 23,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -30087,7 +30087,7 @@
   "source": "Zite/IOM",
   "hh": 149.0,
   "individuals": 557.0,
-  "severity": 16,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -30114,8 +30114,8 @@
   "source": "Zite/IOM",
   "hh": 166.0,
   "individuals": 647.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -30141,7 +30141,7 @@
   "source": "Zite/IOM",
   "hh": 109.0,
   "individuals": 654.0,
-  "severity": 16,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -30168,7 +30168,7 @@
   "source": "Zite/IOM",
   "hh": 59.0,
   "individuals": 243.0,
-  "severity": 16,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -30195,7 +30195,7 @@
   "source": "Zite/IOM",
   "hh": 79.0,
   "individuals": 316.0,
-  "severity": 17,
+  "severity": 19,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -30222,8 +30222,8 @@
   "source": "Zite/IOM",
   "hh": 175.0,
   "individuals": 450.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -30276,7 +30276,7 @@
   "source": "Zite/IOM",
   "hh": 95.0,
   "individuals": 443.0,
-  "severity": 41,
+  "severity": 44,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -30290,7 +30290,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -30303,7 +30303,7 @@
   "source": "Zite/IOM",
   "hh": 94.0,
   "individuals": 564.0,
-  "severity": 45,
+  "severity": 48,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -30317,7 +30317,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -30330,7 +30330,7 @@
   "source": "Zite/IOM",
   "hh": 76.0,
   "individuals": 409.0,
-  "severity": 41,
+  "severity": 44,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -30344,7 +30344,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -30357,7 +30357,7 @@
   "source": "Zite/IOM",
   "hh": 43.0,
   "individuals": 231.0,
-  "severity": 41,
+  "severity": 43,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -30384,7 +30384,7 @@
   "source": "Zite/IOM",
   "hh": 112.0,
   "individuals": 573.0,
-  "severity": 45,
+  "severity": 48,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -30398,7 +30398,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -30411,7 +30411,7 @@
   "source": "Zite/IOM",
   "hh": 35.0,
   "individuals": 210.0,
-  "severity": 46,
+  "severity": 49,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -30425,7 +30425,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -30438,7 +30438,7 @@
   "source": "Zite/IOM",
   "hh": 22.0,
   "individuals": 107.0,
-  "severity": 47,
+  "severity": 50,
   "band": "High",
   "scores": {
    "CCCM": "R",
@@ -30452,7 +30452,7 @@
    "Health": "R",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -30465,7 +30465,7 @@
   "source": "Zite/IOM",
   "hh": 65.0,
   "individuals": 390.0,
-  "severity": 29,
+  "severity": 32,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -30479,7 +30479,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -30492,7 +30492,7 @@
   "source": "Zite/IOM",
   "hh": 105.0,
   "individuals": 624.0,
-  "severity": 29,
+  "severity": 32,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -30506,7 +30506,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -30519,8 +30519,8 @@
   "source": "Zite/IOM",
   "hh": 110.0,
   "individuals": 650.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 26,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "Y",
@@ -30533,7 +30533,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -30546,7 +30546,7 @@
   "source": "Zite/IOM",
   "hh": 98.0,
   "individuals": 588.0,
-  "severity": 27,
+  "severity": 29,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -30560,7 +30560,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -30573,7 +30573,7 @@
   "source": "Zite/IOM",
   "hh": 100.0,
   "individuals": 605.0,
-  "severity": 22,
+  "severity": 24,
   "band": "Low",
   "scores": {
    "CCCM": "Y",
@@ -30587,7 +30587,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -30600,7 +30600,7 @@
   "source": "Zite/IOM",
   "hh": 80.0,
   "individuals": 448.0,
-  "severity": 45,
+  "severity": 46,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -30708,7 +30708,7 @@
   "source": "Zite/IOM",
   "hh": 105.0,
   "individuals": 630.0,
-  "severity": 30,
+  "severity": 31,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -30735,7 +30735,7 @@
   "source": "Zite/IOM",
   "hh": 64.0,
   "individuals": 384.0,
-  "severity": 43,
+  "severity": 44,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -30762,7 +30762,7 @@
   "source": "Zite/IOM",
   "hh": 94.0,
   "individuals": 564.0,
-  "severity": 44,
+  "severity": 47,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -30776,7 +30776,7 @@
    "Health": "G",
    "FSL": "K",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -30789,7 +30789,7 @@
   "source": "Zite/IOM",
   "hh": 157.0,
   "individuals": 942.0,
-  "severity": 40,
+  "severity": 42,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -30843,7 +30843,7 @@
   "source": "Zite/IOM",
   "hh": 121.0,
   "individuals": 386.0,
-  "severity": 16,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -30897,7 +30897,7 @@
   "source": "Zite/IOM",
   "hh": 92.0,
   "individuals": 368.0,
-  "severity": 17,
+  "severity": 19,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -30924,7 +30924,7 @@
   "source": "Zite/IOM",
   "hh": 93.0,
   "individuals": 385.0,
-  "severity": 20,
+  "severity": 22,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -30951,7 +30951,7 @@
   "source": "Zite/IOM",
   "hh": 34.0,
   "individuals": 127.0,
-  "severity": 16,
+  "severity": 17,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -30978,7 +30978,7 @@
   "source": "Zite/IOM",
   "hh": 91.0,
   "individuals": 347.0,
-  "severity": 17,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -31005,7 +31005,7 @@
   "source": "Zite/IOM",
   "hh": 66.0,
   "individuals": 261.0,
-  "severity": 17,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -31032,7 +31032,7 @@
   "source": "Zite/IOM",
   "hh": 55.0,
   "individuals": 206.0,
-  "severity": 19,
+  "severity": 21,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -31046,7 +31046,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -31086,7 +31086,7 @@
   "source": "Zite/IOM",
   "hh": 56.0,
   "individuals": 334.0,
-  "severity": 22,
+  "severity": 23,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -31140,7 +31140,7 @@
   "source": "Zite/IOM",
   "hh": 66.0,
   "individuals": 387.0,
-  "severity": 26,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -31154,7 +31154,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -31167,7 +31167,7 @@
   "source": "Zite/IOM",
   "hh": 80.0,
   "individuals": 470.0,
-  "severity": 30,
+  "severity": 33,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -31181,7 +31181,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -31194,7 +31194,7 @@
   "source": "Zite/IOM",
   "hh": 119.0,
   "individuals": 714.0,
-  "severity": 27,
+  "severity": 30,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -31208,7 +31208,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -31221,7 +31221,7 @@
   "source": "Zite/IOM",
   "hh": 174.0,
   "individuals": 1049.0,
-  "severity": 26,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -31235,7 +31235,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -31248,7 +31248,7 @@
   "source": "Zite/IOM",
   "hh": 56.0,
   "individuals": 336.0,
-  "severity": 29,
+  "severity": 32,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -31262,7 +31262,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -31275,7 +31275,7 @@
   "source": "Zite/IOM",
   "hh": 106.0,
   "individuals": 634.0,
-  "severity": 29,
+  "severity": 31,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -31289,7 +31289,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -31302,8 +31302,8 @@
   "source": "Zite/IOM",
   "hh": 169.0,
   "individuals": 1001.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 26,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "Y",
@@ -31316,7 +31316,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -31329,7 +31329,7 @@
   "source": "Zite/IOM",
   "hh": 81.0,
   "individuals": 486.0,
-  "severity": 29,
+  "severity": 32,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -31343,7 +31343,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -31356,7 +31356,7 @@
   "source": "Zite/IOM",
   "hh": 243.0,
   "individuals": 967.0,
-  "severity": 17,
+  "severity": 19,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -31383,7 +31383,7 @@
   "source": "Zite/IOM",
   "hh": 156.0,
   "individuals": 644.0,
-  "severity": 28,
+  "severity": 29,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -31437,7 +31437,7 @@
   "source": "Zite/IOM",
   "hh": 114.0,
   "individuals": 468.0,
-  "severity": 27,
+  "severity": 29,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -31464,8 +31464,8 @@
   "source": "Zite/IOM",
   "hh": 77.0,
   "individuals": 275.0,
-  "severity": 23,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -31478,7 +31478,7 @@
    "Health": "R",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -31491,7 +31491,7 @@
   "source": "Zite/IOM",
   "hh": 44.0,
   "individuals": 136.0,
-  "severity": 20,
+  "severity": 22,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -31518,7 +31518,7 @@
   "source": "Zite/IOM",
   "hh": 116.0,
   "individuals": 411.0,
-  "severity": 26,
+  "severity": 27,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -31545,7 +31545,7 @@
   "source": "Zite/IOM",
   "hh": 50.0,
   "individuals": 300.0,
-  "severity": 31,
+  "severity": 33,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -31572,8 +31572,8 @@
   "source": "Zite/IOM",
   "hh": 139.0,
   "individuals": 518.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -31599,7 +31599,7 @@
   "source": "Zite/IOM",
   "hh": 78.0,
   "individuals": 271.0,
-  "severity": 26,
+  "severity": 27,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -31626,7 +31626,7 @@
   "source": "Zite/IOM",
   "hh": 78.0,
   "individuals": 259.0,
-  "severity": 50,
+  "severity": 53,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -31640,7 +31640,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -31653,7 +31653,7 @@
   "source": "Zite/IOM",
   "hh": 80.0,
   "individuals": 480.0,
-  "severity": 49,
+  "severity": 51,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -31667,7 +31667,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -31680,7 +31680,7 @@
   "source": "Zite/IOM",
   "hh": 25.0,
   "individuals": 150.0,
-  "severity": 46,
+  "severity": 49,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -31694,7 +31694,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -31761,7 +31761,7 @@
   "source": "Zite/IOM",
   "hh": 59.0,
   "individuals": 342.0,
-  "severity": 22,
+  "severity": 24,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -31788,7 +31788,7 @@
   "source": "Zite/IOM",
   "hh": 52.0,
   "individuals": 312.0,
-  "severity": 21,
+  "severity": 22,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -31815,7 +31815,7 @@
   "source": "Zite/IOM",
   "hh": 55.0,
   "individuals": 330.0,
-  "severity": 23,
+  "severity": 24,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -31842,7 +31842,7 @@
   "source": "Zite/IOM",
   "hh": 92.0,
   "individuals": 552.0,
-  "severity": 19,
+  "severity": 20,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -31869,7 +31869,7 @@
   "source": "Zite/IOM",
   "hh": 165.0,
   "individuals": 990.0,
-  "severity": 21,
+  "severity": 22,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -31923,7 +31923,7 @@
   "source": "Zite/IOM",
   "hh": 52.0,
   "individuals": 309.0,
-  "severity": 29,
+  "severity": 32,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -31937,7 +31937,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -31950,7 +31950,7 @@
   "source": "Zite/IOM",
   "hh": 58.0,
   "individuals": 348.0,
-  "severity": 26,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -31964,7 +31964,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -31977,7 +31977,7 @@
   "source": "Zite/IOM",
   "hh": 107.0,
   "individuals": 642.0,
-  "severity": 27,
+  "severity": 29,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32004,7 +32004,7 @@
   "source": "Zite/IOM",
   "hh": 125.0,
   "individuals": 740.0,
-  "severity": 19,
+  "severity": 20,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -32031,7 +32031,7 @@
   "source": "Zite/IOM",
   "hh": 63.0,
   "individuals": 385.0,
-  "severity": 26,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32045,7 +32045,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32058,7 +32058,7 @@
   "source": "Zite/IOM",
   "hh": 70.0,
   "individuals": 420.0,
-  "severity": 29,
+  "severity": 31,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32072,7 +32072,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32085,7 +32085,7 @@
   "source": "Zite/IOM",
   "hh": 96.0,
   "individuals": 576.0,
-  "severity": 26,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -32112,7 +32112,7 @@
   "source": "Zite/IOM",
   "hh": 110.0,
   "individuals": 648.0,
-  "severity": 25,
+  "severity": 27,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32126,7 +32126,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32139,7 +32139,7 @@
   "source": "Zite/IOM",
   "hh": 58.0,
   "individuals": 350.0,
-  "severity": 32,
+  "severity": 34,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32153,7 +32153,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32166,7 +32166,7 @@
   "source": "Zite/IOM",
   "hh": 171.0,
   "individuals": 1026.0,
-  "severity": 28,
+  "severity": 31,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32180,7 +32180,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32193,7 +32193,7 @@
   "source": "Zite/IOM",
   "hh": 170.0,
   "individuals": 1023.0,
-  "severity": 26,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32207,7 +32207,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32220,7 +32220,7 @@
   "source": "Zite/IOM",
   "hh": 70.0,
   "individuals": 420.0,
-  "severity": 26,
+  "severity": 29,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32234,7 +32234,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32247,7 +32247,7 @@
   "source": "Zite/IOM",
   "hh": 56.0,
   "individuals": 392.0,
-  "severity": 29,
+  "severity": 31,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32261,7 +32261,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32274,7 +32274,7 @@
   "source": "Zite/IOM",
   "hh": 43.0,
   "individuals": 155.0,
-  "severity": 51,
+  "severity": 53,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -32288,7 +32288,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32301,8 +32301,8 @@
   "source": "Zite/IOM",
   "hh": 132.0,
   "individuals": 576.0,
-  "severity": 38,
-  "band": "Moderate",
+  "severity": 40,
+  "band": "High",
   "scores": {
    "CCCM": "Y",
    "Protection": "Y",
@@ -32328,8 +32328,8 @@
   "source": "Zite/IOM",
   "hh": 80.0,
   "individuals": 295.0,
-  "severity": 39,
-  "band": "Moderate",
+  "severity": 42,
+  "band": "High",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -32342,7 +32342,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32355,7 +32355,7 @@
   "source": "Zite/IOM",
   "hh": 88.0,
   "individuals": 387.0,
-  "severity": 44,
+  "severity": 46,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -32382,7 +32382,7 @@
   "source": "Zite/IOM",
   "hh": 57.0,
   "individuals": 256.0,
-  "severity": 46,
+  "severity": 49,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -32396,7 +32396,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32409,7 +32409,7 @@
   "source": "Zite/IOM",
   "hh": 33.0,
   "individuals": 120.0,
-  "severity": 48,
+  "severity": 49,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -32436,7 +32436,7 @@
   "source": "Zite/IOM",
   "hh": 139.0,
   "individuals": 623.0,
-  "severity": 40,
+  "severity": 42,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -32463,7 +32463,7 @@
   "source": "Zite/IOM",
   "hh": 129.0,
   "individuals": 538.0,
-  "severity": 44,
+  "severity": 45,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -32490,7 +32490,7 @@
   "source": "Zite/IOM",
   "hh": 56.0,
   "individuals": 340.0,
-  "severity": 30,
+  "severity": 33,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32504,7 +32504,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32517,7 +32517,7 @@
   "source": "Zite/IOM",
   "hh": 55.0,
   "individuals": 330.0,
-  "severity": 26,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32531,7 +32531,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32544,7 +32544,7 @@
   "source": "Zite/IOM",
   "hh": 70.0,
   "individuals": 432.0,
-  "severity": 31,
+  "severity": 33,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32558,7 +32558,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32571,7 +32571,7 @@
   "source": "Zite/IOM",
   "hh": 52.0,
   "individuals": 312.0,
-  "severity": 29,
+  "severity": 32,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32585,7 +32585,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32598,7 +32598,7 @@
   "source": "Zite/IOM",
   "hh": 56.0,
   "individuals": 392.0,
-  "severity": 33,
+  "severity": 36,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32612,7 +32612,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32652,7 +32652,7 @@
   "source": "Zite/IOM",
   "hh": 75.0,
   "individuals": 450.0,
-  "severity": 32,
+  "severity": 34,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32666,7 +32666,7 @@
    "Health": "Y",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32706,7 +32706,7 @@
   "source": "Zite/IOM",
   "hh": 90.0,
   "individuals": 540.0,
-  "severity": 26,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32720,7 +32720,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32868,7 +32868,7 @@
   "source": "Zite/IOM",
   "hh": 80.0,
   "individuals": 480.0,
-  "severity": 26,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32882,7 +32882,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32895,7 +32895,7 @@
   "source": "Zite/IOM",
   "hh": 68.0,
   "individuals": 408.0,
-  "severity": 25,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32909,7 +32909,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32949,7 +32949,7 @@
   "source": "Zite/IOM",
   "hh": 90.0,
   "individuals": 540.0,
-  "severity": 35,
+  "severity": 39,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32963,7 +32963,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -32976,7 +32976,7 @@
   "source": "Zite/IOM",
   "hh": 87.0,
   "individuals": 609.0,
-  "severity": 31,
+  "severity": 33,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -32990,7 +32990,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -33003,8 +33003,8 @@
   "source": "Zite/IOM",
   "hh": 85.0,
   "individuals": 510.0,
-  "severity": 37,
-  "band": "Moderate",
+  "severity": 40,
+  "band": "High",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -33017,7 +33017,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -33030,7 +33030,7 @@
   "source": "Zite/IOM",
   "hh": 87.0,
   "individuals": 522.0,
-  "severity": 35,
+  "severity": 37,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -33044,7 +33044,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -33057,8 +33057,8 @@
   "source": "Zite/IOM",
   "hh": 75.0,
   "individuals": 450.0,
-  "severity": 36,
-  "band": "Moderate",
+  "severity": 40,
+  "band": "High",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -33071,7 +33071,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -33084,8 +33084,8 @@
   "source": "Zite/IOM",
   "hh": 51.0,
   "individuals": 306.0,
-  "severity": 36,
-  "band": "Moderate",
+  "severity": 40,
+  "band": "High",
   "scores": {
    "CCCM": "Y",
    "Protection": "Y",
@@ -33098,7 +33098,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "Y",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -33111,7 +33111,7 @@
   "source": "Zite/IOM",
   "hh": 12.0,
   "individuals": 42.0,
-  "severity": 41,
+  "severity": 42,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -33138,7 +33138,7 @@
   "source": "Zite/IOM",
   "hh": 134.0,
   "individuals": 557.0,
-  "severity": 35,
+  "severity": 37,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -33165,7 +33165,7 @@
   "source": "Zite/IOM",
   "hh": 42.0,
   "individuals": 179.0,
-  "severity": 43,
+  "severity": 44,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -33192,7 +33192,7 @@
   "source": "Zite/IOM",
   "hh": 55.0,
   "individuals": 247.0,
-  "severity": 44,
+  "severity": 45,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -33219,7 +33219,7 @@
   "source": "Zite/IOM",
   "hh": 73.0,
   "individuals": 300.0,
-  "severity": 46,
+  "severity": 47,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -33246,7 +33246,7 @@
   "source": "Zite/IOM",
   "hh": 87.0,
   "individuals": 328.0,
-  "severity": 50,
+  "severity": 51,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -33273,7 +33273,7 @@
   "source": "Zite/IOM",
   "hh": 40.0,
   "individuals": 240.0,
-  "severity": 43,
+  "severity": 45,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -33300,7 +33300,7 @@
   "source": "Zite/IOM",
   "hh": 35.0,
   "individuals": 210.0,
-  "severity": 50,
+  "severity": 52,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -33327,7 +33327,7 @@
   "source": "Zite/IOM",
   "hh": 30.0,
   "individuals": 180.0,
-  "severity": 47,
+  "severity": 49,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -33381,7 +33381,7 @@
   "source": "Zite/IOM",
   "hh": 105.0,
   "individuals": 630.0,
-  "severity": 26,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -33395,7 +33395,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -33435,7 +33435,7 @@
   "source": "Zite/IOM",
   "hh": 90.0,
   "individuals": 540.0,
-  "severity": 25,
+  "severity": 28,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -33449,7 +33449,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -33462,7 +33462,7 @@
   "source": "Zite/IOM",
   "hh": 65.0,
   "individuals": 390.0,
-  "severity": 32,
+  "severity": 34,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -33476,7 +33476,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -33597,7 +33597,7 @@
   "source": "Zite/IOM",
   "hh": 50.0,
   "individuals": 300.0,
-  "severity": 28,
+  "severity": 31,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -33611,7 +33611,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -33624,7 +33624,7 @@
   "source": "Zite/IOM",
   "hh": 43.0,
   "individuals": 186.0,
-  "severity": 45,
+  "severity": 46,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -33651,8 +33651,8 @@
   "source": "Zite/IOM",
   "hh": 82.0,
   "individuals": 369.0,
-  "severity": 39,
-  "band": "Moderate",
+  "severity": 41,
+  "band": "High",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -33678,7 +33678,7 @@
   "source": "Zite/IOM",
   "hh": 74.0,
   "individuals": 269.0,
-  "severity": 40,
+  "severity": 41,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -33705,8 +33705,8 @@
   "source": "Zite/IOM",
   "hh": 19.0,
   "individuals": 80.0,
-  "severity": 39,
-  "band": "Moderate",
+  "severity": 41,
+  "band": "High",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -33732,7 +33732,7 @@
   "source": "Zite/IOM",
   "hh": 60.0,
   "individuals": 242.0,
-  "severity": 40,
+  "severity": 41,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -33759,7 +33759,7 @@
   "source": "Zite/IOM",
   "hh": 64.0,
   "individuals": 239.0,
-  "severity": 43,
+  "severity": 45,
   "band": "High",
   "scores": {
    "CCCM": "G",
@@ -33786,7 +33786,7 @@
   "source": "Zite/IOM",
   "hh": 47.0,
   "individuals": 187.0,
-  "severity": 42,
+  "severity": 43,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -33813,7 +33813,7 @@
   "source": "Zite/IOM",
   "hh": 118.0,
   "individuals": 523.0,
-  "severity": 43,
+  "severity": 44,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -33840,7 +33840,7 @@
   "source": "Zite/IOM",
   "hh": 17.0,
   "individuals": 44.0,
-  "severity": 41,
+  "severity": 43,
   "band": "High",
   "scores": {
    "CCCM": "Y",
@@ -33854,7 +33854,7 @@
    "Health": "Y",
    "FSL": "G",
    "Nutrition": "R",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -33867,7 +33867,7 @@
   "source": "Zite/IOM",
   "hh": 119.0,
   "individuals": 712.0,
-  "severity": 22,
+  "severity": 23,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -33894,7 +33894,7 @@
   "source": "Zite/IOM",
   "hh": 98.0,
   "individuals": 568.0,
-  "severity": 19,
+  "severity": 20,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -33948,7 +33948,7 @@
   "source": "Zite/IOM",
   "hh": 108.0,
   "individuals": 638.0,
-  "severity": 21,
+  "severity": 22,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -33975,7 +33975,7 @@
   "source": "Zite/IOM",
   "hh": 65.0,
   "individuals": 390.0,
-  "severity": 13,
+  "severity": 14,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -34056,7 +34056,7 @@
   "source": "Zite/IOM",
   "hh": 81.0,
   "individuals": 486.0,
-  "severity": 23,
+  "severity": 24,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -34083,7 +34083,7 @@
   "source": "Zite/IOM",
   "hh": 60.0,
   "individuals": 360.0,
-  "severity": 21,
+  "severity": 22,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -34110,7 +34110,7 @@
   "source": "Zite/IOM",
   "hh": 115.0,
   "individuals": 687.0,
-  "severity": 22,
+  "severity": 23,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -34164,7 +34164,7 @@
   "source": "Zite/IOM",
   "hh": 66.0,
   "individuals": 396.0,
-  "severity": 22,
+  "severity": 23,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -34218,7 +34218,7 @@
   "source": "Zite/IOM",
   "hh": 75.0,
   "individuals": 438.0,
-  "severity": 15,
+  "severity": 16,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -34245,7 +34245,7 @@
   "source": "Zite/IOM",
   "hh": 65.0,
   "individuals": 390.0,
-  "severity": 22,
+  "severity": 23,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -34272,7 +34272,7 @@
   "source": "Zite/IOM",
   "hh": 90.0,
   "individuals": 537.0,
-  "severity": 21,
+  "severity": 22,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -34353,7 +34353,7 @@
   "source": "Zite/IOM",
   "hh": 95.0,
   "individuals": 552.0,
-  "severity": 17,
+  "severity": 18,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -34380,7 +34380,7 @@
   "source": "Zite/IOM",
   "hh": 88.0,
   "individuals": 528.0,
-  "severity": 18,
+  "severity": 20,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -34407,7 +34407,7 @@
   "source": "Zite/IOM",
   "hh": 52.0,
   "individuals": 312.0,
-  "severity": 25,
+  "severity": 26,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -34434,8 +34434,8 @@
   "source": "Zite/IOM",
   "hh": 52.0,
   "individuals": 312.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -34461,7 +34461,7 @@
   "source": "Zite/IOM",
   "hh": 75.0,
   "individuals": 450.0,
-  "severity": 25,
+  "severity": 26,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -34488,7 +34488,7 @@
   "source": "Zite/IOM",
   "hh": 80.0,
   "individuals": 480.0,
-  "severity": 27,
+  "severity": 29,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -34502,7 +34502,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -34650,7 +34650,7 @@
   "source": "Zite/IOM",
   "hh": 63.0,
   "individuals": 378.0,
-  "severity": 36,
+  "severity": 37,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -34677,7 +34677,7 @@
   "source": "Zite/IOM",
   "hh": 115.0,
   "individuals": 690.0,
-  "severity": 25,
+  "severity": 27,
   "band": "Moderate",
   "scores": {
    "CCCM": "Y",
@@ -34691,7 +34691,7 @@
    "Health": "G",
    "FSL": "G",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -34704,7 +34704,7 @@
   "source": "Zite/IOM",
   "hh": 64.0,
   "individuals": 379.0,
-  "severity": 23,
+  "severity": 24,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -34731,8 +34731,8 @@
   "source": "Zite/IOM",
   "hh": 67.0,
   "individuals": 401.0,
-  "severity": 23,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "Y",
    "Protection": "G",
@@ -34758,7 +34758,7 @@
   "source": "Zite/IOM",
   "hh": 68.0,
   "individuals": 408.0,
-  "severity": 22,
+  "severity": 23,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -34785,7 +34785,7 @@
   "source": "Zite/IOM",
   "hh": 63.0,
   "individuals": 378.0,
-  "severity": 20,
+  "severity": 22,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -34799,7 +34799,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {
@@ -34812,8 +34812,8 @@
   "source": "Zite/IOM",
   "hh": 132.0,
   "individuals": 772.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -34839,7 +34839,7 @@
   "source": "Zite/IOM",
   "hh": 65.0,
   "individuals": 390.0,
-  "severity": 20,
+  "severity": 22,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -34866,7 +34866,7 @@
   "source": "Zite/IOM",
   "hh": 100.0,
   "individuals": 600.0,
-  "severity": 21,
+  "severity": 23,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -34893,7 +34893,7 @@
   "source": "Zite/IOM",
   "hh": 80.0,
   "individuals": 480.0,
-  "severity": 21,
+  "severity": 22,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -34947,8 +34947,8 @@
   "source": "Zite/IOM",
   "hh": 96.0,
   "individuals": 576.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -34974,7 +34974,7 @@
   "source": "Zite/IOM",
   "hh": 65.0,
   "individuals": 390.0,
-  "severity": 23,
+  "severity": 24,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -35001,7 +35001,7 @@
   "source": "Zite/IOM",
   "hh": 74.0,
   "individuals": 442.0,
-  "severity": 25,
+  "severity": 27,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -35028,7 +35028,7 @@
   "source": "Zite/IOM",
   "hh": 75.0,
   "individuals": 446.0,
-  "severity": 21,
+  "severity": 22,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -35082,7 +35082,7 @@
   "source": "Zite/IOM",
   "hh": 64.0,
   "individuals": 390.0,
-  "severity": 20,
+  "severity": 21,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -35109,8 +35109,8 @@
   "source": "Zite/IOM",
   "hh": 100.0,
   "individuals": 600.0,
-  "severity": 24,
-  "band": "Low",
+  "severity": 25,
+  "band": "Moderate",
   "scores": {
    "CCCM": "G",
    "Protection": "G",
@@ -35136,7 +35136,7 @@
   "source": "Zite/IOM",
   "hh": 60.0,
   "individuals": 360.0,
-  "severity": 19,
+  "severity": 20,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -35163,7 +35163,7 @@
   "source": "Zite/IOM",
   "hh": 60.0,
   "individuals": 369.0,
-  "severity": 21,
+  "severity": 23,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -35190,7 +35190,7 @@
   "source": "Zite/IOM",
   "hh": 96.0,
   "individuals": 566.0,
-  "severity": 20,
+  "severity": 21,
   "band": "Low",
   "scores": {
    "CCCM": "G",
@@ -35244,7 +35244,7 @@
   "source": "Zite/IOM",
   "hh": 70.0,
   "individuals": 420.0,
-  "severity": 27,
+  "severity": 29,
   "band": "Moderate",
   "scores": {
    "CCCM": "G",
@@ -35258,7 +35258,7 @@
    "Health": "G",
    "FSL": "Y",
    "Nutrition": "G",
-   "Education": "G"
+   "Education": "Y"
   }
  },
  {

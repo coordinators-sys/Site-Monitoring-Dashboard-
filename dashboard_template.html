@@ -62,6 +62,10 @@ main{padding:26px 0 60px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
 .card.p{padding:18px 20px}
 .grid{display:grid;gap:16px}
+/* Grid items default to min-width:auto, so a card containing a wide chart row refuses to
+   shrink below its min-content and pushes the whole page into horizontal scroll on a
+   phone — even though the cols2/cols3 breakpoints below already collapsed to one column. */
+.grid>*{min-width:0}
 
 /* KPI */
 .kpis{grid-template-columns:repeat(7,1fr)}
@@ -85,7 +89,11 @@ main{padding:26px 0 60px}
 .cols2{grid-template-columns:1fr 1fr}
 .cols3{grid-template-columns:1fr 1fr 1fr}
 @media(max-width:960px){.kpis{grid-template-columns:repeat(3,1fr)}.cols2,.cols3{grid-template-columns:1fr}}
-@media(max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}
+  /* label/value gutters are set inline on these rows for the desktop layout */
+  .hbar-row{grid-template-columns:88px 1fr 1fr 46px!important;gap:6px!important}
+  .dv-row,.dv-head{grid-template-columns:78px 1fr 1fr!important}
+}
 
 /* ---------- Diverging bars (gap vs coverage) ---------- */
 .dv-row{display:grid;grid-template-columns:196px 1fr 1fr;align-items:center;gap:0;padding:4px 0;font-size:12.5px;min-height:26px}
@@ -135,11 +143,23 @@ main{padding:26px 0 60px}
 .method-b li{margin:3px 0}
 /* print: one clean page per active view */
 @media print{
-  nav.tabs,.filters,.map-layer,#mapHint,.fl-meta,button,.draft-banner{display:none!important}
-  header.top{background:var(--teal-d)!important;-webkit-print-color-adjust:exact}
+  nav.tabs,.filters,.map-layer,#mapHint,.fl-meta,button,.draft-banner,#toast{display:none!important}
+  /* Every chart here encodes its value in a CSS background: sector dots, severity
+     badges, stacked severity bands, the pyramid, the gap/coverage bars. Browsers drop
+     backgrounds when printing unless told otherwise, and .dot.NA is drawn with a BORDER
+     rather than a background — so without this rule a printed Site Explorer showed the
+     not-assessed markers and nothing else, making a Critical site look identical to an
+     empty cell. Applied document-wide, not just to the header. */
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  header.top{background:var(--teal-d)!important}
   .view{display:none!important}.view.active{display:block!important}
   .card{box-shadow:none!important;border:1px solid #ccc!important;break-inside:avoid}
   body{background:#fff}
+  /* .tbl-scroll has nowhere to scroll on paper and nowrap blocks reflow, so the right-
+     hand sector columns and the severity badge fell off the page. */
+  .tbl-scroll{overflow-x:visible!important}
+  table.sites{font-size:9px!important}
+  table.sites td,table.sites th{white-space:normal!important;padding:3px 2px!important}
 }
 /* map */
 .map-layer.active{background:var(--teal);color:#fff;border-color:var(--teal-d)}
@@ -413,7 +433,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
     </div>
     <div class="draft-banner"><b>Draft data.</b> Site-level rows come from the live rebuild
       (<span id="draftN">—</span> sites), pending IM validation. The officially published Q2
-      figure is <b>1,275 sites</b> — do not quote site-level values externally. See the
+      figure is <b><span id="pubN">—</span> sites</b> — do not quote site-level values externally. See the
       Data Quality tab for the full reconciliation.</div>
 
     <div class="filters">
@@ -433,7 +453,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
         <div style="flex:1"></div>
         <button class="btn sm" id="clearFilters">Clear filters</button>
         <button class="btn sm" id="exportCsv">⬇ Export CSV</button>
-        <button class="btn sm org" id="toPrompt">✨ Build prompt from this view</button>
       </div>
     </div>
 
@@ -469,7 +488,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
   <!-- ============ SECTOR DEEP DIVE ============ -->
   <section class="view" id="view-sectors">
     <div class="sec-head"><h2>Sector Deep-Dive</h2>
-      <p>Indicator-level scoring for each sector across the 1,275 assessed sites/catchments. Green = standards met, Yellow = partially met, Red = gap / not conducted. Rows may not sum to 100% where an indicator was not applicable.</p>
+      <p>Indicator-level scoring for each sector across the <span id="sdN">—</span> assessed sites in the draft rebuild. Green = standards met, Yellow = partially met, Red = gap / not conducted. Rows may not sum to 100% where an indicator was not applicable.</p>
     </div>
     <div class="sd-tabs" id="sdTabs"></div>
     <div class="grid cols2">

@@ -54,11 +54,36 @@ nat = round(sum(sev)/len(sev), 1)
 chk(abs(nat - data["kpi"]["severity"]) < 0.6,
     f"national severity recomputes ({nat} vs KPI {data['kpi']['severity']})")
 
+# Every sector must reach its declared indicator count at *some* site. Sectors whose
+# items are relevant-gated (Education's 9 learning-centre questions) score fewer at
+# gated-out sites, but the high-water mark across 1,300+ sites must still hit the
+# declared total. This is the check that was missing when a bad gate key silently
+# scored Education on 2 of 11 indicators and every other check still passed.
+cov, meta = data.get("sectorCoverage") or {}, data["sectorMeta"]
+if not cov:
+    chk(False, "sectorCoverage absent from payload — rebuild with the current builder")
+else:
+    thin = {c: (cov.get(c, 0), meta[c][2]) for c in meta if cov.get(c, 0) != meta[c][2]}
+    chk(not thin, "every sector scores its declared indicator count at some site"
+                  + (f" (scored/declared: {thin})" if thin else ""))
+
+# The catchment KPI must equal the normalised aggregate the Catchment Analysis table
+# renders — not a raw count of unnormalised CA strings.
+chk(data["kpi"]["catchments"] == len(data.get("catchAgg", [])),
+    f"kpi.catchments ({data['kpi']['catchments']}) == catchAgg rows ({len(data.get('catchAgg', []))})")
+
+# Education dot shape, for the structural-artifacts note in the report below. Computed,
+# not asserted prose — the previous wording described a build in which the 9 LC items
+# were never scored, so the dot really was bimodal.
+_edu = Counter(s["scores"]["Education"] for s in sites)
+_edu_k = _edu.get("K", 0)
+_edu_dist = " ".join(f"{st}={_edu.get(st, 0)}" for st in ("G", "Y", "R"))
+
 dc = Counter(s["district"] for s in sites)
-for d in data.get("districtSev", []):
-    if d["n"] != dc.get(d["district"], 0):
-        chk(False, f"district {d['district']}: districtSev n={d['n']} vs sites.json {dc.get(d['district'],0)}")
-chk(True, f"district counts reconcile across {len(dc)} districts")
+_dbad = [f"{d['district']}: districtSev n={d['n']} vs sites.json {dc.get(d['district'], 0)}"
+         for d in data.get("districtSev", []) if d["n"] != dc.get(d["district"], 0)]
+chk(not _dbad, f"district counts reconcile across {len(dc)} districts"
+               + (f" -> {_dbad}" if _dbad else ""))
 
 # --- spot-check 3 sites end to end -----------------------------------------
 random.seed(20260719)
@@ -152,11 +177,13 @@ dots are not misread:
    so the only reachable red-shares are 0%, 50%, 100% -> Green, Yellow, or dark-red
    critical. The 26-50% (Yellow) and 51-90% (Red) buckets cannot both be occupied, and
    Red is unreachable. CP shows R=0 for this reason alone.
-2. **Education is bimodal by construction.** At a site with no learning centre,
+2. **Education carries a hard critical floor.** At a site with no learning centre,
    `access_education`='no' is the *only* assessed Education indicator (the 9 LC items are
    correctly not-applicable, per the methodology). One indicator, red, = 100% -> dark-red
-   critical. So "no school on site" renders as critical. That is arguably the right
-   signal, but it means the Education dot splits sharply rather than distributing.
+   critical. So "no school on site" renders as critical — arguably the right signal, but
+   it is a floor effect, not a gradient. Current split: {_edu_k} of {len(sites)} sites are
+   critical on that single indicator; the remaining {len(sites)-_edu_k} are scored across
+   all 11 and distribute normally ({_edu_dist}).
 3. **NFI is mostly not-assessed.** Its 2 indicators are gated on an NFI distribution
    having occurred; where none has, both are blank. Those sites are carried as
    *not assessed*, never as zero or Red.

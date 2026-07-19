@@ -1,5 +1,5 @@
 # CCCM Somalia — Site Monitoring Q2 2026
-Run 2026-07-19 18:49. Regenerated from live sources.
+Run 2026-07-19 20:47. Regenerated from live sources.
 
 ## Sources & scope
 | | Kobo (all partners except IOM) | Zite Manager (IOM) |
@@ -50,11 +50,13 @@ dots are not misread:
    so the only reachable red-shares are 0%, 50%, 100% -> Green, Yellow, or dark-red
    critical. The 26-50% (Yellow) and 51-90% (Red) buckets cannot both be occupied, and
    Red is unreachable. CP shows R=0 for this reason alone.
-2. **Education is bimodal by construction.** At a site with no learning centre,
+2. **Education carries a hard critical floor.** At a site with no learning centre,
    `access_education`='no' is the *only* assessed Education indicator (the 9 LC items are
    correctly not-applicable, per the methodology). One indicator, red, = 100% -> dark-red
-   critical. So "no school on site" renders as critical. That is arguably the right
-   signal, but it means the Education dot splits sharply rather than distributing.
+   critical. So "no school on site" renders as critical — arguably the right signal, but
+   it is a floor effect, not a gradient. Current split: 621 of 1315 sites are
+   critical on that single indicator; the remaining 694 are scored across
+   all 11 and distribute normally (G=371 Y=191 R=132).
 3. **NFI is mostly not-assessed.** Its 2 indicators are gated on an NFI distribution
    having occurred; where none has, both are blank. Those sites are carried as
    *not assessed*, never as zero or Red.
@@ -64,11 +66,11 @@ dots are not misread:
 |---|---|
 | Sites | 1315 |
 | Districts | 16 |
-| Catchments | 90 |
+| Catchments | 36 |
 | Households | 174,351 |
 | Individuals | 975,417 |
 | Partners | 8 |
-| National severity | **44.0%** |
+| National severity | **45.3%** |
 
 National severity is the unweighted mean of per-site scores and is dominated by the
 largest district — do not present quarter-on-quarter deltas as like-for-like.
@@ -81,7 +83,9 @@ largest district — do not present quarter-on-quarter deltas as like-for-like.
 - [PASS] severity within 0-100 (min 4, max 97)
 - [PASS] no site with 0 assessed sectors (0 found)
 - [PASS] severity band matches score
-- [PASS] national severity recomputes (44.0 vs KPI 44.0)
+- [PASS] national severity recomputes (45.3 vs KPI 45.3)
+- [PASS] every sector scores its declared indicator count at some site
+- [PASS] kpi.catchments (36) == catchAgg rows (36)
 - [PASS] district counts reconcile across 16 districts
 - [PASS] scrub clean across 4 artefacts (no hits)
 
@@ -94,17 +98,17 @@ site-detail annex per methodology).
   - sectors assessed: 11/12 (not assessed: NFI)
   - sector dots: CCCM=G, Protection=G, CP=G, GBV=G, HLP=G, NFI=NA, Shelter=R, WASH=G, Health=G, FSL=Y, Nutrition=G, Education=G
   - red/critical sectors: Shelter
-  - severity 13 -> band Low (mean of per-sector red% across the 11 assessed sectors)
+  - severity 14 -> band Low (mean of per-sector red% across the 11 assessed sectors)
 **Wadajir** — Kismaayo (IOM)
   - sectors assessed: 11/12 (not assessed: NFI)
-  - sector dots: CCCM=Y, Protection=Y, CP=Y, GBV=G, HLP=G, NFI=NA, Shelter=Y, WASH=R, Health=G, FSL=G, Nutrition=G, Education=G
+  - sector dots: CCCM=Y, Protection=Y, CP=Y, GBV=G, HLP=G, NFI=NA, Shelter=Y, WASH=R, Health=G, FSL=G, Nutrition=G, Education=Y
   - red/critical sectors: WASH
-  - severity 27 -> band Moderate (mean of per-sector red% across the 11 assessed sectors)
+  - severity 29 -> band Moderate (mean of per-sector red% across the 11 assessed sectors)
 **Deg Gaduuda** — Baydhaba (IOM)
   - sectors assessed: 11/12 (not assessed: NFI)
   - sector dots: CCCM=Y, Protection=Y, CP=Y, GBV=Y, HLP=K, NFI=NA, Shelter=Y, WASH=Y, Health=Y, FSL=G, Nutrition=Y, Education=G
   - red/critical sectors: HLP
-  - severity 40 -> band High (mean of per-sector red% across the 11 assessed sectors)
+  - severity 41 -> band High (mean of per-sector red% across the 11 assessed sectors)
 
 ## Not done
 - No GPS/master-list matching: the Kobo↔Zite code systems do not reconcile and no

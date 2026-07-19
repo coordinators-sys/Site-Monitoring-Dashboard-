@@ -623,6 +623,13 @@ data["catchAgg"] = sorted(
       "partners": sorted(a["partners"])} for a in _cagg.values()],
     key=lambda a: -a["avgSev"])
 for a in data["catchAgg"]: a.pop("sev", None)
+
+# kpi.catchments arrives from build_dashboard as len(set(raw CA strings)), which counts
+# 'Catchment Area 9' and 'Catchment Area 09' as two and collapses IOM's un-qualified
+# 'Catchment Area 01' across all 8 districts that use it — it read 90 against a true 36.
+# ca_key() above is the normalisation the CA shapefile join already relies on, so the
+# headline figure is taken from the same aggregate the Catchment Analysis table renders.
+data["kpi"]["catchments"] = len(data["catchAgg"])
 data["catchUnmatched"] = _ca_unmatched
 print(f"  catchment analysis: {len(data['catchAgg'])} catchments aggregated, "
       f"{_ca_unmatched} sites without a parseable CA")

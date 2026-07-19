@@ -147,6 +147,20 @@ INDICATORS = {
  "group_education/functional_latrines_edu":("Educ","Learning centers have functional latrines (LC)"),
  "group_education/access_education_distance":("Educ","Distance to nearest learning center"),  # value
 }
+
+# The nine '(LC)' Education items are relevant-gated in the XLSForm on this question.
+# Named here rather than inlined at the call site: it was previously spelled with a key
+# from _OLD_INDICATORS_UNUSED, which .get() resolved to '' -> gate always False -> all
+# nine silently dropped from every site, scoring Education on 2 of 11. The assert makes
+# that class of typo a build failure instead of a plausible-looking number.
+LC_GATE_IND = "group_education/access_education"
+assert LC_GATE_IND in INDICATORS, f"LC gate {LC_GATE_IND!r} is not a live indicator key"
+
+# Filled by transform(): per sector, the most indicators actually scored at any one site.
+# Published so validate_q2.py can compare it against the declared counts in sectorMeta —
+# the check that would have caught the LC-gate bug above.
+SECTOR_COVERAGE = {}
+
 _OLD_INDICATORS_UNUSED = {
  "CCCM_SiteDecongestion":("CCCM","Decongestion activities conducted at the site"),
  "CCCM_CMC_Training":("CCCM","CMC received trainings this month"),
@@ -401,15 +415,21 @@ def transform(df):
                 col=c; break
         if col: present[ind]=col
     print(f"Indicator columns found: {len(present)} / {len(INDICATORS)}")
+    # Without the gate column every LC item is skipped at every site and Education
+    # quietly scores on 2 of 11. Fail the build rather than emit that.
+    if LC_GATE_IND not in present:
+        raise SystemExit(f"FATAL: LC gate column {LC_GATE_IND!r} absent from this export — "
+                         "Education cannot be scored. Check the XLSForm paths in INDICATORS.")
 
     sites=[]; review=[]
+    sec_max=defaultdict(int)   # per-sector high-water mark of indicators actually scored
     for _,row in df.iterrows():
         site = str(row.get(cmap["site"] or "", "")).strip()
         if not site or site.lower()=="nan":
             review.append(row); continue
         # per-sector red counts
         red=defaultdict(int); assessed=defaultdict(int)
-        lc = norm_binary(row.get(present.get("EDU_Education_Access",""))) in ("G","Y")  # learning-centre?
+        lc = norm_binary(row.get(present[LC_GATE_IND])) in ("G","Y")  # learning-centre?
         for ind,(sec,_lab) in INDICATORS.items():
             col = present.get(ind)
             if col is None: continue
@@ -425,6 +445,7 @@ def transform(df):
         dots=[]; pcts=[]
         for sec in SECTORS:
             a=assessed[sec]
+            if a>sec_max[sec]: sec_max[sec]=a
             if a==0: dots.append("NA"); continue
             p=red[sec]/a*100; pcts.append(p)
             dots.append("G" if p<=25 else "Y" if p<=50 else "R" if p<=90 else "K")
@@ -442,6 +463,9 @@ def transform(df):
                       "_lat":_num(row.get("_lat")),"_lon":_num(row.get("_lon")),
                       "_pc":str(row.get("_dist_pcode","")).strip().upper()})
     print(f"Scored sites: {len(sites)} | review-queue rows: {len(review)}")
+    SECTOR_COVERAGE.update({sec: sec_max[sec] for sec in SECTORS})
+    short = {c: (sec_max[c], SECTOR_META[c][2]) for c in SECTORS if sec_max[c] != SECTOR_META[c][2]}
+    print("Indicator coverage (scored/declared):", short or "all sectors reach their declared count")
     return sites, review, present
 
 # ----------------------------------------------------------------------------- AGGREGATE
@@ -532,6 +556,7 @@ def aggregate(sites, present, df):
       "districtGap":[[d[0],d[1],d[2],d[3]] for d in districtGap],
       "demographics":{"total":0,"malePct":0,"femalePct":0,"matchedSites":0,"bands":[]},  # fill if sex/age cols exist
       "sectorMeta":{c:[SECTOR_META[c][0],SECTOR_META[c][1],SECTOR_META[c][2]] for c in SECTORS},
+      "sectorCoverage":dict(SECTOR_COVERAGE),   # scored-vs-declared guard, see validate_q2.py
       "indicatorScoring":{k:sorted(v,key=lambda x:-x[3]) for k,v in indScore.items()},
       "breakdowns":{},          # populate from multi-select columns as needed
       "aggregates":{},
