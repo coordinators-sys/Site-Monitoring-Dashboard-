@@ -588,6 +588,117 @@ function renderQuality(){
     <td class="ctr mono">${p.latest||'—'}</td></tr>`).join('');
 }
 
+/* ================= REPORTS ================= */
+function metaHeader(title,status){
+  return [[ 'CCCM Cluster Somalia — Site Monitoring Dashboard'],[title],
+    ['Reporting period','Q2 2026 (April–June)'],
+    ['Data status',status],
+    ['Generated',new Date().toISOString()],
+    ['Data source','CCCM Cluster partner submissions (Kobo + Zite Manager), Master List Q2, Site Verification'],
+    ['Dashboard','https://site-monitoring.cccmclustersomalia.org'],
+    ['Methodology','See the Methodology tab. Severity = average % of red-scored indicators across assessed sectors; missing/NA excluded from denominators.'],
+    []];
+}
+function dlCsv(name,rows){
+  const csv=rows.map(r=>r.map(x=>`"${String(x??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'}));
+  a.download=name;a.click();toast('Downloaded '+name);
+}
+function renderReports(){
+  const host=$('#reportBtns'); if(!host) return;
+  const P=DATA.published;
+  const items=[
+    ['Published KPI summary','PUBLISHED — official Q2 2026 figures',()=>{
+      const d=P.denominators;
+      dlCsv('cccm_q2_2026_published_kpis.csv',[...metaHeader('Published KPI summary','PUBLISHED'),
+        ['Metric','Value','Denominator','Coverage'],
+        ['Sites assessed',P.kpi.sites,d.eligibleSites,Math.round(100*P.kpi.sites/d.eligibleSites)+'%'],
+        ['Catchment areas',P.kpi.catchments,d.totalCatchments,Math.round(100*P.kpi.catchments/d.totalCatchments)+'%'],
+        ['Households',P.kpi.hhs,d.totalHHs,Math.round(100*P.kpi.hhs/d.totalHHs)+'%'],
+        ['Individuals',P.kpi.individuals,d.totalIndividuals,Math.round(100*P.kpi.individuals/d.totalIndividuals)+'%'],
+        ['Reporting partners',P.kpi.partners,'',''],
+        ['Districts',P.kpi.districts,'',''],
+        ['National severity',P.kpi.severity+'%','','']]);}],
+    ['Priority gaps (indicator ranking)','DRAFT — live rebuild',()=>{
+      dlCsv('cccm_q2_2026_priority_gaps_DRAFT.csv',[...metaHeader('Priority gaps','DRAFT — pending IM validation'),
+        ['Rank','Indicator','Sector','Red %','n Red','N applicable','HHs affected','Individuals affected','Districts','Priority score /75'],
+        ...DATA.priorityGaps.rows.map((r,i)=>[i+1,r.indicator,r.sector,r.redPct,r.nRed,r.nApplicable,r.hhAffected,r.indAffected,r.districtsAffected,r.priorityScore])]);}],
+    ['Catchment analysis','DRAFT — live rebuild',()=>{
+      dlCsv('cccm_q2_2026_catchments_DRAFT.csv',[...metaHeader('Catchment analysis','DRAFT — pending IM validation'),
+        ['Catchment','District pcode','District','Sites assessed','Avg severity %','Households','Individuals','Partners'],
+        ...DATA.catchAgg.map(a=>[a.ca,a.pc,a.district,a.n,a.avgSev,a.hh,a.ind,a.partners.join('; ')])]);}],
+    ['District severity','DRAFT — live rebuild',()=>{
+      dlCsv('cccm_q2_2026_districts_DRAFT.csv',[...metaHeader('District severity','DRAFT — pending IM validation'),
+        ['District','Region','Sites','Avg severity %','Severe','High','Moderate','Low','Sample note'],
+        ...DATA.districtSev.map(d=>[d.district,d.region,d.n,d.avg,d.Severe,d.High,d.Moderate,d.Low,
+          d.n>=10?'rankable':d.n>=5?'5–9 sites — interpret cautiously':'<5 sites — insufficient for ranking'])]);}],
+    ['Full site list with sector scores','DRAFT — live rebuild',()=>{
+      dlCsv('cccm_q2_2026_sites_DRAFT.csv',[...metaHeader('Full site list','DRAFT — pending IM validation'),
+        ['Site','CCCM code','Partner','Region','District','Catchment','HH','Individuals','Severity %','Band',...SECT.map(c=>META[c][1])],
+        ...DATA.sites.map(s=>[s.s,s.code||'',s.p||'',s.r,s.d,s.c||'',s.hh??'',s.ind??'',s.v,s.b,
+          ...s.sc.map(v=>SCORELAB[v]||v)])]);}],
+  ];
+  host.innerHTML=items.map(([t,st],i)=>`<button class="btn sm" data-ri="${i}" style="justify-content:space-between;display:flex;text-align:left">
+    <span>⬇ ${t}</span><span style="font-size:10px;color:var(--muted)">${st}</span></button>`).join('');
+  $$('#reportBtns [data-ri]').forEach(b=>b.onclick=()=>items[+b.dataset.ri][2]());
+  const pb=$('#printBtn'); if(pb) pb.onclick=()=>window.print();
+}
+
+/* ================= METHODOLOGY ================= */
+function renderMethodology(){
+  if(!$('#mSrc')) return;
+  const rc=DATA.recon;
+  $('#mSrc').innerHTML=`
+    <b>Reporting period:</b> Q2 2026 (1 April – 30 June), filtered on the assessment date,
+    not the submission date — submissions are frequently backfilled.<ul>
+    <li><b>Partner submissions</b>: CCCM Cluster site monitoring form (all partners except IOM)
+      via KoboToolbox; IOM via the Zite Manager feed. Both refresh automatically each day.</li>
+    <li><b>Population (HH / individuals)</b>: CCCM IDP Site Master List Q2-2026 where the site
+      matches by CCCM code or verified name (${fmt(DATA.quality.population_from_masterlist)} sites);
+      the monitoring submission otherwise.</li>
+    <li><b>Age &amp; sex</b>: IDP Site Verification dataset (Q1-2026 vintage), for the
+      ${fmt(DATA.quality.siteverif_matched)} matched sites only.</li>
+    <li><b>Boundaries</b>: UNDP/OCHA Admin 2; CCCM 2025 catchment shapefiles.</li></ul>
+    <b>Last data refresh:</b> ${DATA.generated}.`;
+  $('#mSev').innerHTML=`
+    Each indicator scores <b>Green</b> (standard met), <b>Yellow</b> (partial — only possible on
+    the six value-scale indicators), or <b>Red</b> (gap). <b>Not applicable</b> and <b>missing</b>
+    responses are excluded from every denominator and never counted as Red.<ul>
+    <li><b>Sector severity</b> (per site) = red applicable indicators ÷ all applicable indicators × 100.</li>
+    <li><b>Site severity</b> = average of sector severities across sectors assessed at that site.</li>
+    <li><b>District / catchment severity</b> = unweighted average of site severities.</li>
+    <li><b>Bands</b>: Severe ≥55 · High 40–55 · Moderate 25–40 · Low &lt;25.</li>
+    <li><b>Minimum samples</b>: districts under 5 sites are not ranked; 5–9 flagged for caution.</li></ul>`;
+  $('#mStatus').innerHTML=`
+    <b>Published</b> — the officially released Q2 2026 figures (${fmt(rc.published_sites)} sites);
+    authoritative for external reporting, shown on all KPI cards.<br>
+    <b>Draft</b> — this live rebuild (${fmt(rc.final_draft_sites)} sites), refreshed daily and
+    labelled wherever shown; used for site-level views the published aggregates cannot provide.<ul>
+    <li>Eligibility: one record per site per quarter; duplicate submissions collapsed
+      (most recent, then most complete).</li>
+    <li>Site identity: CCCM code first; verified name second; GPS only as a tie-breaker
+      when district and name independently agree (sites cluster tens of metres apart —
+      nearest-point GPS matching alone misassigns more often than not).</li>
+    <li>${fmt(rc.name_pending_review)} field-reported names pending Master List verification
+      are counted in coverage and listed in the review queue.</li></ul>`;
+  $('#mLim').innerHTML=`<ul>
+    <li>The form's yes/no choice list has no "partial" option, so Yellow can only arise on
+      the six value-scale indicators — sector results read more polarised than the
+      methodology text implies.</li>
+    <li>WASH scores on 10 indicators, not the published 11: "latrines functional &amp;
+      sufficient" has no scorable field; latrine counts are carried as context only.</li>
+    <li>FSL income-generation cut-offs (0%=Red · 1–50%=Yellow · &gt;50%=Green) are a cluster
+      decision pending confirmation.</li>
+    <li>Kahda and Daynile are monitored separately but render on the Banadir Admin-2 polygon;
+      catchment-level analysis keeps them separate.</li>
+    <li>Age/sex reflects Q1-2026 verification data on ${fmt(DATA.quality.siteverif_matched)} of
+      ${fmt(rc.final_draft_sites)} sites (~33%) — not the full caseload.</li>
+    <li>Quarter-on-quarter severity is not like-for-like: coverage changed materially
+      (1,902 sites in Q1 → ${fmt(rc.published_sites)} published in Q2).</li>
+    <li>Draft vs published delta (+${rc.delta_vs_published}): ${rc.delta_explanation}</li></ul>`;
+}
+
 /* ================= INIT =================
    Each renderer runs independently. Previously these were chained on one line, so a single
    throw (a stale selector left behind when a panel was removed) silently killed every
@@ -598,7 +709,8 @@ function renderQuality(){
  ['severity view',renderSeverityView],['filter options',populateSelects],
  ['explorer wiring',wireExplorer],['explorer table',renderExplorer],
  ['sector tabs',renderSDTabs],['sector deep-dive',renderSD],['branding',renderBrand],
- ['priority gaps',renderGaps],['data quality',renderQuality],['catchment table',renderCatchTable]
+ ['priority gaps',renderGaps],['data quality',renderQuality],['catchment table',renderCatchTable],
+ ['reports',renderReports],['methodology',renderMethodology]
 ].forEach(([label,fn])=>{
   try{ fn(); }
   catch(e){ console.error('[dashboard] "'+label+'" failed:',e); }

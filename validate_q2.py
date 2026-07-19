@@ -86,7 +86,7 @@ def scrub(p):
     if re.search(r"[?&]key=", low): h.append("query_param_key")
     if re.search(r"authorization\s*:\s*token", low): h.append("auth_header")
     ok = ("https://www.w3.org", "https://{s}.tile.openstreetmap.org",
-          "https://www.openstreetmap.org", "https://leafletjs.com",
+          "https://www.openstreetmap.org", "https://leafletjs.com", "https://site-monitoring.cccmclustersomalia.org",
           "http://www.w3.org", "https://github.com/leaflet")
     low2 = low
     for u in ok: low2 = low2.replace(u, "")

@@ -128,6 +128,19 @@ main{padding:26px 0 60px}
 .draft-banner{background:#fdf3e7;border:1px solid #e8b97a;border-left:4px solid #d97b1f;border-radius:var(--radius-s);
   padding:10px 14px;font-size:12.5px;color:#7a4a10;margin-bottom:14px}
 
+/* methodology */
+.method-b{font-size:12.5px;color:var(--ink-2);line-height:1.65;margin-top:8px}
+.method-b b{color:var(--ink)}
+.method-b ul{margin:6px 0;padding-left:18px}
+.method-b li{margin:3px 0}
+/* print: one clean page per active view */
+@media print{
+  nav.tabs,.filters,.map-layer,#mapHint,.fl-meta,button,.draft-banner{display:none!important}
+  header.top{background:var(--teal-d)!important;-webkit-print-color-adjust:exact}
+  .view{display:none!important}.view.active{display:block!important}
+  .card{box-shadow:none!important;border:1px solid #ccc!important;break-inside:avoid}
+  body{background:#fff}
+}
 /* map */
 .map-layer.active{background:var(--teal);color:#fff;border-color:var(--teal-d)}
 #somMap .dist{stroke:#fff;stroke-width:.35;transition:opacity .15s}
@@ -278,6 +291,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
     <button class="tab" data-view="sectors">Sector Deep-Dive</button>
     <button class="tab" data-view="gaps">Priority Gaps</button>
     <button class="tab" data-view="quality">Data Quality</button>
+    <button class="tab" data-view="reports">Reports</button>
+    <button class="tab" data-view="method">Methodology</button>
   </div>
 </nav>
 
@@ -580,6 +595,41 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
   </section>
 
   
+
+  <!-- ============ REPORTS ============ -->
+  <section class="view" id="view-reports">
+    <div class="sec-head"><h2>Reports &amp; Exports</h2>
+      <p>Every export carries its reporting period, data status, generation time, source and
+      methodology reference in the file header. Published figures are authoritative for
+      external use; draft exports are labelled.</p>
+    </div>
+    <div class="grid cols2">
+      <div class="card p">
+        <h3 style="margin-bottom:10px">Downloads</h3>
+        <div id="reportBtns" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+      <div class="card p">
+        <h3 style="margin-bottom:10px">Print</h3>
+        <p style="font-size:12.5px;color:var(--ink-2);margin:0 0 10px">Open the tab you want
+        (Overview, Map, Priority Gaps…), then print — navigation and controls are stripped
+        automatically and the active view prints on white.</p>
+        <button class="btn sm org" id="printBtn">Print current view</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ METHODOLOGY ============ -->
+  <section class="view" id="view-method">
+    <div class="sec-head"><h2>Methodology &amp; Data Sources</h2>
+      <p>Everything a reader needs to interpret — or challenge — the figures on this dashboard.</p>
+    </div>
+    <div class="grid cols2">
+      <div class="card p"><h3>Sources &amp; reporting period</h3><div class="method-b" id="mSrc"></div></div>
+      <div class="card p"><h3>Severity calculation</h3><div class="method-b" id="mSev"></div></div>
+      <div class="card p"><h3>Data statuses &amp; eligibility</h3><div class="method-b" id="mStatus"></div></div>
+      <div class="card p"><h3>Known limitations &amp; divergences</h3><div class="method-b" id="mLim"></div></div>
+    </div>
+  </section>
 </main>
 
 <footer>
