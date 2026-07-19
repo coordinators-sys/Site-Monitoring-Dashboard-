@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CCCM Somalia — Site Monitoring Dashboard</title>
-<meta name="description" content="CCCM Cluster Somalia site monitoring dashboard, Q2 2026 (April–June): 1,275 assessed sites across 16 districts, scored by sector.">
+<meta name="description" content="CCCM Cluster Somalia Site Monitoring Dashboard, 2026 — assessed IDP sites scored Green/Yellow/Red across 12 sectors.">
 <meta name="theme-color" content="#1f6b72">
 <!-- Icons are generated from logo/CCCMCluster_Somalia.png by tools/make_icons.py.
      data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABtklEQVR4nGOUzy76zzCAgGkgLR91wNAMAWYmiJYibw+GOxO7GBpCA1HEae6Av//+MbCzsjCEWpgysDAzM/ibGDLwcHCAxeniAEZGRgZWZhYGPi5OMJ+FiZnh158/ZFlOlgP+///P4Gmgx8DFxgb2NRc7G0Ouhwv9HMDDwcFQGeANDgkYzvVwZSj19aKPA4LNTRiEeHgY/v3/z8AEcgADA5id4GBDlgNYSNUQaWUBjgYYAIcCAwM4SujiAA1pSYjFUD7IMSBHvPvylT5RcOv5C7jFYBoaBbP3HqCPA6ImzWB4/ekzmA1LB3/+/mXYev4ifRzAzsrCwM3BDo97UEiwsbAwqEiI08cBiqKi4AQHi3tYchTk5qKPA6SFBME0eisGVCzTxQGSggIQByBlRRD49vMXfRwgzMONwodlx68/f9LHAbycnKgOYGSkrwP+/vsLzn6oYv/IjgIWUjWASjxQ3keu/UGNEbo1SPZeucZw/9VrsK9hCfH9168M33/RKRGeuH2XwbGpg2HZkePw+N9+4TK8iKa5A3g5OcCl4c1nz+FiYny8DJxk1oaMoz0jhlEHDDAYcAcAAKMMjKeDnm42AAAAAElFTkSuQmCC is replaced at build time with a base64 data URI of the 32px
@@ -19,7 +19,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CCCM Cluster Somalia">
 <meta property="og:title" content="CCCM Somalia — Site Monitoring Dashboard">
-<meta property="og:description" content="Q2 2026 (April–June): 1,275 assessed sites across 16 districts, scored Green/Yellow/Red across 76 indicators in 12 sectors.">
+<meta property="og:description" content="CCCM Cluster Somalia Site Monitoring Dashboard, 2026 — assessed IDP sites scored Green/Yellow/Red across 12 sectors.">
 <meta property="og:image" content="https://site-monitoring.cccmclustersomalia.org/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -105,17 +105,17 @@ main{padding:26px 0 60px}
 .kpi .k-val{font-size:25px;font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
 .kpi .k-lab{font-size:11px;color:var(--muted);margin-top:5px;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
 .kpi .k-sub{font-size:10.5px;color:var(--muted);margin-top:2px}
-.kpi.accent{background:linear-gradient(135deg,#fff,#fef1ec)}
+.kpi.accent{background:var(--surface)}
 .kpi.accent .k-val{color:var(--s-crit)}
 .kpi .bar-top{position:absolute;top:0;left:0;right:0;height:3px;background:var(--teal)}
 .kpi.accent .bar-top{background:var(--orange)}
 
 /* Findings */
-.findings{background:linear-gradient(135deg,#fff8f4,#fef1ec);border:1px solid #f6d9cd;border-left:4px solid var(--orange);border-radius:var(--radius-s);padding:15px 18px}
-.findings h4{color:var(--orange-d);font-size:13px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.03em}
+.findings{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:15px 18px}
+.findings h4{color:var(--muted);font-size:11px;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.03em}
 .findings ul{margin:0;padding-left:18px}
 .sigrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
-.sig{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.sig{background:var(--plane);border:1px solid var(--line-2);border-radius:10px;padding:10px 12px}
 .sig .v{font-size:21px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
 .sig.gap .v{color:var(--gap)} .sig.good .v{color:var(--good)} .sig.warn .v{color:#9a5b13}
 .sig .l{font-size:11px;color:var(--ink-2);margin-top:3px;line-height:1.35}
@@ -179,10 +179,8 @@ main{padding:26px 0 60px}
 /* data-status chips: published (authoritative) vs draft (live rebuild) */
 .pub-chip{display:inline-block;background:var(--teal-l);color:var(--teal-d);border:1px solid var(--teal);
   border-radius:20px;padding:2px 10px;font-size:10.5px;font-weight:700;letter-spacing:.03em;vertical-align:middle}
-.draft-chip{display:inline-block;background:#fdf3e7;color:#9a5b13;border:1px solid #e8b97a;
+.draft-chip{display:inline-block;background:var(--plane-2);color:var(--muted);border:1px solid var(--line);
   border-radius:20px;padding:2px 10px;font-size:10.5px;font-weight:700;letter-spacing:.03em;vertical-align:middle}
-.draft-banner{background:#fdf3e7;border:1px solid #e8b97a;border-left:4px solid #d97b1f;border-radius:var(--radius-s);
-  padding:10px 14px;font-size:12.5px;color:#7a4a10;margin-bottom:14px}
 
 /* methodology */
 .method-b{font-size:12.5px;color:var(--ink-2);line-height:1.65;margin-top:8px}
@@ -328,11 +326,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
 .chip{background:var(--plane-2);border:1px solid var(--line);border-radius:16px;padding:3px 10px;font-size:11.5px;color:var(--ink-2);font-weight:600}
 
 /* ---------- site-wide draft bar ---------- */
-.draft-bar{background:#fdf3e7;border-bottom:1px solid #e8b97a;color:#7d4a10;font-size:12.5px;
-  position:sticky;top:var(--navh,44px);z-index:45}
-.draft-bar .wrap{display:flex;align-items:center;gap:9px;padding:7px 22px}
-.draft-bar svg{flex:none;color:#c8791a}
-.draft-bar[hidden]{display:none}
 .draft-x{margin-left:auto;flex:none;background:none;border:0;color:inherit;cursor:pointer;
   font-size:14px;line-height:1;padding:4px 6px;border-radius:6px;opacity:.65}
 .draft-x:hover{opacity:1;background:rgba(0,0,0,.06)}
@@ -1068,7 +1061,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <div>
         <div class="eyebrow">CCCM Cluster Somalia</div>
         <h1>Site Monitoring Dashboard</h1>
-        <div class="sub">Q2 2026 (April–June)</div>
+        <div class="sub">2026</div>
       </div>
     </div>
     <div class="spacer"></div>
@@ -1102,16 +1095,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
      Deep-Dive, Priority Gaps and Data Quality carried its own chip, which made the
      caveat feel like decoration. Dismissible per session (sessionStorage), so it
      returns for every new visitor rather than being permanently silenced. -->
-<div class="draft-bar" id="draftBar" role="status">
-  <div class="wrap">
-    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
-         stroke-width="2" stroke-linecap="round" aria-hidden="true">
-      <path d="M12 3.5 22 20H2L12 3.5Z"/><path d="M12 10v4"/><circle cx="12" cy="17.2" r=".9" fill="currentColor" stroke="none"/>
-    </svg>
-    <span><b>Draft data</b> — pending IM validation. Official published Q2 figure:
-      <b><span id="bannerPub">—</span> sites</b>.</span>
-    <button class="draft-x" id="draftBarX" aria-label="Dismiss draft-data notice">✕</button>
-  </div>
 </div>
 
 <!-- Glossary: acronyms expanded once, centrally, rather than inline on first use in
@@ -1150,7 +1133,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
          (what the quarter covers, how severity is derived) is on Methodology — a
          dashboard should open with the figures, not with three lines of prose. -->
     <div class="sec-head compact"><h2>National Overview</h2>
-      <p class="ov-lede">Q2 2026 (April–June) · published figures ·
+      <p class="ov-lede">Latest published round: Q2 2026 · 
         <a href="#" class="lnk" id="toMethod">how these are calculated</a></p>
     </div>
 
@@ -1485,7 +1468,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 <footer>
   <div class="wrap">
-    <span>CCCM Cluster Somalia · Site Monitoring Dashboard · Q2 2026 (April–June)</span>
+    <span>CCCM Cluster Somalia · Site Monitoring Dashboard · 2026</span>
     <span>IM: im@cccmclustersomalia.org · Coordination: coordinators@cccmclustersomalia.org</span>
   </div>
 </footer>
