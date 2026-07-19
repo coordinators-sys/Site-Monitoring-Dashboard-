@@ -47,19 +47,31 @@ function renderKPIs(){
     dist:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
     sev:'<path d="M12 3.5 22 20H2L12 3.5Z"/><path d="M12 10v4.5"/><circle cx="12" cy="17.4" r=".9" fill="currentColor" stroke="none"/>',
   };
+  // KPI cards show the PUBLISHED figures (authoritative for external use), each with its
+  // coverage denominator. The live-rebuild figures appear only in labelled Draft views.
+  const P=DATA.published, pk=P?P.kpi:k, pd_=P?P.denominators:null;
+  const pct=(a,b)=>b?Math.round(100*a/b)+'%':'';
   const cards=[
-    {ic:svg(I.site),v:fmt(k.sites),l:'Sites / CAs assessed',s:k.quarter||''},
-    {ic:svg(I.catch),v:k.catchments,l:'Catchment areas',s:'partner-covered'},
-    {ic:svg(I.hh),v:fmt(k.hhs),l:'Households',s:''},
-    {ic:svg(I.ind),v:fmt(k.individuals),l:'Individuals',s:''},
-    {ic:svg(I.partner),v:k.partners,l:'Reporting partners',s:''},
-    {ic:svg(I.dist),v:k.districts,l:'Districts',s:'across '+(k.regions||10)+' regions'},
-    {ic:svg(I.sev,true),v:k.severity+'%',l:'National severity',s:'avg red-indicator share',accent:true},
+    {ic:svg(I.site),v:fmt(pk.sites),l:'Sites assessed',
+     s:pd_?`of ${fmt(pd_.eligibleSites)} Master List sites · ${pct(pk.sites,pd_.eligibleSites)} coverage`:(k.quarter||'')},
+    {ic:svg(I.catch),v:pk.catchments,l:'Catchment areas',
+     s:pd_?`of ${pd_.totalCatchments} CCCM-covered CAs · ${pct(pk.catchments,pd_.totalCatchments)}`:'partner-covered'},
+    {ic:svg(I.hh),v:fmt(pk.hhs),l:'Households',
+     s:pd_?`of ${fmt(pd_.totalHHs)} · ${pct(pk.hhs,pd_.totalHHs)}`:''},
+    {ic:svg(I.ind),v:fmt(pk.individuals),l:'Individuals',
+     s:pd_?`of ${fmt(pd_.totalIndividuals)} · ${pct(pk.individuals,pd_.totalIndividuals)}`:''},
+    {ic:svg(I.partner),v:pk.partners,l:'Reporting partners',s:''},
+    {ic:svg(I.dist),v:pk.districts,l:'Districts',s:'across '+(k.regions||10)+' regions'},
+    {ic:svg(I.sev,true),v:pk.severity+'%',l:'National severity',s:'avg red-indicator share',accent:true},
   ];
-  $('#kpiRow').innerHTML=cards.map(c=>`<div class="kpi ${c.accent?'accent':''}"><div class="bar-top"></div>
+  $('#kpiRow').innerHTML=`<div style="grid-column:1/-1;margin-bottom:-6px">
+      <span class="pub-chip">PUBLISHED · Q2 2026 official figures</span>
+      <span style="font-size:11px;color:var(--muted);margin-left:8px">${P?P.source:''}</span>
+      <span style="font-size:11px;color:var(--muted);margin-left:8px">· live draft rebuild: ${fmt(k.sites)} sites — see Data Quality tab</span>
+    </div>`+cards.map(c=>`<div class="kpi ${c.accent?'accent':''}"><div class="bar-top"></div>
     <div class="k-ic">${c.ic}</div><div class="k-val">${c.v}</div><div class="k-lab">${c.l}</div>
     ${c.s?`<div class="k-sub">${c.s}</div>`:''}</div>`).join('');
-  $('#findingsList').innerHTML=DATA.keyFindings.map(f=>`<li>${f}</li>`).join('');
+  $('#findingsList').innerHTML=((P&&P.keyFindings)||DATA.keyFindings).map(f=>`<li>${f}</li>`).join('');
   $('#covNote').textContent=DATA.coverageNotes;
   // Q1 vs Q2
   const q=DATA.q1;
@@ -88,12 +100,14 @@ function renderSectorDiverge(){
   const max=Math.max(...DATA.sectors.map(s=>Math.max(s.gap,s.cov)));
   $('#sectorDiverge').innerHTML=DATA.sectors.map(s=>{
     const gw=s.gap/max*100, cw=s.cov/max*100;
-    return `<div class="dv-row">
+    const den=s.nApplicable?`${fmt(s.nRed)} Red / ${fmt(s.nGreen)} Green of ${fmt(s.nApplicable)} applicable indicator-assessments`:'';
+    return `<div class="dv-row" ${den?`data-t="<b>${s.name}</b><br>${den}"`:''}>
       <div class="lab">${s.name}</div>
       <div class="dv-left"><div class="dv-bar gap" style="width:${gw}%"><span>${s.gap}%</span></div></div>
       <div class="dv-right"><div class="dv-bar cov" style="width:${cw}%"><span>${s.cov}%</span></div></div>
     </div>`;
   }).join('');
+  $$('#sectorDiverge .dv-row').forEach(r=>r.dataset.t&&tip(r,()=>r.dataset.t));
 }
 
 function renderTopLists(){
@@ -206,8 +220,12 @@ function renderSeverityView(){
       <div class="stk-track">${segs}</div><div class="n mono">${d.n}</div></div>`;
   }).join('');
   $$('#districtStacks .stk-seg').forEach(s=>tip(s,()=>s.dataset.t));
+  // Minimum-sample rule: districts with tiny samples must not be read alongside large
+  // ones without warning. <5 insufficient; 5-9 interpret cautiously; >=10 rankable.
+  const sample=n=>n>=10?'':n>=5?'<div style="font-size:10px;color:#9a5b13;font-weight:600">5–9 sites — interpret cautiously</div>'
+                              :'<div style="font-size:10px;color:var(--gap);font-weight:600">&lt;5 sites — insufficient for ranking</div>';
   $('#districtTable').innerHTML=ds.map(d=>`<tr>
-    <td class="site-nm">${d.district}</td><td>${d.region}</td><td class="ctr mono">${d.n}</td>
+    <td class="site-nm">${d.district}${sample(d.n)}</td><td>${d.region}</td><td class="ctr mono">${d.n}</td>
     <td class="ctr"><span class="badge ${d.avg>=55?'Severe':d.avg>=40?'High':d.avg>=25?'Moderate':'Low'}">${d.avg}%</span></td>
     <td class="ctr mono">${d.Severe}</td><td class="ctr mono">${d.High}</td><td class="ctr mono">${d.Moderate}</td><td class="ctr mono">${d.Low}</td>
   </tr>`).join('');
@@ -388,6 +406,60 @@ function renderSD(){
   $('#sdBreakdowns').innerHTML=(extra+cards)|| '<p style="color:var(--muted);font-size:12.5px">No operational breakdown tables for this sector.</p>';
 }
 
+/* ================= PRIORITY GAPS ================= */
+function renderGaps(){
+  const g=DATA.priorityGaps; if(!g||!$('#gapsTable')) return;
+  $('#gapsFormula').textContent=g.formula||'';
+  $('#gapsActiveNote').textContent=g.activeNote||'';
+  const dn=$('#draftN'); if(dn) dn.textContent=fmt(DATA.kpi.sites);
+  $('#gapsTable').innerHTML=g.rows.map((r,i)=>`<tr>
+    <td class="ctr mono">${i+1}</td>
+    <td class="site-nm">${r.indicator}</td>
+    <td style="font-size:11.5px">${r.sector}</td>
+    <td class="ctr"><b style="color:var(--gap)">${r.redPct}%</b>
+      <div style="font-size:10px;color:var(--muted)">${fmt(r.nRed)} of ${fmt(r.nApplicable)}</div></td>
+    <td class="ctr mono">${fmt(r.hhAffected)}</td>
+    <td class="ctr mono">${fmt(r.indAffected)}</td>
+    <td class="ctr mono">${r.districtsAffected}</td>
+    <td class="ctr"><b>${r.priorityScore}</b><span style="font-size:10px;color:var(--muted)">/75</span></td>
+  </tr>`).join('');
+}
+
+/* ================= DATA QUALITY ================= */
+function renderQuality(){
+  const rc=DATA.recon, q=DATA.quality;
+  if(!rc||!$('#reconTable')) return;
+  const row=(k,v,strong)=>`<tr><td>${k}</td><td style="text-align:right;${strong?'font-weight:700':''}">${v}</td></tr>`;
+  $('#reconTable').innerHTML=[
+    row('Kobo submissions in Q2 window',fmt(rc.kobo_submissions_q2)),
+    row('&nbsp;&nbsp;duplicate submissions collapsed','−'+fmt(rc.kobo_duplicates_collapsed)),
+    row('Kobo sites',fmt(rc.kobo_sites)),
+    row('IOM sites (Q2 window)',fmt(rc.iom_sites_q2)),
+    row('Union before resolution',fmt(rc.union_before_resolution)),
+    row('&nbsp;&nbsp;free-text names resolved to CCCM codes',fmt(rc.freetext_resolved_to_codes)),
+    row('&nbsp;&nbsp;cross-source duplicates collapsed','−'+fmt(rc.cross_source_duplicates_collapsed)),
+    row('<b>Final draft sites</b>',fmt(rc.final_draft_sites),1),
+    row('&nbsp;&nbsp;of which name-pending review',fmt(rc.name_pending_review)),
+    row('<b>Published Q2 sites (official)</b>',fmt(rc.published_sites),1),
+    row('Draft minus published',(rc.delta_vs_published>0?'+':'')+rc.delta_vs_published),
+  ].join('');
+  $('#reconNote').textContent=rc.delta_explanation||'';
+  const mm=q.masterlist_match_methods||{};
+  $('#qualityTable').innerHTML=[
+    row('Master List matched (population source)',`${fmt(q.masterlist_matched)} of ${fmt(DATA.kpi.sites)}`),
+    row('&nbsp;&nbsp;by CCCM code',fmt(mm.code||0)),
+    row('&nbsp;&nbsp;by verified name',fmt(mm.name||0)),
+    row('&nbsp;&nbsp;by GPS + name agreement',fmt(mm['gps+name']||0)),
+    row('Site Verification matched (age/sex source)',`${fmt(q.siteverif_matched)} of ${fmt(DATA.kpi.sites)}`),
+    row('Missing GPS coordinates',fmt(q.missing_gps)),
+    row('Population from Master List / from form',`${fmt(q.population_from_masterlist)} / ${fmt(q.population_from_form)}`),
+    row('Site names pending verification',fmt(q.name_pending)),
+  ].join('');
+  $('#qualityPartners').innerHTML=(q.partners||[]).map(p=>`<tr>
+    <td class="site-nm">${p.partner}</td><td class="ctr mono">${fmt(p.sites)}</td>
+    <td class="ctr mono">${p.latest||'—'}</td></tr>`).join('');
+}
+
 /* ================= INIT =================
    Each renderer runs independently. Previously these were chained on one line, so a single
    throw (a stale selector left behind when a panel was removed) silently killed every
@@ -397,7 +469,8 @@ function renderSD(){
  ['district gap',renderDistrictGap],['demographics',renderPyramid],['severity donut',renderDonut],
  ['severity view',renderSeverityView],['filter options',populateSelects],
  ['explorer wiring',wireExplorer],['explorer table',renderExplorer],
- ['sector tabs',renderSDTabs],['sector deep-dive',renderSD],['branding',renderBrand]
+ ['sector tabs',renderSDTabs],['sector deep-dive',renderSD],['branding',renderBrand],
+ ['priority gaps',renderGaps],['data quality',renderQuality]
 ].forEach(([label,fn])=>{
   try{ fn(); }
   catch(e){ console.error('[dashboard] "'+label+'" failed:',e); }

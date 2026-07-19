@@ -477,6 +477,111 @@ data["partners"] = sorted({s["p"] for s in data["sites"] if s["p"]})
 data["provenance"] = {"kobo_sites": int(len(ko_q2)), "iom_sites": int(len(zn)),
                       "quarter": QLABEL, "window": [Q_START, Q_END]}
 
+# =================================================================== DATA GOVERNANCE
+# Two tiers, never mixed:
+#   PUBLISHED - transcribed from the officially released CCCM Q2 2026 report. Authoritative
+#               for aggregate/KPI display and external quotation.
+#   DRAFT     - this live rebuild (site-level detail the published report's aggregates
+#               cannot provide). Always labelled; never presented as official.
+data["dataStatus"] = "draft"
+data["published"] = {
+    "label": "Published Q2 2026 (official)",
+    "source": "CCCM Cluster Somalia Site Monitoring Report Q2 2026 v1.1, published 03 July 2026",
+    "kpi": {"sites": 1275, "catchments": 36, "hhs": 131520, "individuals": 719747,
+            "partners": 7, "districts": 16, "severity": 44.6},
+    # Denominators, each independently verifiable:
+    #  - 4,119 verified sites: CCCM Master List Q2 (recomputed from data/masterlist_q2.xlsx)
+    #  - 53 catchments: published report, p.3
+    #  - 614,590 HH / 3,375,346 individuals: Master List totals row; matches the Q1
+    #    report's "out of" reference figures
+    "denominators": {"eligibleSites": 4119, "totalCatchments": 53,
+                     "totalHHs": 614590, "totalIndividuals": 3375346},
+    "keyFindings": [
+        "Widest gap: on-site food or cash distribution, 84% Red — 869 of 1,275 sites report never receiving it.",
+        "Highest-severity districts (at least 10 sites): Afmadow 67%, Xudur 61%, Baardheere 60%.",
+        "Strongest coverage: functioning CFM 97% Green; inclusive Camp Management Committees 95% Green.",
+        "14 of Mogadishu's 26 catchments were not assessed this quarter — a major geographic coverage gap.",
+    ]}
+
+# ------------------------------------------------------------------- reconciliation
+data["recon"] = {
+    "kobo_submissions_q2": int(before), "kobo_duplicates_collapsed": int(collisions),
+    "kobo_sites": int((df["__source"] == "Kobo").sum()),
+    "iom_sites_q2": int(len(zn)), "union_before_resolution": int(before_dd),
+    "freetext_resolved_to_codes": int(resolved_other),
+    "cross_source_duplicates_collapsed": int(site_collisions),
+    "final_draft_sites": int(len(df)),
+    "name_pending_review": int(df["_name_unresolved"].sum()),
+    "published_sites": 1275, "delta_vs_published": int(len(df)) - 1275,
+    "delta_explanation": ("The remaining difference is dominated by field-reported site "
+        "names that do not yet match the Master List under defensible rules — real "
+        "assessed sites pending code verification, carried in the review queue rather "
+        "than silently dropped or force-matched.")}
+
+# ------------------------------------------------------------------- data quality
+_pl = df.groupby("_partner").agg(
+        n=("_site_id", "size"), latest=("_date", "max")).reset_index()
+data["quality"] = {
+    "masterlist_matched": int(n_ml), "masterlist_match_methods": dict(Counter(ml_how)),
+    "siteverif_matched": int(n_sv),
+    "missing_gps": int((df["_lat"].isna() | df["_lon"].isna()).sum()),
+    "population_from_masterlist": int(n_ml),
+    "population_from_form": int(len(df) - n_ml),
+    "name_pending": int(df["_name_unresolved"].sum()),
+    "partners": [{"partner": r["_partner"], "sites": int(r["n"]),
+                  "latest": str(r["latest"].date()) if pd.notna(r["latest"]) else ""}
+                 for _, r in _pl.sort_values("n", ascending=False).iterrows()]}
+
+# ------------------------------------------------------------------- priority gaps
+# Per-indicator: applicable N, red n, HH/individuals at red sites, districts affected.
+# Missing / not-applicable responses are EXCLUDED from denominators, never counted Red.
+EDU_ACCESS = "group_education/access_education"
+_hh_num  = pd.to_numeric(df["group_demographic_info/hhs"],  errors="coerce").fillna(0)
+_ind_num = pd.to_numeric(df["group_demographic_info/inds"], errors="coerce").fillna(0)
+_lc_ok   = df.get(EDU_ACCESS, pd.Series("", index=df.index)).astype(str).str.lower().eq("yes")
+gap_rows = []
+for ind, (sec, label) in bd.INDICATORS.items():
+    if ind not in df.columns:
+        continue
+    is_lc = "(LC)" in label
+    applicable = red = hh_red = ind_red = 0
+    dists = set()
+    for i, raw in enumerate(df[ind]):
+        if is_lc and not _lc_ok.iloc[i]:
+            continue
+        sc = bd.score_value(ind, raw) if ind in bd.VALUE_INDS else bd.norm_binary(raw)
+        if sc is None:
+            continue
+        if ind in bd.REVERSE and sc in ("G", "R"):
+            sc = "R" if sc == "G" else "G"
+        applicable += 1
+        if sc == "R":
+            red += 1
+            hh_red  += _hh_num.iloc[i]
+            ind_red += _ind_num.iloc[i]
+            dists.add(df[DCOL].iloc[i])
+    if applicable == 0:
+        continue
+    gap_rows.append({"indicator": label, "sector": bd.IS_KEY[sec],
+                     "redPct": round(100 * red / applicable, 1),
+                     "nRed": red, "nApplicable": applicable,
+                     "hhAffected": int(hh_red), "indAffected": int(ind_red),
+                     "districtsAffected": len(dists)})
+_max_hh = max((g["hhAffected"] for g in gap_rows), default=1) or 1
+for g in gap_rows:
+    # Weights per coordination methodology: 50% severity + 25% affected population
+    # + 15% negative trend + 10% contextual risk. Trend and risk are INACTIVE this
+    # quarter (no matched-site baseline; no risk layer) and shown as such — the score
+    # is therefore out of the 75 active points, not silently rescaled.
+    g["priorityScore"] = round(50 * g["redPct"] / 100 + 25 * g["hhAffected"] / _max_hh, 1)
+gap_rows.sort(key=lambda g: -g["priorityScore"])
+data["priorityGaps"] = {
+    "formula": "Priority = 50% severity + 25% affected population + 15% trend + 10% contextual risk",
+    "activeNote": ("Trend (15%) and contextual risk (10%) components are inactive this "
+                   "quarter: no matched-site baseline or risk layer is loaded yet. "
+                   "Scores are shown out of the 75 active points."),
+    "rows": gap_rows[:40]}
+
 json.dump(data, open("dashboard_data.json", "w", encoding="utf-8"), ensure_ascii=False)
 
 SEC_ORDER = ["CCCM","Protection","CP","GBV","HLP","NFI","Shelter","WASH","Health",

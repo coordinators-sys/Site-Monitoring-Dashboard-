@@ -486,7 +486,8 @@ def aggregate(sites, present, df):
     for code in SECTORS:
         t=sec_tot[code]
         if t==0: continue
-        sectors.append({"name":SECTOR_META[code][1],"gap":round(sec_r[code]/t*100),"cov":round(sec_g[code]/t*100)})
+        sectors.append({"name":SECTOR_META[code][1],"gap":round(sec_r[code]/t*100),"cov":round(sec_g[code]/t*100),
+                        "nRed":sec_r[code],"nGreen":sec_g[code],"nApplicable":t})
     sectors.sort(key=lambda x:-x["gap"])
     # top red / green individual indicators
     allind=[(v[0],v[3]) for v in per_ind.values()]

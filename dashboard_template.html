@@ -120,6 +120,14 @@ main{padding:26px 0 60px}
 .badge.Severe{background:var(--s-crit)} .badge.High{background:var(--s-high)}
 .badge.Moderate{background:var(--s-mod)} .badge.Low{background:var(--s-low)}
 
+/* data-status chips: published (authoritative) vs draft (live rebuild) */
+.pub-chip{display:inline-block;background:var(--teal-l);color:var(--teal-d);border:1px solid var(--teal);
+  border-radius:20px;padding:2px 10px;font-size:10.5px;font-weight:700;letter-spacing:.03em;vertical-align:middle}
+.draft-chip{display:inline-block;background:#fdf3e7;color:#9a5b13;border:1px solid #e8b97a;
+  border-radius:20px;padding:2px 10px;font-size:10.5px;font-weight:700;letter-spacing:.03em;vertical-align:middle}
+.draft-banner{background:#fdf3e7;border:1px solid #e8b97a;border-left:4px solid #d97b1f;border-radius:var(--radius-s);
+  padding:10px 14px;font-size:12.5px;color:#7a4a10;margin-bottom:14px}
+
 /* ---------- Filters ---------- */
 .filters{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);margin-bottom:16px}
 .filters .fl-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:end}
@@ -256,6 +264,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
     <button class="tab" data-view="severity">Severity by District</button>
     <button class="tab" data-view="explorer">Site Explorer</button>
     <button class="tab" data-view="sectors">Sector Deep-Dive</button>
+    <button class="tab" data-view="gaps">Priority Gaps</button>
+    <button class="tab" data-view="quality">Data Quality</button>
   </div>
 </nav>
 
@@ -372,8 +382,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
   <!-- ============ SITE EXPLORER ============ -->
   <section class="view" id="view-explorer">
     <div class="sec-head"><h2>Site Explorer</h2>
-      <p>All <span id="exCount2">—</span> assessed sites with per-sector scoring. Filter and sort to prioritise, then jump to the <b>AI Prompt Builder</b> — it inherits whatever you filter here. Each dot is a sector: it shows the share of that sector's indicators scored Red at the site.</p>
+      <p>All <span id="exCount2">—</span> assessed sites with per-sector scoring. Filter and sort to prioritise. Each dot is a sector: it shows the share of that sector's indicators scored Red at the site.</p>
     </div>
+    <div class="draft-banner"><b>Draft data.</b> Site-level rows come from the live rebuild
+      (<span id="draftN">—</span> sites), pending IM validation. The officially published Q2
+      figure is <b>1,275 sites</b> — do not quote site-level values externally. See the
+      Data Quality tab for the full reconciliation.</div>
 
     <div class="filters">
       <div class="fl-grid">
@@ -445,6 +459,63 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
       <div class="card p">
         <h3 style="margin-bottom:6px">Operational Breakdowns <span class="hint">count of sites, unless noted</span></h3>
         <div id="sdBreakdowns" class="grid" style="gap:16px;margin-top:10px"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRIORITY GAPS ============ -->
+  <section class="view" id="view-gaps">
+    <div class="sec-head">
+      <h2>Priority Gaps</h2>
+      <p>Indicator-level service gaps ranked for coordination action. Every percentage
+      carries its denominator; missing and not-applicable responses are excluded, never
+      counted as Red. <span class="draft-chip">DRAFT · live rebuild · pending IM validation</span></p>
+    </div>
+    <div class="card p" style="margin-bottom:16px">
+      <h3 style="margin-bottom:4px">Priority Score</h3>
+      <p id="gapsFormula" style="margin:0;font-size:12.5px;color:var(--ink-2)"></p>
+      <p id="gapsActiveNote" style="margin:6px 0 0;font-size:11.5px;color:var(--muted)"></p>
+    </div>
+    <div class="card p">
+      <div class="tbl-scroll">
+        <table class="sites">
+          <thead><tr>
+            <th>#</th><th>Indicator</th><th>Sector</th><th class="ctr">Red % (n/N)</th>
+            <th class="ctr">HHs affected</th><th class="ctr">Individuals affected</th>
+            <th class="ctr">Districts</th><th class="ctr">Priority score</th>
+          </tr></thead>
+          <tbody id="gapsTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DATA QUALITY ============ -->
+  <section class="view" id="view-quality">
+    <div class="sec-head">
+      <h2>Coverage &amp; Data Quality</h2>
+      <p>Internal reconciliation view: how the raw submissions became the draft dataset,
+      and how the draft relates to the officially published Q2 figures. External reporting
+      must use the <b>Published</b> figures only.</p>
+    </div>
+    <div class="grid cols2" style="margin-bottom:16px">
+      <div class="card p">
+        <h3 style="margin-bottom:10px">Reconciliation — submissions to published</h3>
+        <table class="mini-tbl" id="reconTable"></table>
+        <p id="reconNote" style="margin:10px 0 0;font-size:11.5px;color:var(--muted)"></p>
+      </div>
+      <div class="card p">
+        <h3 style="margin-bottom:10px">Matching &amp; completeness</h3>
+        <table class="mini-tbl" id="qualityTable"></table>
+      </div>
+    </div>
+    <div class="card p">
+      <h3 style="margin-bottom:10px">Partner reporting <span class="hint">draft dataset · latest submission per partner</span></h3>
+      <div class="tbl-scroll">
+        <table class="sites">
+          <thead><tr><th>Partner</th><th class="ctr">Sites</th><th class="ctr">Latest submission</th></tr></thead>
+          <tbody id="qualityPartners"></tbody>
+        </table>
       </div>
     </div>
   </section>
