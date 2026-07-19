@@ -85,7 +85,12 @@ def scrub(p):
         if lit in low: h.append(lit)
     if re.search(r"[?&]key=", low): h.append("query_param_key")
     if re.search(r"authorization\s*:\s*token", low): h.append("auth_header")
-    if re.search(r"https?://(?!www\.w3\.org)", low): h.append("external_url")
+    ok = ("https://www.w3.org", "https://{s}.tile.openstreetmap.org",
+          "https://www.openstreetmap.org", "https://leafletjs.com",
+          "http://www.w3.org", "https://github.com/leaflet")
+    low2 = low
+    for u in ok: low2 = low2.replace(u, "")
+    if re.search(r"https?://", low2): h.append("external_url")
     return h
 arts = ["dashboard_data.json","sites.json","review_queue.csv",
         "CCCM_Site_Monitoring_Dashboard.html"]

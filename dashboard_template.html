@@ -246,6 +246,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
 .chiprow{display:flex;gap:7px;flex-wrap:wrap}
 .chip{background:var(--plane-2);border:1px solid var(--line);border-radius:16px;padding:3px 10px;font-size:11.5px;color:var(--ink-2);font-weight:600}
 </style>
+<style>
+/*LEAFLET_CSS*/
+</style>
 </head>
 <body>
 <header class="top">
@@ -488,10 +491,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
         <button class="btn sm map-layer" data-layer="sites">Site points</button>
         <button class="btn sm map-layer" data-layer="ca">Catchment areas</button>
         <div style="flex:1"></div>
-        <span id="mapHint" style="font-size:11.5px;color:var(--muted)">hover a district or site · scroll to zoom · drag to pan</span>
+        <span id="mapHint" style="font-size:11.5px;color:var(--muted)">OpenStreetMap basemap · hover a district or site · scroll to zoom</span>
       </div>
       <div id="mapWrap" style="position:relative;background:#eef4f6;border:1px solid var(--line);border-radius:10px;overflow:hidden">
-        <svg id="somMap" style="display:block;width:100%;height:640px;cursor:grab"></svg>
+        <div id="somMap" style="width:100%;height:640px"></div>
       </div>
       <div class="legend" id="mapLegend" style="margin-top:10px"></div>
       <p style="margin:8px 0 0;font-size:11px;color:var(--muted)">
@@ -573,6 +576,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
 
 <script>
 /*DATA_PLACEHOLDER*/
+</script>
+<script>
+/*LEAFLET_JS*/
 </script>
 <script>
 /*APP_PLACEHOLDER*/

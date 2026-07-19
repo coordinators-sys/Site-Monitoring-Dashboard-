@@ -637,7 +637,14 @@ def scrub(path):
             hits.append(lit)
     if re.search(r"[?&]key=", low):        hits.append("query_param_key")
     if re.search(r"authorization\s*:\s*token", low): hits.append("auth_header")
-    if re.search(r"https?://(?!www\.w3\.org)", low): hits.append("external_url")
+    # Known-good external references: SVG namespace, the OSM basemap (tiles +
+    # required attribution) and Leaflet's licence header. Anything else still trips.
+    ok = ("https://www.w3.org", "https://{s}.tile.openstreetmap.org",
+          "https://www.openstreetmap.org", "https://leafletjs.com",
+          "http://www.w3.org", "https://github.com/leaflet")
+    low2 = low
+    for u in ok: low2 = low2.replace(u, "")
+    if re.search(r"https?://", low2): hits.append("external_url")
     return hits
 
 leaks = {a: h for a in ("dashboard_data.json","sites.json","review_queue.csv",

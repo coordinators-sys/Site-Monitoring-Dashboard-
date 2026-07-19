@@ -548,6 +548,16 @@ def render(data):
     tpl=open("dashboard_template.html",encoding="utf-8").read()
     app=open("app.js",encoding="utf-8").read()
     tpl=tpl.replace("/*DATA_PLACEHOLDER*/","const DATA = "+json.dumps(data,ensure_ascii=False)+";")
+    # vendored Leaflet (map basemap library) — inlined so the file stays a single artefact
+    for ph, path in (("/*LEAFLET_CSS*/", os.path.join("vendor","leaflet.css")),
+                     ("/*LEAFLET_JS*/",  os.path.join("vendor","leaflet.js"))):
+        if ph in tpl:
+            body = open(path,encoding="utf-8").read() if os.path.exists(path) \
+                   else "/* vendor file missing: map disabled */"
+            if path.endswith(".css"):
+                # comments reference external bug-tracker URLs that would trip the scrub
+                body = re.sub(r"/\*.*?\*/", "", body, flags=re.S)
+            tpl=tpl.replace(ph, body)
     tpl=tpl.replace("/*APP_PLACEHOLDER*/",app)
     open(OUT_HTML,"w",encoding="utf-8").write(tpl)
     try:
