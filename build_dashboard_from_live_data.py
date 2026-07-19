@@ -584,6 +584,7 @@ def render(data):
     tpl=tpl.replace("/*DATA_PLACEHOLDER*/","const DATA = "+json.dumps(data,ensure_ascii=False)+";")
     # vendored Leaflet (map basemap library) — inlined so the file stays a single artefact
     for ph, path in (("/*LEAFLET_CSS*/", os.path.join("vendor","leaflet.css")),
+                     ("/*INTER_CSS*/",   os.path.join("vendor","inter.css")),
                      ("/*LEAFLET_JS*/",  os.path.join("vendor","leaflet.js"))):
         if ph in tpl:
             body = open(path,encoding="utf-8").read() if os.path.exists(path) \

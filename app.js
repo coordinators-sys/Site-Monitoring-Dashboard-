@@ -116,19 +116,6 @@ $$('.tab').forEach(b=>b.addEventListener('click',()=>{
 /* ================= OVERVIEW ================= */
 function renderKPIs(){
   const k=DATA.kpi;
-  // Inline stroke icons — consistent weight and colour, unlike emoji which render
-  // differently on every OS and look informal in a cluster product.
-  const svg=(p,accent)=>`<svg viewBox="0 0 24 24" fill="none" stroke="${accent?'var(--orange)':'var(--teal)'}"
-    stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">${p}</svg>`;
-  const I={
-    site:'<path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>',
-    catch:'<path d="M3 7.5 9 4.5l6 3 6-3v12l-6 3-6-3-6 3Z"/><path d="M9 4.5v12M15 7.5v12"/>',
-    hh:'<path d="M3.5 10.5 12 3.5l8.5 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5.5h4V20"/>',
-    ind:'<circle cx="9" cy="8" r="3.2"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17.5" cy="9.5" r="2.4"/><path d="M16 14.6a5.6 5.6 0 0 1 5.5 5.4"/>',
-    partner:'<path d="M12 20.5s-7.5-4.6-7.5-9.6a4.3 4.3 0 0 1 7.5-2.9 4.3 4.3 0 0 1 7.5 2.9c0 5-7.5 9.6-7.5 9.6Z"/>',
-    dist:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
-    sev:'<path d="M12 3.5 22 20H2L12 3.5Z"/><path d="M12 10v4.5"/><circle cx="12" cy="17.4" r=".9" fill="currentColor" stroke="none"/>',
-  };
   // KPI cards show the PUBLISHED figures (authoritative for external use), each with its
   // coverage denominator. The live-rebuild figures appear only in labelled Draft views.
   const P=DATA.published, pk=P?P.kpi:k, pd_=P?P.denominators:null;
@@ -142,20 +129,19 @@ function renderKPIs(){
   // A card renders only when it has a real value. An empty card or a "—" reads as a
   // broken dashboard; a card that is simply absent reads as "not applicable this round".
   const cards=[
-    {ic:svg(I.site),v:pk.sites,fmtv:1,l:'Published sites',
+    {v:pk.sites,fmtv:1,l:'Published sites',
      s:pd_?`of ${fmt(pd_.eligibleSites)} Master List sites · ${pct(pk.sites,pd_.eligibleSites)} coverage`:null},
-    {ic:svg(I.dist),v:pk.districts,l:'Districts assessed',
+    {v:pk.districts,l:'Districts assessed',
      s:k.regions?`across ${k.regions} regions`:null},
-    {ic:svg(I.sev,true),v:hiPct,suf:'%',l:'Sites Severe or High',accent:1,
+    {v:hiPct,suf:'%',l:'Sites Severe or High',accent:1,
      s:hiN?`${fmt(hiN)} of ${fmt(sv.length)} draft-assessed sites`:null},
-    {ic:svg(I.partner),v:pk.partners,l:'Reporting partners',
+    {v:pk.partners,l:'Reporting partners',
      s:pk.catchments?`${pk.catchments} catchment areas`:null},
-    {ic:svg(I.ind),v:pk.individuals,fmtv:1,l:'Individuals',
+    {v:pk.individuals,fmtv:1,l:'Individuals',
      s:pd_?`of ${fmt(pd_.totalIndividuals)} · ${pct(pk.individuals,pd_.totalIndividuals)}`:null},
   ].filter(c=>c.v!=null&&c.v!==''&&!Number.isNaN(c.v));
 
   $('#kpiRow').innerHTML=cards.map(c=>`<div class="stat ${c.accent?'accent':''}">
-    <div class="s-ic">${c.ic}</div>
     <div class="s-lab">${esc(c.l)}</div>
     <div class="s-val">${c.fmtv?fmt(c.v):c.v}${c.suf||''}</div>
     ${c.s?`<div class="s-sub">${esc(c.s)}</div>`:''}</div>`).join('');
@@ -526,8 +512,8 @@ function renderSD(){
 /* ================= MAP (Leaflet + OpenStreetMap) ================= */
 const MAPST={fill:'sev',sites:true,ca:false};
 let MAP=null, MAPLAYERS=null;
-function bandColor(v){return v>=55?'#c0392b':v>=40?'#ee6a3a':v>=25?'#f4a929':'#2ba24d';}
-function covColor(n){return n>=200?'#1f6b72':n>=50?'#2f8f97':n>=10?'#6fb3b9':n>=1?'#b7d8db':'#d5dbd9';}
+function bandColor(v){return v>=55?'#D9534F':v>=40?'#EC6B4D':v>=25?'#E9A23B':'#3A8D68';}
+function covColor(n){return n>=200?'#104E5D':n>=50?'#17677A':n>=10?'#6FAEBD':n>=1?'#C9E0E6':'#E2E5E0';}
 function renderMap(){
   const geo=DATA.geo, host=$('#somMap');
   if(!host) return;
@@ -544,7 +530,7 @@ function renderMap(){
   const distFill=pc=>{
     const a=agg[pc];
     if(MAPST.fill==='cov') return covColor(a?a.n:0);
-    return a?bandColor(a.sev/a.n):'#d5dbd9';
+    return a?bandColor(a.sev/a.n):'#E2E5E0';
   };
   MAP=L.map('somMap',{zoomSnap:.5,attributionControl:true});
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
@@ -570,8 +556,8 @@ function renderMap(){
   geo.catchments.forEach(c=>{
     const a=caAgg[(c.pc||'').toUpperCase()+'|'+(caNorm(c.ca)||c.ca)];
     const poly=L.polygon(c.rings.map(swap),
-      a?{color:'#1f6b72',weight:1.2,dashArray:'4 3',fillColor:bandColor(a.avgSev),fillOpacity:.62}
-       :{color:'#8a938f',weight:1,dashArray:'4 3',fillColor:'#d5dbd9',fillOpacity:.35});
+      a?{color:'#104E5D',weight:1.2,dashArray:'4 3',fillColor:bandColor(a.avgSev),fillOpacity:.62}
+       :{color:'#8a938f',weight:1,dashArray:'4 3',fillColor:'#E2E5E0',fillOpacity:.35});
     poly.bindTooltip(a
       ?`<b>${esc(c.ca)}</b> · ${esc(c.d)} district<br>${a.n} sites assessed · avg severity <b>${a.avgSev}%</b>
         <br>HH ${fmt(a.hh)} · Individuals ${fmt(a.ind)}<br>Partners: ${esc(a.partners.join(', '))||'—'}
@@ -586,7 +572,7 @@ function renderMap(){
     if(s.lat==null||s.lon==null) return;
     if(s.lat<-2||s.lat>12.5||s.lon<40||s.lon>52) return;
     const m=L.circleMarker([s.lat,s.lon],{radius:4.5,color:'#fff',weight:.8,
-      fillColor:s.b==='Severe'?'#c0392b':s.b==='High'?'#ee6a3a':s.b==='Moderate'?'#f4a929':'#2ba24d',fillOpacity:.95});
+      fillColor:s.b==='Severe'?'#D9534F':s.b==='High'?'#EC6B4D':s.b==='Moderate'?'#E9A23B':'#3A8D68',fillOpacity:.95});
     m.bindTooltip(`<b>${esc(s.s)}</b>${s.code&&s.code!==s.s?' · <span style="font-family:monospace;font-size:10px">'+esc(s.code)+'</span>':''}
       <br>${esc(s.d)} · ${esc(s.c||'—')} · ${esc(s.p||'—')}
       <br>HH ${s.hh!=null?fmt(Math.round(s.hh)):'—'} · Individuals ${s.ind!=null?fmt(Math.round(s.ind)):'—'}
@@ -630,9 +616,9 @@ function renderMapLegend(){
       aria-hidden="true">${m||''}</span>${l}</span>`;
   $('#mapLegend').innerHTML = MAPST.fill==='sev'
     ? BANDDEF.map(b=>it(b.col,`${b.k} ${b.rng}`,b.mark,b.k==='Moderate')).join('')
-      +it('#d5dbd9','Not assessed','·',true)
-    : it('#1f6b72','200+ sites')+it('#2f8f97','50–199')+it('#6fb3b9','10–49')
-      +it('#b7d8db','1–9')+it('#d5dbd9','None');
+      +it('#E2E5E0','Not assessed','·',true)
+    : it('#104E5D','200+ sites')+it('#17677A','50–199')+it('#6FAEBD','10–49')
+      +it('#C9E0E6','1–9')+it('#E2E5E0','None');
 }
 
 /* ================= CATCHMENT ANALYSIS TABLE ================= */

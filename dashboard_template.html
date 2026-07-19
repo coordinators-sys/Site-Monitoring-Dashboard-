@@ -28,18 +28,20 @@
 <meta name="twitter:title" content="CCCM Somalia — Site Monitoring Dashboard">
 <meta name="twitter:image" content="https://site-monitoring.cccmclustersomalia.org/og-image.png">
 <style>
+/*INTER_CSS*/
 :root{
-  --teal:#2f8f97; --teal-d:#1f6b72; --teal-l:#e7f3f3; --orange:#ec6b4d; --orange-d:#c84e30;
-  --ink:#12211f; --ink-2:#4c5a58; --muted:#8a938f; --line:#e3e7e5; --line-2:#eef1ef;
-  --surface:#ffffff; --plane:#f4f6f5; --plane-2:#eef2f1;
+  /* Service Mapping design system (service-mapping-dashboard.cccmclustersomalia.org) */
+  --teal:#17677A; --teal-d:#104E5D; --teal-l:#E8F4F6; --orange:#EC6B4D; --orange-d:#c84e30;
+  --ink:#26343A; --ink-2:#4c5a60; --muted:#6B777C; --line:#DCE3E5; --line-2:#ECF0F1;
+  --surface:#FFFFFF; --plane:#F5F5F1; --plane-2:#EFEFEA;
   /* status / severity */
-  --s-low:#2ba24d; --s-mod:#f4a929; --s-high:#ee6a3a; --s-crit:#c0392b; --s-na:#c3cbc8;
-  --good:#2ba24d; --gap:#d0473a; --cov:#2f8f97;
+  --s-low:#3A8D68; --s-mod:#E9A23B; --s-high:#EC6B4D; --s-crit:#D9534F; --s-na:#9AA5B1;
+  --good:#3A8D68; --gap:#D9534F; --cov:#17677A;
   --male:#2a78d6; --female:#d55181;
   --shadow:0 1px 2px rgba(18,33,31,.06),0 4px 14px rgba(18,33,31,.05);
   --shadow-lg:0 8px 30px rgba(18,33,31,.12);
-  --radius:14px; --radius-s:10px;
-  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --radius:12px; --radius-s:10px;
+  --sans:Inter,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -50,16 +52,17 @@ a{color:var(--teal-d)}
 .wrap{max-width:1280px;margin:0 auto;padding:0 22px}
 
 /* ---------- Header ---------- */
-header.top{background:linear-gradient(135deg,var(--teal-d),var(--teal));color:#fff;padding:20px 0 18px;box-shadow:var(--shadow)}
+header.top{background:var(--surface);color:var(--ink);padding:14px 0 12px;border-bottom:3px solid var(--teal-d)}
 .top .wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .logo{display:flex;align-items:center;gap:13px}
-.logo-mark{width:auto;height:46px;max-width:150px;flex:0 0 auto;background:#fff;padding:5px 9px;border-radius:8px;object-fit:contain}
-.logo h1{font-size:19px;line-height:1.15}
-.logo .sub{font-size:12.5px;opacity:.9;font-weight:500;margin-top:2px}
+.logo-mark{width:auto;height:52px;max-width:170px;flex:0 0 auto;object-fit:contain}
+.logo .eyebrow{font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--teal);text-transform:uppercase}
+.logo h1{font-size:20px;line-height:1.2;color:var(--ink)}
+.logo .sub{font-size:12.5px;color:var(--muted);font-weight:500;margin-top:2px}
 .top .spacer{flex:1}
-.top .meta{text-align:right;font-size:11.5px;opacity:.9;line-height:1.55}
+.top .meta{text-align:right;font-size:11.5px;color:var(--muted);line-height:1.55}
 .top .meta b{font-weight:700}
-.top .pill{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:3px 11px;font-size:11px;font-weight:600;margin-top:5px}
+.top .pill{display:inline-block;background:var(--teal-l);border:1px solid var(--teal);color:var(--teal-d);border-radius:8px;padding:4px 12px;font-size:11px;font-weight:600;margin-top:5px}
 
 /* ---------- Nav ---------- */
 nav.tabs{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:0 1px 0 rgba(18,33,31,.03)}
@@ -67,7 +70,7 @@ nav.tabs .wrap{display:flex;gap:2px;overflow-x:auto}
 .tab{appearance:none;border:none;background:none;font-family:inherit;font-size:13.5px;font-weight:600;color:var(--ink-2);
   padding:14px 16px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:.15s}
 .tab:hover{color:var(--teal-d);background:var(--plane-2)}
-.tab.active{color:var(--teal-d);border-bottom-color:var(--orange)}
+.tab.active{color:var(--teal-d);border-bottom-color:var(--teal)}
 
 /* ---------- Sections ---------- */
 main{padding:26px 0 60px}
@@ -93,12 +96,13 @@ main{padding:26px 0 60px}
 /* KPI */
 .kpis{grid-template-columns:repeat(7,1fr)}
 .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:15px 15px 14px;box-shadow:var(--shadow);position:relative;overflow:hidden}
-.kpi .k-ic{margin-bottom:8px;line-height:0;display:flex;align-items:center;min-height:20px}
-.kpi .k-val{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1}
-.kpi .k-lab{font-size:11.5px;color:var(--ink-2);margin-top:5px;font-weight:600}
+.kpi{transition:box-shadow .15s,transform .15s}
+.kpi:hover{box-shadow:0 4px 14px rgba(0,0,0,.08);transform:translateY(-1px)}
+.kpi .k-val{font-size:25px;font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
+.kpi .k-lab{font-size:11px;color:var(--muted);margin-top:5px;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
 .kpi .k-sub{font-size:10.5px;color:var(--muted);margin-top:2px}
 .kpi.accent{background:linear-gradient(135deg,#fff,#fef1ec)}
-.kpi.accent .k-val{color:var(--orange-d)}
+.kpi.accent .k-val{color:var(--s-crit)}
 .kpi .bar-top{position:absolute;top:0;left:0;right:0;height:3px;background:var(--teal)}
 .kpi.accent .bar-top{background:var(--orange)}
 
@@ -397,7 +401,8 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,
     <div class="logo">
       <img class="logo-mark" id="brandLogo" alt="CCCM Cluster Somalia">
       <div>
-        <h1>CCCM Cluster Somalia — Site Monitoring Dashboard</h1>
+        <div class="eyebrow">CCCM Cluster Somalia</div>
+        <h1>Site Monitoring Dashboard</h1>
         <div class="sub">Q2 2026 (April–June)</div>
       </div>
     </div>
