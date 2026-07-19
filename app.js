@@ -164,36 +164,23 @@ function renderKPIs(){
   const bp=$('#bannerPub'); if(bp) bp.textContent=fmt(pk.sites);
   const pn=$('#pubN'); if(pn) pn.textContent=fmt(pk.sites);
   const sn=$('#sdN'); if(sn) sn.textContent=fmt(k.sites);   // deep-dive scores the draft
-  $('#findingsList').innerHTML=((P&&P.keyFindings)||DATA.keyFindings).map(f=>`<li>${esc(f)}</li>`).join('');
-  $('#covNote').textContent=DATA.coverageNotes;
-  // Q1 vs Q2
-  const q=DATA.q1;
-  // If no prior-quarter baseline was supplied, q1 mirrors q2 and every delta is 0 — which
-  // renders as "coverage unchanged", a finding we have not established. Show the current
-  // figures and say plainly that no baseline exists.
-  const hasBaseline = DATA.hasQ1Baseline === true;
-  $('#q1q2').innerHTML=Object.entries(q).map(([m,[q2,q1]])=>{
+  // Key Signals: number-first chips, not sentences — a dashboard states, it does not narrate.
+  const sigs=P&&P.signals;
+  $('#findingsList').innerHTML=sigs
+    ? sigs.map(g=>`<div class="sig ${g.k}"><div class="v">${esc(g.v)}</div><div class="l">${esc(g.l)}</div></div>`).join('')
+    : ((P&&P.keyFindings)||DATA.keyFindings).map(f=>`<li>${esc(f)}</li>`).join('');
+  // Q1 -> Q2 coverage: compact delta rows, one caveat line. The published-vs-draft
+  // reconciliation narrative lives in Data Quality and Methodology, not here.
+  const q=DATA.q1, hasBaseline=DATA.hasQ1Baseline===true;
+  $('#q1q2').innerHTML='<div class="q1chips">'+Object.entries(q).map(([m,[q2,q1]])=>{
     const d=q2-q1, up=d>=0;
-    return `<div class="hbar-row" style="grid-template-columns:120px 1fr 1fr 70px">
-      <div class="l">${m}</div>
-      <div style="font-weight:700" class="mono">${fmt(q2)}</div>
-      <div style="color:var(--muted)" class="mono">${hasBaseline?fmt(q1)+' <span style="font-size:10px">Q1</span>':'<span style="font-size:11px">no baseline</span>'}</div>
-      <div class="v" style="color:${hasBaseline?(up?'var(--good)':'var(--gap)'):'var(--muted)'}">${hasBaseline?(up?'▲':'▼')+' '+fmt(Math.abs(d)):'—'}</div></div>`;
-  }).join('')+`<div class="note" style="margin-top:8px">${hasBaseline
-      ? (DATA.q1Source||'')+(DATA.kpi.sites!==q.Sites[0]
-          // The KPI cards were switched to the published figures (see renderKPIs), so this
-          // panel and the cards now agree. Only the draft differs, and it is labelled as
-          // draft wherever it appears.
-          ? ` <b>Note:</b> this panel shows the <b>published</b> Q2 figures
-              (${fmt(q.Sites[0])} sites), as do the headline KPI cards above. The
-              Severe-or-High share is the one card derived from the draft rebuild
-              (${fmt(DATA.kpi.sites)} rows), because band membership is not part of the
-              published figure set — its own sub-line names that denominator. The two
-              differ because the published round applied additional site-eligibility
-              filtering. Reconciliation is pending; use the published figures for
-              external reporting.`
-          : '')
-      : 'No Q1 2026 baseline is loaded, so no coverage change is shown.'}</div>`;
+    return `<div class="q1c"><span class="m">${m}</span><span class="now">${fmt(q2)}</span>
+      <span class="dl" style="color:${hasBaseline?(up?'var(--good)':'var(--gap)'):'var(--muted)'}">${hasBaseline?(up?'▲':'▼')+fmt(Math.abs(d)):'—'}</span>
+      <span style="font-size:10px;color:var(--muted)">${hasBaseline?'vs '+fmt(q1)+' Q1':''}</span></div>`;
+  }).join('')+'</div>';
+  $('#covNote').textContent=hasBaseline
+    ? 'Published Q1→Q2. Coverage changed — severity is not like-for-like across quarters.'
+    : 'No Q1 2026 baseline loaded.';
 }
 
 function renderSectorDiverge(){

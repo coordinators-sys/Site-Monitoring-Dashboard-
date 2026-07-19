@@ -106,6 +106,16 @@ main{padding:26px 0 60px}
 .findings{background:linear-gradient(135deg,#fff8f4,#fef1ec);border:1px solid #f6d9cd;border-left:4px solid var(--orange);border-radius:var(--radius-s);padding:15px 18px}
 .findings h4{color:var(--orange-d);font-size:13px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.03em}
 .findings ul{margin:0;padding-left:18px}
+.sigrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.sig{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.sig .v{font-size:21px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.sig.gap .v{color:var(--gap)} .sig.good .v{color:var(--good)} .sig.warn .v{color:#9a5b13}
+.sig .l{font-size:11px;color:var(--ink-2);margin-top:3px;line-height:1.35}
+.q1chips{display:flex;flex-direction:column;gap:6px}
+.q1c{display:flex;align-items:baseline;gap:8px;font-size:12.5px;padding:3px 0;border-bottom:1px solid var(--line-2)}
+.q1c:last-child{border-bottom:none}
+.q1c .m{flex:1;color:var(--ink-2)} .q1c .now{font-weight:800;font-variant-numeric:tabular-nums}
+.q1c .dl{font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}
 .findings li{margin:4px 0;font-size:13px}
 
 /* two-col */
@@ -478,8 +488,8 @@ a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,
 
     <div class="grid cols2 block">
       <div class="findings">
-        <h4>Key Findings</h4>
-        <ul id="findingsList"></ul>
+        <h4>Key Signals</h4>
+        <div id="findingsList" class="sigrow"></div>
       </div>
       <div class="card p">
         <h3 style="font-size:14px;margin-bottom:10px">Coverage this quarter <span class="hint" style="font-weight:500;color:var(--muted)">Q2 vs Q1 2026</span></h3>

@@ -588,6 +588,13 @@ data["published"] = {
     #    report's "out of" reference figures
     "denominators": {"eligibleSites": 4119, "totalCatchments": 53,
                      "totalHHs": 614590, "totalIndividuals": 3375346},
+    # structured signals for the Overview chips — numbers first, no sentences
+    "signals": [
+        {"v": "84%", "l": "sites with no food/cash distribution — widest gap (869 of 1,275)", "k": "gap"},
+        {"v": "67%", "l": "Afmadow — highest-severity district (≥10 sites)", "k": "gap"},
+        {"v": "97%", "l": "CFM functioning — strongest coverage", "k": "good"},
+        {"v": "14/26", "l": "Mogadishu catchments not assessed", "k": "warn"},
+    ],
     "keyFindings": [
         "Widest gap: on-site food or cash distribution, 84% Red — 869 of 1,275 sites report never receiving it.",
         "Highest-severity districts (at least 10 sites): Afmadow 67%, Xudur 61%, Baardheere 60%.",
