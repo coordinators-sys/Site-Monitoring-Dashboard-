@@ -516,8 +516,8 @@ data["demographics"] = {
   "malePct": pct(male), "femalePct": pct(female),
   "source": (f"Age/sex computed from the IDP Site Verification dataset, summed over the "
              f"{n_sv_distinct} distinct verification records matching the {n_sv} of {len(df)} "
-             f"sites in this quarter that resolved by CCCM site code or district + site name. "
-             f"Not collected by the monitoring form or the Q2 Master "
+             f"draft site rows this quarter that resolved by CCCM site code or district + "
+             f"site name. Not collected by the monitoring form or the Q2 Master "
              f"List. Verification totals are Q1-2026 vintage."),
   "bands": [{"age": lab,
              "mN": int(tot[mc]), "mP": pct(tot[mc]),

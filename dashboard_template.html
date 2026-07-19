@@ -3,7 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CCCM Somalia · Site Monitoring Dashboard · Q2 2026</title>
+<title>CCCM Somalia — Site Monitoring Dashboard</title>
+<meta name="description" content="CCCM Cluster Somalia site monitoring dashboard, Q2 2026 (April–June): 1,275 assessed sites across 16 districts, scored by sector.">
+<meta name="theme-color" content="#1f6b72">
+<!-- Icons are generated from logo/CCCMCluster_Somalia.png by tools/make_icons.py.
+     /*FAVICON_INLINE*/ is replaced at build time with a base64 data URI of the 32px
+     icon, so the tab icon still works when the single-file build is opened straight
+     from disk with no server and no sibling files. The file references below are what
+     the deployed copy uses — browsers prefer the later, higher-resolution entries. -->
+<link rel="icon" href="/*FAVICON_INLINE*/">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CCCM Cluster Somalia">
+<meta property="og:title" content="CCCM Somalia — Site Monitoring Dashboard">
+<meta property="og:description" content="Q2 2026 (April–June): 1,275 assessed sites across 16 districts, scored Green/Yellow/Red across 76 indicators in 12 sectors.">
+<meta property="og:image" content="https://site-monitoring.cccmclustersomalia.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://site-monitoring.cccmclustersomalia.org/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CCCM Somalia — Site Monitoring Dashboard">
+<meta name="twitter:image" content="https://site-monitoring.cccmclustersomalia.org/og-image.png">
 <style>
 :root{
   --teal:#2f8f97; --teal-d:#1f6b72; --teal-l:#e7f3f3; --orange:#ec6b4d; --orange-d:#c84e30;
@@ -118,7 +141,14 @@ main{padding:26px 0 60px}
 .hbar-row .v{font-weight:700;text-align:right;font-size:12px}
 
 /* ---------- Severity dots ---------- */
-.dot{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:middle}
+/* The letter (L/M/H/C) inside each dot is what makes the sector grid readable for a
+   colour-blind reader and on a monochrome print — colour is the redundant channel here,
+   not the primary one. */
+.dot{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:middle;
+  font-size:9px;line-height:14px;font-weight:800;color:#fff;text-align:center;
+  letter-spacing:0;font-family:var(--sans)}
+.dot.Y{color:#5a3c00}                     /* amber needs dark text for AA contrast */
+.badge .b-lab{font-weight:600;opacity:.92;margin-left:2px}
 .dot.G{background:var(--s-low)} .dot.Y{background:var(--s-mod)} .dot.R{background:var(--s-high)}
 .dot.K{background:var(--s-crit)} .dot.NA{background:transparent;border:1.5px solid var(--s-na);width:9px;height:9px}
 .sq{border-radius:2px}
@@ -278,6 +308,74 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
 .note{font-size:11.5px;color:var(--muted);margin-top:8px}
 .chiprow{display:flex;gap:7px;flex-wrap:wrap}
 .chip{background:var(--plane-2);border:1px solid var(--line);border-radius:16px;padding:3px 10px;font-size:11.5px;color:var(--ink-2);font-weight:600}
+
+/* ---------- site-wide draft bar ---------- */
+.draft-bar{background:#fdf3e7;border-bottom:1px solid #e8b97a;color:#7d4a10;font-size:12.5px;
+  position:sticky;top:var(--navh,44px);z-index:45}
+.draft-bar .wrap{display:flex;align-items:center;gap:9px;padding:7px 22px}
+.draft-bar svg{flex:none;color:#c8791a}
+.draft-bar[hidden]{display:none}
+.draft-x{margin-left:auto;flex:none;background:none;border:0;color:inherit;cursor:pointer;
+  font-size:14px;line-height:1;padding:4px 6px;border-radius:6px;opacity:.65}
+.draft-x:hover{opacity:1;background:rgba(0,0,0,.06)}
+.tabspacer{flex:1}
+/* Styled like a tab but intentionally not one — see the note in the markup. */
+.glossary-btn{appearance:none;border:none;background:none;font-family:inherit;font-size:13.5px;
+  font-weight:600;color:var(--ink-2);padding:13px 14px;cursor:pointer;white-space:nowrap}
+.glossary-btn:hover{color:var(--teal-d)}
+
+/* ---------- glossary modal ---------- */
+.modal-back{position:fixed;inset:0;background:rgba(18,33,31,.45);z-index:200;
+  display:flex;align-items:center;justify-content:center;padding:24px}
+.modal-back[hidden]{display:none}
+.modal{background:var(--surface);border-radius:var(--radius);max-width:620px;width:100%;
+  max-height:80vh;overflow:auto;box-shadow:var(--shadow-lg);padding:20px 24px 24px}
+.modal-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.modal-head h3{margin:0;font-size:16px}
+dl.gloss{margin:0;font-size:12.5px;line-height:1.55}
+dl.gloss dt{font-weight:700;color:var(--teal-d);margin-top:11px}
+dl.gloss dd{margin:1px 0 0;color:var(--ink-2)}
+
+/* ---------- shared severity legend (one definition, used on 3 tabs) ---------- */
+.sev-legend{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:11.5px;
+  color:var(--ink-2);background:var(--plane-2);border:1px solid var(--line);
+  border-radius:var(--radius-s);padding:8px 12px;margin-bottom:12px}
+.sev-legend .lg-t{font-weight:700;color:var(--ink);letter-spacing:.02em;text-transform:uppercase;font-size:10.5px}
+.sev-legend .it{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.sev-legend .sw{width:11px;height:11px;border-radius:50%;flex:none;
+  display:inline-flex;align-items:center;justify-content:center;font-size:8px;color:#fff;font-weight:800}
+.info-dot{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;
+  border-radius:50%;border:1px solid var(--muted);color:var(--muted);font-size:10px;font-weight:700;
+  cursor:help;background:none;padding:0;flex:none}
+.info-dot:hover,.info-dot:focus-visible{border-color:var(--teal);color:var(--teal-d)}
+
+/* ---------- KPI stat cards (dashboard landing) ---------- */
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:15px 16px 14px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.stat .s-lab{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700}
+.stat .s-val{font-size:31px;font-weight:800;line-height:1.05;margin:7px 0 2px;letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums}
+.stat .s-sub{font-size:11.5px;color:var(--ink-2)}
+.stat.accent .s-val{color:var(--orange-d)}
+.stat .s-ic{position:absolute;top:13px;right:14px;opacity:.5}
+.stat-skel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:15px 16px;box-shadow:var(--shadow);min-height:96px}
+.stat-skel .sk{background:linear-gradient(90deg,var(--plane-2) 25%,var(--line-2) 50%,var(--plane-2) 75%);
+  background-size:200% 100%;animation:sk 1.4s ease-in-out infinite;border-radius:5px}
+.stat-skel .sk.a{height:9px;width:52%}.stat-skel .sk.b{height:24px;width:64%;margin:11px 0 8px}
+.stat-skel .sk.c{height:9px;width:78%}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){.stat-skel .sk{animation:none}}
+.stats-grid{display:grid;gap:14px;grid-template-columns:repeat(5,1fr)}
+@media(max-width:1100px){.stats-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.stats-grid{grid-template-columns:repeat(2,1fr)}
+  .grid.cols2,.grid.cols3{grid-template-columns:1fr}}
+@media(max-width:430px){.stats-grid{grid-template-columns:1fr}}
+
+/* visible keyboard focus everywhere — was browser-default and effectively invisible
+   on the teal chrome */
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,
+[tabindex]:focus-visible{outline:2.5px solid var(--teal);outline-offset:2px;border-radius:4px}
 </style>
 <style>
 /*LEAFLET_CSS*/
@@ -313,18 +411,70 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
     <button class="tab" data-view="quality">Data Quality</button>
     <button class="tab" data-view="reports">Reports</button>
     <button class="tab" data-view="method">Methodology</button>
+    <span class="tabspacer"></span>
+    <!-- Deliberately NOT class="tab": the tab handler resolves #view-<data-view>, and a
+         .tab with no data-view resolves to null and throws on click. -->
+    <button class="glossary-btn" id="glossaryBtn" aria-haspopup="dialog">Glossary</button>
   </div>
 </nav>
+
+<!-- One draft notice for the whole product. Previously each of Site Explorer, Sector
+     Deep-Dive, Priority Gaps and Data Quality carried its own chip, which made the
+     caveat feel like decoration. Dismissible per session (sessionStorage), so it
+     returns for every new visitor rather than being permanently silenced. -->
+<div class="draft-bar" id="draftBar" role="status">
+  <div class="wrap">
+    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <path d="M12 3.5 22 20H2L12 3.5Z"/><path d="M12 10v4"/><circle cx="12" cy="17.2" r=".9" fill="currentColor" stroke="none"/>
+    </svg>
+    <span><b>Draft data</b> — pending IM validation. Official published Q2 figure:
+      <b><span id="bannerPub">—</span> sites</b>.</span>
+    <button class="draft-x" id="draftBarX" aria-label="Dismiss draft-data notice">✕</button>
+  </div>
+</div>
+
+<!-- Glossary: acronyms expanded once, centrally, rather than inline on first use in
+     nine different tabs. -->
+<div class="modal-back" id="glossaryModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="glossaryTitle">
+    <div class="modal-head">
+      <h3 id="glossaryTitle">Glossary</h3>
+      <button class="draft-x" id="glossaryX" aria-label="Close glossary">✕</button>
+    </div>
+    <dl class="gloss">
+      <dt>CCCM</dt><dd>Camp Coordination and Camp Management — the humanitarian cluster responsible for displacement sites.</dd>
+      <dt>IM</dt><dd>Information Management — the cluster function that validates and publishes these figures.</dd>
+      <dt>CA</dt><dd>Catchment Area — a group of nearby displacement sites managed as one operational unit.</dd>
+      <dt>HH</dt><dd>Household — the counting unit for population figures alongside individuals.</dd>
+      <dt>IDP</dt><dd>Internally Displaced Person.</dd>
+      <dt>SNFI / NFI</dt><dd>Shelter and Non-Food Items — non-food relief such as blankets, mats and kitchen sets.</dd>
+      <dt>WASH</dt><dd>Water, Sanitation and Hygiene.</dd>
+      <dt>FSL</dt><dd>Food Security and Livelihoods.</dd>
+      <dt>GBV</dt><dd>Gender-Based Violence.</dd>
+      <dt>HLP</dt><dd>Housing, Land and Property.</dd>
+      <dt>CMC</dt><dd>Camp Management Committee — the site-level representative body.</dd>
+      <dt>CFM</dt><dd>Complaint and Feedback Mechanism.</dd>
+      <dt>UNDP</dt><dd>United Nations Development Programme — source of the Admin-2 district boundaries.</dd>
+      <dt>OCHA</dt><dd>UN Office for the Coordination of Humanitarian Affairs — co-source of those boundaries.</dd>
+      <dt>Severity Score</dt><dd>Mean share of indicators scored Red across the sectors assessed at a site. Sectors not assessed are excluded, never counted as zero.</dd>
+    </dl>
+  </div>
+</div>
 
 <main class="wrap">
 
   <!-- ============ OVERVIEW ============ -->
   <section class="view active" id="view-overview">
-    <div class="sec-head"><h2>National Overview</h2>
-      <p>Q2 2026 covers sites and catchment areas where CCCM partners are actively present — it is not a census of all displacement sites. Each site is scored Green/Yellow/Red per indicator; the Severity Score is the average share of red-scored indicators across assessed sectors (higher = wider service gap).</p>
+    <!-- Landing view: numbers first. The explanatory paragraph that used to sit here
+         (what the quarter covers, how severity is derived) is on Methodology — a
+         dashboard should open with the figures, not with three lines of prose. -->
+    <div class="sec-head compact"><h2>National Overview</h2>
+      <p class="ov-lede">Q2 2026 (April–June) · published figures ·
+        <a href="#" class="lnk" id="toMethod">how these are calculated</a></p>
     </div>
 
-    <div class="grid kpis block" id="kpiRow"></div>
+    <div class="stats-grid block" id="kpiRow"></div>
 
     <div class="grid cols2 block">
       <div class="findings">
@@ -378,15 +528,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
   <!-- ============ SEVERITY BY DISTRICT ============ -->
   <section class="view" id="view-severity">
     <div class="sec-head"><h2>Severity by District</h2>
-      <p>Distribution of the <span id="sevCount2">—</span> assessed sites across severity bands, by district. Severity bands: <b>Severe</b> ≥55%, <b>High</b> 40–55%, <b>Moderate</b> 25–40%, <b>Low</b> &lt;25% of indicators scored Red. All districts are shown; the national ranking highlights those with ≥10 assessed sites.</p>
+      <p>Draft site rows grouped by district. All districts are shown; the national
+         ranking highlights those with 10 or more assessed sites.</p>
     </div>
+    <!-- band definitions come from the one shared legend component -->
+    <div data-sev-legend></div>
     <div class="card p block">
-      <div class="legend" style="margin-bottom:14px">
-        <span class="it"><span class="dot K"></span> Severe (≥55%)</span>
-        <span class="it"><span class="dot R"></span> High (40–55%)</span>
-        <span class="it"><span class="dot Y"></span> Moderate (25–40%)</span>
-        <span class="it"><span class="dot G"></span> Low (&lt;25%)</span>
-      </div>
       <div class="stk-row" style="border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px">
         <div class="l" style="color:var(--muted);text-transform:uppercase;font-size:10.5px;letter-spacing:.04em">District</div>
         <div style="color:var(--muted);text-transform:uppercase;font-size:10.5px;letter-spacing:.04em">Site severity mix</div>
@@ -429,12 +576,11 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
   <!-- ============ SITE EXPLORER ============ -->
   <section class="view" id="view-explorer">
     <div class="sec-head"><h2>Site Explorer</h2>
-      <p>All <span id="exCount2">—</span> assessed sites with per-sector scoring. Filter and sort to prioritise. Each dot is a sector: it shows the share of that sector's indicators scored Red at the site.</p>
+      <p>Per-sector scoring for every draft site row. Filter and sort to prioritise. Each
+         dot is a sector: it shows the share of that sector's indicators scored Red at
+         the site. Do not quote site-level values externally.</p>
     </div>
-    <div class="draft-banner"><b>Draft data.</b> Site-level rows come from the live rebuild
-      (<span id="draftN">—</span> sites), pending IM validation. The officially published Q2
-      figure is <b><span id="pubN">—</span> sites</b> — do not quote site-level values externally. See the
-      Data Quality tab for the full reconciliation.</div>
+    <div data-sev-legend></div>
 
     <div class="filters">
       <div class="fl-grid">
@@ -459,10 +605,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
     <div class="card p" style="padding:12px 16px;margin-bottom:14px">
       <div class="legend">
         <b style="font-size:12px;color:var(--ink)">Sector dot:</b>
-        <span class="it"><span class="dot G"></span> 0–25% Red (Low gap)</span>
-        <span class="it"><span class="dot Y"></span> 26–50% (Moderate)</span>
-        <span class="it"><span class="dot R"></span> 51–90% (High)</span>
-        <span class="it"><span class="dot K"></span> 91–100% (Critical)</span>
+        <span class="it"><span class="dot G"></span> 0–25% — Low gap</span>
+        <span class="it"><span class="dot Y"></span> 26–50% — Moderate</span>
+        <span class="it"><span class="dot R"></span> 51–90% — High</span>
+        <span class="it"><span class="dot K"></span> 91–100% — Critical</span>
         <span class="it"><span class="dot NA sq"></span> Not assessed</span>
       </div>
     </div>
@@ -514,16 +660,20 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
     <div class="sec-head">
       <h2>Geographic Prioritisation</h2>
       <p>District severity choropleth with assessed-site locations. Grey districts were
-      not assessed this quarter. Site-level detail is
-      <span class="draft-chip">DRAFT · live rebuild · pending IM validation</span></p>
+      not assessed this quarter.</p>
     </div>
+    <div data-sev-legend></div>
     <div class="card p">
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
         <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase">Layers</span>
-        <button class="btn sm map-layer active" data-layer="sev">District severity</button>
-        <button class="btn sm map-layer" data-layer="cov">Assessment coverage</button>
-        <button class="btn sm map-layer" data-layer="sites">Site points</button>
-        <button class="btn sm map-layer" data-layer="ca">Catchment areas</button>
+        <button class="btn sm map-layer active" data-layer="sev"
+          data-tip="Shades each district by the average severity score of its assessed sites — darker means a wider service gap.">District severity</button>
+        <button class="btn sm map-layer" data-layer="cov"
+          data-tip="Shades each district by how many sites were assessed there this quarter, regardless of their scores.">Assessment coverage</button>
+        <button class="btn sm map-layer" data-layer="sites"
+          data-tip="One dot per assessed site with GPS coordinates, coloured by its severity band. Click a dot to open that site in the Site Explorer.">Site points</button>
+        <button class="btn sm map-layer" data-layer="ca"
+          data-tip="Outlines the CCCM catchment areas — groups of nearby sites managed as one operational unit.">Catchment areas</button>
         <div style="flex:1"></div>
         <span id="mapHint" style="font-size:11.5px;color:var(--muted)">OpenStreetMap basemap · hover a district or site · scroll to zoom</span>
       </div>
@@ -531,10 +681,10 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
         <div id="somMap" style="width:100%;height:640px"></div>
       </div>
       <div class="legend" id="mapLegend" style="margin-top:10px"></div>
+      <!-- Shapefile versions and the Kahda/Daynile rendering caveat moved to Methodology;
+           only the endorsement disclaimer has to travel with the map itself. -->
       <p style="margin:8px 0 0;font-size:11px;color:var(--muted)">
-        Boundaries: UNDP/OCHA Somalia Admin 2 · Catchments: CCCM 2025 CA shapefiles v01.
-        Kahda and Daynile are monitored as separate sub-districts but render on the Banadir
-        Admin-2 polygon. The boundaries shown do not imply official endorsement.</p>
+        Boundaries shown do not imply official endorsement.</p>
     </div>
 
     <div class="card p" style="margin-top:16px">
@@ -560,12 +710,14 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
   <section class="view" id="view-gaps">
     <div class="sec-head">
       <h2>Priority Gaps</h2>
-      <p>Indicator-level service gaps ranked for coordination action. Every percentage
-      carries its denominator; missing and not-applicable responses are excluded, never
-      counted as Red. <span class="draft-chip">DRAFT · live rebuild · pending IM validation</span></p>
+      <p>Indicator-level service gaps ranked for coordination action.</p>
     </div>
     <div class="card p" style="margin-bottom:16px">
       <h3 style="margin-bottom:4px">Priority Score</h3>
+      <p style="margin:0 0 6px;font-size:12.5px;color:var(--ink-2)">Missing and
+      not-applicable responses are excluded and never counted as Red, so every
+      percentage below is a share of the sites where the question was actually
+      answered.</p>
       <p id="gapsFormula" style="margin:0;font-size:12.5px;color:var(--ink-2)"></p>
       <p id="gapsActiveNote" style="margin:6px 0 0;font-size:11.5px;color:var(--muted)"></p>
     </div>
@@ -573,7 +725,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
       <div class="tbl-scroll">
         <table class="sites">
           <thead><tr>
-            <th>#</th><th>Indicator</th><th>Sector</th><th class="ctr">Red % (n/N)</th>
+            <th>#</th><th>Indicator</th><th>Sector</th><th class="ctr">Sites scored Red</th>
             <th class="ctr">HHs affected</th><th class="ctr">Individuals affected</th>
             <th class="ctr">Districts</th><th class="ctr">Priority score</th>
           </tr></thead>

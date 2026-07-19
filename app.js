@@ -9,7 +9,11 @@ const SD_LABEL = {CCCM:"CCCM",Protection:"Protection",CP:"Child Protection",GBV:
   Health:"Health",FSL:"Food Security & Livelihoods",Nutrition:"Nutrition",Education:"Education"};
 const BANDS=["Severe","High","Moderate","Low"];
 const BANDCLASS={Severe:"K",High:"R",Moderate:"Y",Low:"G"};
-const SCORELAB={G:"0–25% Red (Low)",Y:"26–50% Red (Moderate)",R:"51–90% Red (High)",K:"91–100% Red (Critical)",NA:"Not assessed"};
+/* Percentage and its band label always travel together — a reader should never have to
+   map a colour back to a range from memory or from a legend elsewhere on the page. */
+const SCORELAB={G:"0–25% — Low gap",Y:"26–50% — Moderate",R:"51–90% — High",K:"91–100% — Critical",NA:"Not assessed"};
+/* Letter shown inside each sector dot so the grid is readable without colour. */
+const SCOREMARK={G:"L",Y:"M",R:"H",K:"C",NA:""};
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const fmt=n=>n.toLocaleString('en-US');
 /* Site, partner, district, catchment and region names are free text typed by enumerators
@@ -22,6 +26,70 @@ const fmt=n=>n.toLocaleString('en-US');
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
 
+/* ---------- severity bands: ONE definition ----------
+   These four thresholds previously appeared as prose on Severity by District, as a
+   legend on the Map, and again in Methodology, so a change to the banding had three
+   places to go wrong. BANDDEF is the single source; renderSevLegend() paints it
+   wherever a [data-sev-legend] host appears. Each swatch also carries a letter, so the
+   bands stay distinguishable without relying on colour. */
+const BANDDEF=[
+  {k:'Severe',   mark:'S', col:'var(--s-crit)', rng:'≥55%'},
+  {k:'High',     mark:'H', col:'var(--s-high)', rng:'40–55%'},
+  {k:'Moderate', mark:'M', col:'var(--s-mod)',  rng:'25–40%'},
+  {k:'Low',      mark:'L', col:'var(--s-low)',  rng:'<25%'},
+];
+const BANDHELP='Severity Score = the mean share of indicators scored Red across the '
+  +'sectors assessed at a site. Sectors that were not assessed are excluded, never '
+  +'counted as zero. Higher = wider service gap.';
+/* Draft bar, glossary modal, and the Overview "how these are calculated" link. */
+function wireChrome(){
+  const bar=$('#draftBar');
+  if(bar){
+    // sessionStorage, not localStorage: the caveat should reappear for the next visitor
+    // and the next session, not be dismissed once and gone for good.
+    if(sessionStorage.getItem('cccm-draft-dismissed')==='1') bar.hidden=true;
+    const x=$('#draftBarX');
+    if(x) x.addEventListener('click',()=>{
+      bar.hidden=true;
+      try{ sessionStorage.setItem('cccm-draft-dismissed','1'); }catch(e){}
+      syncNavOffset();
+    });
+  }
+  const modal=$('#glossaryModal'), open=$('#glossaryBtn'), close=$('#glossaryX');
+  if(modal&&open){
+    const show=v=>{ modal.hidden=!v; if(v) (close||modal).focus(); else open.focus(); };
+    open.addEventListener('click',()=>show(true));
+    if(close) close.addEventListener('click',()=>show(false));
+    modal.addEventListener('click',e=>{ if(e.target===modal) show(false); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!modal.hidden) show(false); });
+  }
+  const tm=$('#toMethod');
+  if(tm) tm.addEventListener('click',e=>{
+    e.preventDefault();
+    const b=document.querySelector('.tab[data-view=method]'); if(b) b.click();
+  });
+  syncNavOffset();
+  addEventListener('resize',syncNavOffset);
+}
+/* The draft bar sticks below the tab bar; both heights vary with wrapping, so the
+   offset is measured rather than hard-coded. */
+function syncNavOffset(){
+  const nav=document.querySelector('nav.tabs');
+  if(nav) document.documentElement.style.setProperty('--navh',nav.offsetHeight+'px');
+}
+
+function renderSevLegend(){
+  $$('[data-sev-legend]').forEach(host=>{
+    host.className='sev-legend';
+    host.innerHTML=`<span class="lg-t">Severity band</span>`
+      +BANDDEF.map(b=>`<span class="it"><span class="sw" style="background:${b.col}"
+         aria-hidden="true">${b.mark}</span>${b.k} <span style="color:var(--muted)">${b.rng}</span></span>`).join('')
+      +`<button class="info-dot" type="button" aria-label="How the severity score is calculated"
+          data-tip="${esc(BANDHELP)}">?</button>`;
+    const q=host.querySelector('.info-dot'); if(q) tip(q,()=>esc(BANDHELP));
+  });
+}
+
 /* ---------- tooltip ---------- */
 const tt=$('#tt');
 function tip(node,html){
@@ -33,9 +101,14 @@ function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');se
 
 /* ================= TAB NAV ================= */
 $$('.tab').forEach(b=>b.addEventListener('click',()=>{
+  // Bail before mutating anything if the target panel is missing: a .tab whose
+  // data-view resolves to nothing would otherwise clear every .active class, throw on
+  // the null, and leave the page with no visible panel at all.
+  const panel=b.dataset.view?$('#view-'+b.dataset.view):null;
+  if(!panel){ console.warn('[dashboard] tab has no matching panel:',b.dataset.view); return; }
   $$('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');
   $$('.view').forEach(v=>v.classList.remove('active'));
-  $('#view-'+b.dataset.view).classList.add('active');
+  panel.classList.add('active');
   if(b.dataset.view==='map'){renderMap();if(MAP)setTimeout(()=>MAP.invalidateSize(),60);}
   window.scrollTo({top:0,behavior:'smooth'});
 }));
@@ -60,28 +133,35 @@ function renderKPIs(){
   // coverage denominator. The live-rebuild figures appear only in labelled Draft views.
   const P=DATA.published, pk=P?P.kpi:k, pd_=P?P.denominators:null;
   const pct=(a,b)=>b?Math.round(100*a/b)+'%':'';
+  // Share of sites in the two worst bands. Derived from the draft rows (band membership
+  // is not part of the published figure set), so the sub-line names that denominator
+  // rather than letting it read as a share of the published 1,275.
+  const sv=DATA.sites||[], hiN=sv.filter(s=>s.b==='Severe'||s.b==='High').length;
+  const hiPct=sv.length?Math.round(100*hiN/sv.length):null;
+
+  // A card renders only when it has a real value. An empty card or a "—" reads as a
+  // broken dashboard; a card that is simply absent reads as "not applicable this round".
   const cards=[
-    {ic:svg(I.site),v:fmt(pk.sites),l:'Sites assessed',
-     s:pd_?`of ${fmt(pd_.eligibleSites)} Master List sites · ${pct(pk.sites,pd_.eligibleSites)} coverage`:(k.quarter||'')},
-    {ic:svg(I.catch),v:pk.catchments,l:'Catchment areas',
-     s:pd_?`of ${pd_.totalCatchments} CCCM-covered CAs · ${pct(pk.catchments,pd_.totalCatchments)}`:'partner-covered'},
-    {ic:svg(I.hh),v:fmt(pk.hhs),l:'Households',
-     s:pd_?`of ${fmt(pd_.totalHHs)} · ${pct(pk.hhs,pd_.totalHHs)}`:''},
-    {ic:svg(I.ind),v:fmt(pk.individuals),l:'Individuals',
-     s:pd_?`of ${fmt(pd_.totalIndividuals)} · ${pct(pk.individuals,pd_.totalIndividuals)}`:''},
-    {ic:svg(I.partner),v:pk.partners,l:'Reporting partners',s:''},
-    {ic:svg(I.dist),v:pk.districts,l:'Districts',s:'across '+(k.regions||10)+' regions'},
-    {ic:svg(I.sev,true),v:pk.severity+'%',l:'National severity',s:'avg red-indicator share',accent:true},
-  ];
-  $('#kpiRow').innerHTML=`<div style="grid-column:1/-1;margin-bottom:-6px">
-      <span class="pub-chip">PUBLISHED · Q2 2026 official figures</span>
-      <span style="font-size:11px;color:var(--muted);margin-left:8px">${P?P.source:''}</span>
-      <span style="font-size:11px;color:var(--muted);margin-left:8px">· live draft rebuild: ${fmt(k.sites)} sites — see Data Quality tab</span>
-    </div>`+cards.map(c=>`<div class="kpi ${c.accent?'accent':''}"><div class="bar-top"></div>
-    <div class="k-ic">${c.ic}</div><div class="k-val">${c.v}</div><div class="k-lab">${c.l}</div>
-    ${c.s?`<div class="k-sub">${c.s}</div>`:''}</div>`).join('');
+    {ic:svg(I.site),v:pk.sites,fmtv:1,l:'Published sites',
+     s:pd_?`of ${fmt(pd_.eligibleSites)} Master List sites · ${pct(pk.sites,pd_.eligibleSites)} coverage`:null},
+    {ic:svg(I.dist),v:pk.districts,l:'Districts assessed',
+     s:k.regions?`across ${k.regions} regions`:null},
+    {ic:svg(I.sev,true),v:hiPct,suf:'%',l:'Sites Severe or High',accent:1,
+     s:hiN?`${fmt(hiN)} of ${fmt(sv.length)} draft-assessed sites`:null},
+    {ic:svg(I.partner),v:pk.partners,l:'Reporting partners',
+     s:pk.catchments?`${pk.catchments} catchment areas`:null},
+    {ic:svg(I.ind),v:pk.individuals,fmtv:1,l:'Individuals',
+     s:pd_?`of ${fmt(pd_.totalIndividuals)} · ${pct(pk.individuals,pd_.totalIndividuals)}`:null},
+  ].filter(c=>c.v!=null&&c.v!==''&&!Number.isNaN(c.v));
+
+  $('#kpiRow').innerHTML=cards.map(c=>`<div class="stat ${c.accent?'accent':''}">
+    <div class="s-ic">${c.ic}</div>
+    <div class="s-lab">${esc(c.l)}</div>
+    <div class="s-val">${c.fmtv?fmt(c.v):c.v}${c.suf||''}</div>
+    ${c.s?`<div class="s-sub">${esc(c.s)}</div>`:''}</div>`).join('');
   // Published/draft counts were baked into the template as "1,275" literals; they go
   // stale the moment a new round is published, in the two places readers rely on most.
+  const bp=$('#bannerPub'); if(bp) bp.textContent=fmt(pk.sites);
   const pn=$('#pubN'); if(pn) pn.textContent=fmt(pk.sites);
   const sn=$('#sdN'); if(sn) sn.textContent=fmt(k.sites);   // deep-dive scores the draft
   $('#findingsList').innerHTML=((P&&P.keyFindings)||DATA.keyFindings).map(f=>`<li>${esc(f)}</li>`).join('');
@@ -104,11 +184,13 @@ function renderKPIs(){
           // The KPI cards were switched to the published figures (see renderKPIs), so this
           // panel and the cards now agree. Only the draft differs, and it is labelled as
           // draft wherever it appears.
-          ? ` <b>Note:</b> this panel and the KPI cards above both show the <b>published</b> Q2
-              figures (${fmt(q.Sites[0])} sites). The live draft rebuild counts
-              ${fmt(DATA.kpi.sites)} sites — it differs because the published round applied
-              additional site-eligibility filtering, and it is the basis for the site-level
-              Draft views only. Reconciliation is pending; use the published figures for
+          ? ` <b>Note:</b> this panel shows the <b>published</b> Q2 figures
+              (${fmt(q.Sites[0])} sites), as do the headline KPI cards above. The
+              Severe-or-High share is the one card derived from the draft rebuild
+              (${fmt(DATA.kpi.sites)} rows), because band membership is not part of the
+              published figure set — its own sub-line names that denominator. The two
+              differ because the published round applied additional site-eligibility
+              filtering. Reconciliation is pending; use the published figures for
               external reporting.`
           : '')
       : 'No Q1 2026 baseline is loaded, so no coverage change is shown.'}</div>`;
@@ -149,7 +231,9 @@ function renderDistrictGap(){
 function renderPyramid(){
   const d=DATA.demographics;
   // headings are computed, never literals baked into the template
-  const sh=$('#sevHint'); if(sh) sh.textContent=fmt(DATA.kpi.sites)+' assessed sites';
+  // Draft totals are labelled as draft rows wherever they surface outside Data Quality,
+  // so the published 1,275 stays the only number that reads as a coverage figure.
+  const sh=$('#sevHint'); if(sh) sh.textContent='across '+fmt(DATA.kpi.sites)+' draft site rows';
   ['sevCount2','exCount2'].forEach(id=>{const n=$('#'+id); if(n) n.textContent=fmt(DATA.kpi.sites);});
   // Source is named as CCCM Cluster Site Monitoring: IOM reports through the same cluster
   // instrument, so naming the underlying platforms (Kobo / Zite) misrepresents provenance.
@@ -320,7 +404,9 @@ function visibleSites(){
 function renderExplorer(){
   const list=visibleSites();
   const avg=list.length?(list.reduce((a,s)=>a+s.v,0)/list.length).toFixed(1):'—';
-  $('#explorerCount').textContent=fmt(list.length)+' sites';
+  // "rows", not "sites": this is a count of what the table is showing, never a claim
+  // about how many sites the round covered.
+  $('#explorerCount').textContent=fmt(list.length)+' draft rows';
   $('#explorerAvg').innerHTML=list.length?`avg severity <b>${avg}%</b> · Severe ${list.filter(s=>s.b==='Severe').length} · High ${list.filter(s=>s.b==='High').length}`:'';
   // header
   $('#sitesHead').innerHTML=`
@@ -335,8 +421,12 @@ function renderExplorer(){
     <td class="site-nm">${esc(s.s)}${s.code&&s.code!==s.s?`<div style="font-weight:500;color:var(--muted);font-size:10px;font-family:ui-monospace,monospace">${esc(s.code)}</div>`:''}</td>
     <td style="font-size:11.5px">${esc(s.p||'—')}</td><td>${esc(s.d)}</td><td style="color:var(--ink-2)">${esc(s.r)}</td>
     <td style="color:var(--muted)">${esc(s.c||'—')}</td>`+
-    s.sc.map((v,i)=>`<td class="ctr"><span class="dot ${v} ${v==='NA'?'sq':''}" data-t="${META[SECT[i]][1]}: ${SCORELAB[v]}"></span></td>`).join('')+
-    `<td class="ctr"><span class="badge ${s.b}">${s.v}%</span></td></tr>`).join('');
+    // Letter inside the dot + a text label for screen readers: colour alone must not be
+    // the only carrier of the score.
+    s.sc.map((v,i)=>`<td class="ctr"><span class="dot ${v} ${v==='NA'?'sq':''}"
+      data-t="${META[SECT[i]][1]}: ${SCORELAB[v]}" role="img"
+      aria-label="${META[SECT[i]][1]}: ${SCORELAB[v]}">${SCOREMARK[v]||''}</span></td>`).join('')+
+    `<td class="ctr"><span class="badge ${s.b}">${s.v}%<span class="b-lab"> ${s.b}</span></span></td></tr>`).join('');
   $$('#sitesBody .dot').forEach(d=>d.dataset.t&&tip(d,()=>d.dataset.t));
   $('#pagerInfo').textContent=`Showing ${list.length?EX.page*EX.per+1:0}–${Math.min((EX.page+1)*EX.per,list.length)} of ${fmt(list.length)}`;
   $('#pgNum').textContent=`${EX.page+1} / ${pages}`;
@@ -531,6 +621,9 @@ function renderMap(){
   MAP.fitBounds(gDist.getLayers()[0]?L.featureGroup(distPolys).getBounds():[[ -1.7,41],[12,51.4]]);
   $$('.map-layer').forEach(b=>{
     const Lr=b.dataset.layer;
+    // data-tip is authored in the template so each toggle says what the layer shows;
+    // also mirrored to title= so it survives keyboard focus and touch.
+    if(b.dataset.tip){ tip(b,()=>esc(b.dataset.tip)); b.setAttribute('title',b.dataset.tip); }
     b.classList.toggle('active',Lr===MAPST.fill||(Lr==='sites'&&MAPST.sites)||(Lr==='ca'&&MAPST.ca));
     b.onclick=()=>{
       if(Lr==='sev'||Lr==='cov'){MAPST.fill=Lr;
@@ -544,11 +637,15 @@ function renderMap(){
   renderMapLegend();
 }
 function renderMapLegend(){
-  const it=(c,l)=>`<span class="it"><span class="dot" style="background:${c}"></span>${l}</span>`;
+  // Every swatch carries its band letter as well as its fill, so the choropleth is
+  // readable without relying on colour discrimination.
+  const it=(c,l,m,dark)=>`<span class="it"><span class="dot" style="background:${c};color:${dark?'#5a3c00':'#fff'}"
+      aria-hidden="true">${m||''}</span>${l}</span>`;
   $('#mapLegend').innerHTML = MAPST.fill==='sev'
-    ? it('#c0392b','Severe ≥55%')+it('#ee6a3a','High 40–55%')+it('#f4a929','Moderate 25–40%')
-      +it('#2ba24d','Low <25%')+it('#d5dbd9','Not assessed')
-    : it('#1f6b72','200+ sites')+it('#2f8f97','50–199')+it('#6fb3b9','10–49')+it('#b7d8db','1–9')+it('#d5dbd9','None');
+    ? BANDDEF.map(b=>it(b.col,`${b.k} ${b.rng}`,b.mark,b.k==='Moderate')).join('')
+      +it('#d5dbd9','Not assessed','·',true)
+    : it('#1f6b72','200+ sites')+it('#2f8f97','50–199')+it('#6fb3b9','10–49')
+      +it('#b7d8db','1–9')+it('#d5dbd9','None');
 }
 
 /* ================= CATCHMENT ANALYSIS TABLE ================= */
@@ -584,7 +681,7 @@ function renderGaps(){
     <td class="site-nm">${esc(r.indicator)}</td>
     <td style="font-size:11.5px">${esc(r.sector)}</td>
     <td class="ctr"><b style="color:var(--gap)">${r.redPct}%</b>
-      <div style="font-size:10px;color:var(--muted)">${fmt(r.nRed)} of ${fmt(r.nApplicable)}</div></td>
+      <div style="font-size:10px;color:var(--muted)">${fmt(r.nRed)} of ${fmt(r.nApplicable)} draft rows assessed</div></td>
     <td class="ctr mono">${fmt(r.hhAffected)}</td>
     <td class="ctr mono">${fmt(r.indAffected)}</td>
     <td class="ctr mono">${r.districtsAffected}</td>
@@ -698,7 +795,9 @@ function renderMethodology(){
       the monitoring submission otherwise.</li>
     <li><b>Age &amp; sex</b>: IDP Site Verification dataset (Q1-2026 vintage), for the
       ${fmt(DATA.quality.siteverif_matched)} matched sites only.</li>
-    <li><b>Boundaries</b>: UNDP/OCHA Admin 2; CCCM 2025 catchment shapefiles.</li></ul>
+    <li><b>Boundaries</b>: district polygons from UNDP/OCHA Somalia Admin 2; catchment
+      polygons from the CCCM 2025 CA shapefiles v01. Boundaries shown on the map do not
+      imply official endorsement.</li></ul>
     <b>Last data refresh:</b> ${DATA.generated}.`;
   $('#mSev').innerHTML=`
     Each indicator scores <b>Green</b> (standard met), <b>Yellow</b> (partial — only possible on
@@ -749,7 +848,8 @@ function renderMethodology(){
  ['explorer wiring',wireExplorer],['explorer table',renderExplorer],
  ['sector tabs',renderSDTabs],['sector deep-dive',renderSD],['branding',renderBrand],
  ['priority gaps',renderGaps],['data quality',renderQuality],['catchment table',renderCatchTable],
- ['reports',renderReports],['methodology',renderMethodology]
+ ['reports',renderReports],['methodology',renderMethodology],
+ ['severity legend',renderSevLegend],['chrome',wireChrome]
 ].forEach(([label,fn])=>{
   try{ fn(); }
   catch(e){ console.error('[dashboard] "'+label+'" failed:',e); }
