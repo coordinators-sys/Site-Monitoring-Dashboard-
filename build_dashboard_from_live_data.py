@@ -451,11 +451,12 @@ def transform(df):
             dots.append("G" if p<=25 else "Y" if p<=50 else "R" if p<=90 else "K")
         if not pcts:
             review.append(row); continue
-        sev=round(sum(pcts)/len(pcts))
+        sevf=sum(pcts)/len(pcts)      # unrounded; "v" stays the integer we display
+        sev=round(sevf)
         sites.append({"r":str(row.get(cmap["region"] or "","")).strip(),
                       "d":str(row.get(cmap["district"] or "","")).strip(),
                       "c":re.sub(r"_G\s+([NS])",r"_G\1",str(row.get(cmap["ca"] or "","")).strip()).replace("nan",""),
-                      "s":site,"v":sev,"b":band(sev),"sc":dots,
+                      "s":site,"v":sev,"_vf":sevf,"b":band(sev),"sc":dots,
                       "_hh":_num(row.get(cmap["hh"] or "")),"_ind":_num(row.get(cmap["ind"] or "")),
                       "_partner":str(row.get(cmap["partner"] or "","")).strip(),
                       "_code":str(row.get("_site_id","")).strip(),
@@ -477,7 +478,8 @@ def aggregate(sites, present, df):
         dsev[s["d"]][s["b"]]+=1; dsev[s["d"]]["n"]+=1; dreg.setdefault(s["d"],s["r"])
     districtSev=[]
     for d,c in dsev.items():
-        avg=round(sum(x["v"] for x in sites if x["d"]==d)/c["n"],1)
+        # averaged over the unrounded per-site means, not the displayed integers
+        avg=round(sum(x["_vf"] for x in sites if x["d"]==d)/c["n"],1)
         districtSev.append({"district":d,"region":dreg[d],"n":c["n"],"avg":avg,
             "Severe":c["Severe"],"High":c["High"],"Moderate":c["Moderate"],"Low":c["Low"]})
     districtSev.sort(key=lambda x:-x["avg"])
@@ -491,10 +493,17 @@ def aggregate(sites, present, df):
     sec_g=Counter(); sec_r=Counter(); sec_tot=Counter()
     # (recompute from df using present cols)
     per_ind = {}
+    gate_col=present[LC_GATE_IND]
     for ind,col in present.items():
         sec,label=INDICATORS[ind]
         g=y=r=0
         for _,row in df.iterrows():
+            # Apply the same learning-centre gate transform() uses. Without it this pass
+            # scored the 9 (LC) items over the whole population while the site dots and
+            # priorityGaps scored them over learning-centre sites only — the same
+            # indicator carried three different denominators on one dashboard.
+            if "(LC)" in label and norm_binary(row.get(gate_col)) not in ("G","Y"):
+                continue
             raw=row.get(col)
             sc=score_value(ind,raw) if ind in VALUE_INDS else norm_binary(raw)
             if sc is None: continue
@@ -529,7 +538,7 @@ def aggregate(sites, present, df):
     # KPIs
     hhs=int(sum(s["_hh"] or 0 for s in sites)); inds=int(sum(s["_ind"] or 0 for s in sites))
     partners=len(set(s["_partner"] for s in sites if s["_partner"] and s["_partner"]!="nan"))
-    natSev=round(sum(s["v"] for s in sites)/n,1) if n else 0
+    natSev=round(sum(s["_vf"] for s in sites)/n,1) if n else 0
     kpi={"sites":n,"sitesAnnex":n,"catchments":len(set(s["c"] for s in sites if s["c"])),
          "hhs":hhs,"individuals":inds,"partners":partners or 0,"districts":len(dsev),"severity":natSev}
     # key findings (auto)
