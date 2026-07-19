@@ -445,11 +445,25 @@ function renderMap(){
                       :`<b>${d.n}</b> · ${d.r}<br>Not assessed this quarter`,{sticky:true});
     poly._pc=d.pc; distPolys.push(poly); poly.addTo(gDist);
   });
+  // Catchment layer: filled by the pipeline's automatic per-catchment aggregation
+  // (DATA.catchAgg), keyed on district pcode + normalised CA code.
+  const caNorm=v=>{const m=String(v||'').toUpperCase().match(/CA\s*_?0*(\d+)\s*(_G\s*[NS])?/);
+    return m?('CA'+String(+m[1]).padStart(2,'0')+(m[2]||'').replace(/\s/g,'')):null;};
+  const caAgg={};(DATA.catchAgg||[]).forEach(a=>caAgg[a.key]=a);
   const gCA=L.layerGroup();
   geo.catchments.forEach(c=>{
-    L.polygon(c.rings.map(swap),{color:'#1f6b72',weight:1,dashArray:'4 3',fill:false})
-     .bindTooltip(`<b>${c.ca}</b> · ${c.d}<br>${c.agency||'—'} · HH ${fmt(c.hh)} · ind ${fmt(c.ind)}`,{sticky:true})
-     .addTo(gCA);
+    const a=caAgg[(c.pc||'').toUpperCase()+'|'+(caNorm(c.ca)||c.ca)];
+    const poly=L.polygon(c.rings.map(swap),
+      a?{color:'#1f6b72',weight:1.2,dashArray:'4 3',fillColor:bandColor(a.avgSev),fillOpacity:.62}
+       :{color:'#8a938f',weight:1,dashArray:'4 3',fillColor:'#d5dbd9',fillOpacity:.35});
+    poly.bindTooltip(a
+      ?`<b>${c.ca}</b> · ${c.d} district<br>${a.n} sites assessed · avg severity <b>${a.avgSev}%</b>
+        <br>HH ${fmt(a.hh)} · Individuals ${fmt(a.ind)}<br>Partners: ${a.partners.join(', ')||'—'}
+        <br><span style="font-size:10px">CCCM agency (shapefile): ${c.agency||'—'}</span>`
+      :`<b>${c.ca}</b> · ${c.d} district<br>No assessed sites this quarter
+        <br><span style="font-size:10px">CCCM agency (shapefile): ${c.agency||'—'} · HH ${fmt(c.hh)} · ind ${fmt(c.ind)}</span>`,
+      {sticky:true});
+    poly.addTo(gCA);
   });
   const gSites=L.layerGroup().addTo(MAP);
   DATA.sites.forEach(s=>{
@@ -496,6 +510,28 @@ function renderMapLegend(){
     ? it('#c0392b','Severe ≥55%')+it('#ee6a3a','High 40–55%')+it('#f4a929','Moderate 25–40%')
       +it('#2ba24d','Low <25%')+it('#d5dbd9','Not assessed')
     : it('#1f6b72','200+ sites')+it('#2f8f97','50–199')+it('#6fb3b9','10–49')+it('#b7d8db','1–9')+it('#d5dbd9','None');
+}
+
+/* ================= CATCHMENT ANALYSIS TABLE ================= */
+function renderCatchTable(){
+  const rows=DATA.catchAgg, host=$('#caTable');
+  if(!rows||!host) return;
+  $('#caHint').textContent=`${rows.length} catchments · draft data, recomputed on every refresh`;
+  host.innerHTML=rows.map(a=>{
+    const cls=a.avgSev>=55?'Severe':a.avgSev>=40?'High':a.avgSev>=25?'Moderate':'Low';
+    return `<tr>
+      <td class="site-nm">${a.ca}<div style="font-weight:500;color:var(--muted);font-size:10px;font-family:ui-monospace,monospace">${a.pc}</div></td>
+      <td>${a.district}</td>
+      <td class="ctr mono">${a.n}</td>
+      <td class="ctr"><span class="badge ${cls}">${a.avgSev}%</span></td>
+      <td class="ctr mono">${fmt(a.hh)}</td>
+      <td class="ctr mono">${fmt(a.ind)}</td>
+      <td style="font-size:11.5px">${a.partners.join(', ')||'—'}</td>
+    </tr>`;
+  }).join('');
+  $('#caNote').textContent=(DATA.catchUnmatched||0)
+    ? `${DATA.catchUnmatched} assessed sites report no parseable catchment code and are excluded from this table (they remain in all other views).`
+    : '';
 }
 
 /* ================= PRIORITY GAPS ================= */
@@ -562,7 +598,7 @@ function renderQuality(){
  ['severity view',renderSeverityView],['filter options',populateSelects],
  ['explorer wiring',wireExplorer],['explorer table',renderExplorer],
  ['sector tabs',renderSDTabs],['sector deep-dive',renderSD],['branding',renderBrand],
- ['priority gaps',renderGaps],['data quality',renderQuality]
+ ['priority gaps',renderGaps],['data quality',renderQuality],['catchment table',renderCatchTable]
 ].forEach(([label,fn])=>{
   try{ fn(); }
   catch(e){ console.error('[dashboard] "'+label+'" failed:',e); }

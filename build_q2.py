@@ -585,6 +585,48 @@ data["priorityGaps"] = {
                    "Scores are shown out of the 75 active points."),
     "rows": gap_rows[:40]}
 
+# ------------------------------------------------------------------- catchment analysis
+# Aggregated automatically from the API-derived site records each build — nothing
+# hand-entered. Site CA strings arrive in two formats ("SO2401CA10" embeds the district
+# pcode; IOM's "Catchment Area 01" pairs with the site's own pcode; Gaalkacyo carries
+# _GN/_GS suffixes) — both normalise to the CA shapefile's (pcode, CAxx) key.
+def ca_key(ca_str, pcode):
+    s = str(ca_str or "").upper()
+    m = re.search(r"CA\s*_?0*(\d+)\s*(_G\s*[NS])?", s)
+    if not m:
+        m2 = re.search(r"CATCHMENT\s*AREA\s*0*(\d+)", s)
+        if not m2:
+            return None
+        num, suf = int(m2.group(1)), ""
+    else:
+        num, suf = int(m.group(1)), (m.group(2) or "").replace(" ", "")
+    pc = re.search(r"SO\d{4}", s)
+    pc = pc.group(0) if pc else str(pcode or "").upper()
+    if not pc.startswith("SO"):
+        return None
+    return f"{pc}|CA{num:02d}{suf}"
+
+_cagg, _ca_unmatched = {}, 0
+for s in data["sites"]:
+    k = ca_key(s.get("c"), s.get("pc"))
+    if not k:
+        _ca_unmatched += 1
+        continue
+    a = _cagg.setdefault(k, {"key": k, "pc": k.split("|")[0], "ca": k.split("|")[1],
+                             "district": s["d"], "n": 0, "sev": 0.0,
+                             "hh": 0.0, "ind": 0.0, "partners": set()})
+    a["n"] += 1; a["sev"] += s["v"]
+    a["hh"] += (s.get("hh") or 0); a["ind"] += (s.get("ind") or 0)
+    if s.get("p"): a["partners"].add(s["p"])
+data["catchAgg"] = sorted(
+    [{**a, "avgSev": round(a["sev"] / a["n"], 1), "hh": int(a["hh"]), "ind": int(a["ind"]),
+      "partners": sorted(a["partners"])} for a in _cagg.values()],
+    key=lambda a: -a["avgSev"])
+for a in data["catchAgg"]: a.pop("sev", None)
+data["catchUnmatched"] = _ca_unmatched
+print(f"  catchment analysis: {len(data['catchAgg'])} catchments aggregated, "
+      f"{_ca_unmatched} sites without a parseable CA")
+
 # ------------------------------------------------------------------- map geometry
 # Pre-converted from the UNDP Admin2 + CCCM catchment shapefiles (tools/convert_maps.py).
 if os.path.exists(os.path.join("data", "geo.json")):
