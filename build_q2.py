@@ -18,6 +18,33 @@ from collections import Counter, defaultdict
 import pandas as pd
 
 Q_START, Q_END, QLABEL = "2026-04-01", "2026-06-30", "Q2 2026"
+# Half-open upper bound. "<= 2026-06-30" coerces to 2026-06-30 00:00:00, so the moment
+# either feed carries a time component (Kobo's _submission_time already does, and the
+# XLSX path yields datetimes) every 30-June assessment silently drops out of the quarter.
+Q_END_EXCL = "2026-07-01"
+
+def q2_mask(series, label):
+    """Q2 membership + a count of what the date filter discarded. Rows with an unparseable
+    or absent date compare False against any bound and would otherwise vanish with no
+    trace — they are reported here so a feed that stops emitting dates is visible."""
+    d = pd.to_datetime(series, errors="coerce")
+    if getattr(d.dt, "tz", None) is not None:
+        d = d.dt.tz_localize(None)      # tz-aware vs naive comparison raises, not filters
+    null_n = int(d.isna().sum())
+    if null_n:
+        print(f"  [{label}] {null_n} of {len(d)} records carry no parseable date "
+              f"and are outside the quarter by construction")
+    return d, (d >= Q_START) & (d < Q_END_EXCL), null_n
+
+def _answered(frame, cols):
+    """Count ANSWERED indicators. Not .notna(): to_code() returns '' for a blank Zite
+    value, so every mapped Zite column is a non-null string and .notna() would score
+    76/76 for every IOM row regardless of content."""
+    if not cols:
+        return pd.Series(0, index=frame.index)
+    blank = frame[cols].isna() | frame[cols].astype(str).apply(
+        lambda c: c.str.strip().str.lower().isin(["", "nan", "none", "nat"]))
+    return (~blank).sum(axis=1)
 FORM  = os.environ.get("XLSFORM_PATH", os.path.join("data", "xlsform.xlsx"))
 BAD   = ["zitemanager", "http", "/api/", "key=", "token"]
 
@@ -51,6 +78,8 @@ for _, r in choices.iterrows():
         if str(lb).strip():
             lab2code[ln][norm(lb)] = cd
 
+UNMAPPED = Counter()          # (machine_name, raw label) -> n, reported after translation
+
 def to_code(machine_name, value):
     """Zite exports LABELS; Kobo exports CODES. Normalise everything to codes."""
     if value is None or str(value).strip() == "":
@@ -61,7 +90,15 @@ def to_code(machine_name, value):
         return v
     if v in code_ok[ln]:
         return v
-    return lab2code[ln].get(norm(v), v)
+    hit = lab2code[ln].get(norm(v))
+    if hit is None:
+        # The raw label is returned unchanged, and for a value indicator it is not a key
+        # in VALUE_MAPS, so the scorer reads "not assessed". One relabelled XLSForm choice
+        # would blank an indicator across every IOM site with the build still printing
+        # "clean" — so misses are counted here and asserted on below.
+        UNMAPPED[(machine_name, v)] += 1
+        return v
+    return hit
 
 # ---------------------------------------------------------------- admin lookups
 dist_label, dist_region = {}, {}
@@ -87,10 +124,14 @@ ZITE_DISTRICT_ALIAS = {           # Zite operational name -> XLSForm district la
 def zite_district_to_pcode(name):
     n = norm(name)
     n = ZITE_DISTRICT_ALIAS.get(n, n)
+    # A blank name makes the 5-char prefix test below true for whichever district happens
+    # to be first in the XLSForm, silently assigning an arbitrary district and region.
+    if len(n) < 3:
+        return ""
     if n in by_norm_label:
         return by_norm_label[n]
     for cand, pc in by_norm_label.items():          # tolerate spelling drift
-        if cand.startswith(n[:5]) or n.startswith(cand[:5]):
+        if len(cand) >= 5 and (cand.startswith(n[:5]) or n.startswith(cand[:5])):
             return pc
     return ""
 
@@ -100,9 +141,9 @@ KD, KSITE, KSITE2 = ("group_incident_basic/date_entry",
 KNEW, KOTH = "group_general_info/site_name_new", "group_general_info/site_name_other"
 
 ko = pd.DataFrame(json.load(open("_cache_kobo.json", encoding="utf-8")))
-kd = pd.to_datetime(ko[KD], errors="coerce")
-ko_q2 = ko[(kd >= Q_START) & (kd <= Q_END)].copy()
-ko_q2["_date"] = kd[(kd >= Q_START) & (kd <= Q_END)]
+kd, k_mask, ko_nulldate = q2_mask(ko[KD], "Kobo")
+ko_q2 = ko[k_mask].copy()
+ko_q2["_date"] = kd[k_mask]
 
 raw_id = ko_q2[KSITE].fillna(ko_q2[KSITE2]).astype(str).str.strip()
 is_other = raw_id.str.lower().isin(["other", "nan", ""])
@@ -118,7 +159,7 @@ ko_q2["_lon"] = pd.to_numeric(ko_q2.get("group_general_info/final_longitude"), e
 
 # completeness = non-null scored indicators; dedupe keeps most recent, then most complete
 ind_cols_k = [c for c in INDICATORS if c in ko_q2.columns]
-ko_q2["_complete"] = ko_q2[ind_cols_k].notna().sum(axis=1)
+ko_q2["_complete"] = _answered(ko_q2, ind_cols_k)
 before = len(ko_q2)
 ko_q2 = (ko_q2.sort_values(["_date", "_complete"], ascending=[False, False])
               .drop_duplicates("_site_id", keep="first"))
@@ -126,9 +167,9 @@ collisions = before - len(ko_q2)
 
 # ---------------------------------------------------------------- Source B: Zite (IOM)
 zi = pd.DataFrame(json.load(open("_cache_zite.json", encoding="utf-8")))
-zd = pd.to_datetime(zi["Date of Assessment"], errors="coerce")
-zi_q2 = zi[(zd >= Q_START) & (zd <= Q_END)].copy()
-zi_q2["_date"] = zd[(zd >= Q_START) & (zd <= Q_END)]
+zd, z_mask, zi_nulldate = q2_mask(zi["Date of Assessment"], "Zite")
+zi_q2 = zi[z_mask].copy()
+zi_q2["_date"] = zd[z_mask]
 
 zmap = json.load(open("zite_map.json", encoding="utf-8"))
 short2path = {k.split("/")[-1]: k for k in INDICATORS}
@@ -191,8 +232,11 @@ def display_name(r):
         return nm
     return code            # 'other' rows already carry their free-text name here
 df[SCOL] = df.apply(display_name, axis=1)
-df["_partner"] = df["_partner"].map(lambda p: org_label.get(str(p).strip().lower(),
-                                                            str(p).strip().upper()))
+# A missing organisation arrives as the float nan, which str() renders "nan" -> "NAN".
+# Left alone it becomes a distinct partner and inflates the Reporting-partners KPI.
+df["_partner"] = df["_partner"].map(
+    lambda p: "" if str(p).strip().lower() in ("", "nan", "none")
+    else org_label.get(str(p).strip().lower(), str(p).strip().upper()))
 df["group_incident_basic/organization_updating"] = df["_partner"]
 resolved = df[SCOL].ne(df["_site_id"]).sum()
 print(f"  site names resolved to labels: {resolved} of {len(df)}")
@@ -201,6 +245,15 @@ print(f"  site names resolved to labels: {resolved} of {len(df)}")
 print(f"Kobo   {QLABEL}: {before} submissions -> {len(ko_q2)} sites "
       f"({collisions} duplicate submissions collapsed)")
 print(f"Zite   {QLABEL}: {len(zi_q2)} IOM sites")
+if UNMAPPED:
+    _tot = sum(UNMAPPED.values())
+    print(f"  [Zite] WARNING {_tot} value(s) across {len(UNMAPPED)} distinct labels did not "
+          f"translate to an XLSForm code and will score as NOT ASSESSED:")
+    for (mn, lab), n in UNMAPPED.most_common(10):
+        print(f"      {mn}: {lab!r} x{n}")
+    print("      -> reconcile zite_map.json / the XLSForm choices sheet before publishing.")
+else:
+    print("  [Zite] label->code translation: no unmapped values")
 print(f"UNION            : {len(df)} sites   "
       f"(name-unresolved: {int(df['_name_unresolved'].sum())})")
 unmapped = zn["group_general_info/district"].eq("").sum()
@@ -360,11 +413,22 @@ print(f"  Site Verification matched: {n_sv} of {len(df)}  " + str(dict(Counter(s
 df["_canon"] = [ml["_c"].iloc[j] if j >= 0 else None for j in ml_idx]
 resolved_other = int((df["_canon"].notna() & df["_name_unresolved"]).sum())
 df.loc[df["_canon"].notna(), "_name_unresolved"] = False
-df["_key"] = df["_canon"].fillna(df["_cu"])
+# Unresolved rows fall back to the bare site name, which carries no district. Two
+# genuinely different sites that share a name in different regions — "Bay iyo Bakool" in
+# Gaalkacyo (NoFYL) and "Bay iyo bakool" in Baidoa (AMARD) — collided on the upper-cased
+# name and one was deleted as a duplicate. Qualify the fallback with the district pcode;
+# a canonical CCCM code is already globally unique and needs no qualifier.
+_dist_q = df[DCOL].astype(str).str.strip().str.upper()
+df["_key"] = df["_canon"].fillna(_dist_q + "|" + df["_cu"])
 df.loc[df["_canon"].notna(), "_site_id"] = df.loc[df["_canon"].notna(), "_canon"]
 
 _indcols = [c for c in INDICATORS if c in df.columns]
-df["_complete"] = df["_complete"].fillna(df[_indcols].notna().sum(axis=1))
+# Completeness must count ANSWERED indicators, not non-null cells. to_code() returns ""
+# for a blank Zite value, so every mapped Zite column is a non-null string and .notna()
+# scored all 76/76 for every IOM row — against a Kobo maximum of 75. Any same-date
+# collision was therefore won by the Zite row however empty it was, which is the opposite
+# of the documented "most recent, tie-break most complete" rule.
+df["_complete"] = df["_complete"].fillna(_answered(df, _indcols))
 before_dd = len(df)
 dup_mask = df.duplicated("_key", keep=False)
 xsrc = df.loc[dup_mask].groupby("_key")["__source"].nunique()
@@ -390,14 +454,27 @@ print(f"  population: Master List for {n_ml} sites, monitoring form for {len(df)
 # Age/sex totals across SV-matched sites only
 bands = [("0-4","Male <5","Female <5"), ("5-17","Male 5-17","Female 5-17"),
          ("18-59","Male 18-59","Female 18-59"), ("60+","Male 60+","Female 60+")]
+# match_rows resolves by-name with setdefault, so several site rows can legitimately point
+# at the SAME Site Verification row. Master-List matches are protected from this (a shared
+# _canon collapses in the dedup above) but SV matches are not, so a shared SV row had its
+# age/sex block added once per site and inflated the demographic totals. Count each SV row
+# once; report how many rows were shared so the join quality stays visible.
 tot = {c: 0.0 for c in AGE}
-for v in demo_rows:
+_seen_sv, _sv_shared = set(), 0
+for _j, v in zip(df["_sv_idx"], demo_rows):
     if v is None: continue
+    j = int(_j)
+    if j in _seen_sv:
+        _sv_shared += 1
+        continue
+    _seen_sv.add(j)
     for c in AGE:
         x = v.get(c)
         if x is not None and pd.notna(x): tot[c] += float(x)
 grand = sum(tot.values())
-print(f"  age/sex total across matched sites: {grand:,.0f} individuals")
+n_sv_distinct = len(_seen_sv)
+print(f"  age/sex total across {n_sv_distinct} distinct verification rows: {grand:,.0f} individuals"
+      + (f"  ({_sv_shared} site rows shared an already-counted verification row)" if _sv_shared else ""))
 
 # ---------------------------------------------------------------- score / aggregate
 sites, review, present = bd.transform(df)
@@ -405,7 +482,7 @@ if not sites:
     raise SystemExit("no scorable sites")
 data = bd.aggregate(sites, present, df)
 data["kpi"]["quarter"] = QLABEL
-data["kpi"]["partners"] = int(df["_partner"].nunique())
+data["kpi"]["partners"] = int(df["_partner"].astype(str).str.strip().replace("", pd.NA).nunique())
 data["kpi"]["regions"] = int(df[RCOL].astype(str).str.strip().replace("", pd.NA).nunique())
 # No prior-quarter dataset is present in this working directory. aggregate() defaults q1
 # to a copy of q2, which would render as "coverage unchanged" — a claim we cannot make.
@@ -433,11 +510,14 @@ male   = sum(tot[c] for c in AGE if c.startswith("Male"))
 female = sum(tot[c] for c in AGE if c.startswith("Female"))
 pct = lambda v: round(100.0 * v / grand, 1) if grand else 0.0
 data["demographics"] = {
-  "total": int(grand), "matchedSites": n_sv,
+  # matchedSites counts DISTINCT verification rows, which is what the total is summed
+  # over; n_sv counts site rows and is >= it when several sites share one SV row.
+  "total": int(grand), "matchedSites": n_sv_distinct, "matchedSiteRows": n_sv,
   "malePct": pct(male), "femalePct": pct(female),
   "source": (f"Age/sex computed from the IDP Site Verification dataset, summed over the "
-             f"{n_sv} of {len(df)} sites in this quarter that matched by CCCM site code or "
-             f"district + site name. Not collected by the monitoring form or the Q2 Master "
+             f"{n_sv_distinct} distinct verification records matching the {n_sv} of {len(df)} "
+             f"sites in this quarter that resolved by CCCM site code or district + site name. "
+             f"Not collected by the monitoring form or the Q2 Master "
              f"List. Verification totals are Q1-2026 vintage."),
   "bands": [{"age": lab,
              "mN": int(tot[mc]), "mP": pct(tot[mc]),
@@ -476,9 +556,18 @@ for s in data["sites"]:
     s["lat"]  = s.pop("_lat", None)
     s["lon"]  = s.pop("_lon", None)
     s["pc"]   = s.pop("_pc", "")
+    s.pop("_vf", None)    # unrounded severity: aggregation only, not part of the payload
 data["partners"] = sorted({s["p"] for s in data["sites"] if s["p"]})
-data["provenance"] = {"kobo_sites": int(len(ko_q2)), "iom_sites": int(len(zn)),
-                      "quarter": QLABEL, "window": [Q_START, Q_END]}
+# Counted on the FINAL frame, after cross-source dedup, so these agree with recon and with
+# sites.json. Previously kobo_sites was len(ko_q2) (pre-dedup, 469 against a final 467) and
+# published alongside recon's post-dedup figure — two different answers to one question.
+data["provenance"] = {"kobo_sites": int((df["__source"] == "Kobo").sum()),
+                      "iom_sites": int((df["__source"] != "Kobo").sum()),
+                      "kobo_rows_in_window": int(len(ko_q2)), "iom_rows_in_window": int(len(zi_q2)),
+                      "kobo_null_date": ko_nulldate, "iom_null_date": zi_nulldate,
+                      "zite_unmapped_values": int(sum(UNMAPPED.values())),
+                      "zite_unmapped_labels": len(UNMAPPED),
+                      "quarter": QLABEL, "window": [Q_START, Q_END_EXCL]}
 
 # =================================================================== DATA GOVERNANCE
 # Two tiers, never mixed:
@@ -623,6 +712,13 @@ data["catchAgg"] = sorted(
       "partners": sorted(a["partners"])} for a in _cagg.values()],
     key=lambda a: -a["avgSev"])
 for a in data["catchAgg"]: a.pop("sev", None)
+
+# kpi.catchments arrives from build_dashboard as len(set(raw CA strings)), which counts
+# 'Catchment Area 9' and 'Catchment Area 09' as two and collapses IOM's un-qualified
+# 'Catchment Area 01' across all 8 districts that use it — it read 90 against a true 36.
+# ca_key() above is the normalisation the CA shapefile join already relies on, so the
+# headline figure is taken from the same aggregate the Catchment Analysis table renders.
+data["kpi"]["catchments"] = len(data["catchAgg"])
 data["catchUnmatched"] = _ca_unmatched
 print(f"  catchment analysis: {len(data['catchAgg'])} catchments aggregated, "
       f"{_ca_unmatched} sites without a parseable CA")

@@ -12,6 +12,14 @@ const BANDCLASS={Severe:"K",High:"R",Moderate:"Y",Low:"G"};
 const SCORELAB={G:"0–25% Red (Low)",Y:"26–50% Red (Moderate)",R:"51–90% Red (High)",K:"91–100% Red (Critical)",NA:"Not assessed"};
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const fmt=n=>n.toLocaleString('en-US');
+/* Site, partner, district, catchment and region names are free text typed by enumerators
+   in the field and reach us unfiltered from Kobo/Zite. Every one of them lands in an
+   innerHTML template below, several inside quoted attributes (title="..."), so both the
+   element and attribute contexts have to be neutralised. The deployed CSP sets
+   script-src 'unsafe-inline' for the inlined bundle, which means it does NOT stop an
+   injected handler — this function is the only control. Escape at render, not at load,
+   so CSV export still writes the original characters. */
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
 
 /* ---------- tooltip ---------- */
@@ -72,7 +80,11 @@ function renderKPIs(){
     </div>`+cards.map(c=>`<div class="kpi ${c.accent?'accent':''}"><div class="bar-top"></div>
     <div class="k-ic">${c.ic}</div><div class="k-val">${c.v}</div><div class="k-lab">${c.l}</div>
     ${c.s?`<div class="k-sub">${c.s}</div>`:''}</div>`).join('');
-  $('#findingsList').innerHTML=((P&&P.keyFindings)||DATA.keyFindings).map(f=>`<li>${f}</li>`).join('');
+  // Published/draft counts were baked into the template as "1,275" literals; they go
+  // stale the moment a new round is published, in the two places readers rely on most.
+  const pn=$('#pubN'); if(pn) pn.textContent=fmt(pk.sites);
+  const sn=$('#sdN'); if(sn) sn.textContent=fmt(k.sites);   // deep-dive scores the draft
+  $('#findingsList').innerHTML=((P&&P.keyFindings)||DATA.keyFindings).map(f=>`<li>${esc(f)}</li>`).join('');
   $('#covNote').textContent=DATA.coverageNotes;
   // Q1 vs Q2
   const q=DATA.q1;
@@ -89,10 +101,15 @@ function renderKPIs(){
       <div class="v" style="color:${hasBaseline?(up?'var(--good)':'var(--gap)'):'var(--muted)'}">${hasBaseline?(up?'▲':'▼')+' '+fmt(Math.abs(d)):'—'}</div></div>`;
   }).join('')+`<div class="note" style="margin-top:8px">${hasBaseline
       ? (DATA.q1Source||'')+(DATA.kpi.sites!==q.Sites[0]
-          ? ` <b>Note:</b> this panel shows the <b>published</b> Q2 figures (${fmt(q.Sites[0])} sites).
-              The KPI cards above show this <b>live rebuild</b> (${fmt(DATA.kpi.sites)} sites) — the two
-              differ because the published round applied additional site-eligibility filtering.
-              Reconciliation is pending; use the published figures for external reporting.`
+          // The KPI cards were switched to the published figures (see renderKPIs), so this
+          // panel and the cards now agree. Only the draft differs, and it is labelled as
+          // draft wherever it appears.
+          ? ` <b>Note:</b> this panel and the KPI cards above both show the <b>published</b> Q2
+              figures (${fmt(q.Sites[0])} sites). The live draft rebuild counts
+              ${fmt(DATA.kpi.sites)} sites — it differs because the published round applied
+              additional site-eligibility filtering, and it is the basis for the site-level
+              Draft views only. Reconciliation is pending; use the published figures for
+              external reporting.`
           : '')
       : 'No Q1 2026 baseline is loaded, so no coverage change is shown.'}</div>`;
 }
@@ -113,7 +130,7 @@ function renderSectorDiverge(){
 
 function renderTopLists(){
   const mk=(arr,cls,col)=>arr.map(([n,p])=>`<div class="hbar-row">
-      <div class="l" title="${n}">${n}</div>
+      <div class="l" title="${esc(n)}">${esc(n)}</div>
       <div class="hbar-track"><div class="hbar-fill" style="width:${p}%;background:${col}"></div></div>
       <div class="v" style="color:${col}">${p}%</div></div>`).join('');
   $('#topRed').innerHTML=mk(DATA.topRed,'r','var(--gap)');
@@ -124,7 +141,7 @@ function renderDistrictGap(){
   const max=100;
   $('#districtGap').innerHTML=`<div class="dv-head"><div></div><div class="g">◀ Gap</div><div class="c">Coverage ▶</div></div>`+
   DATA.districtGap.map(([d,n,g,c])=>`<div class="dv-row">
-    <div class="lab">${d}<div style="font-weight:500;color:var(--muted);font-size:10.5px">${n} sites</div></div>
+    <div class="lab">${esc(d)}<div style="font-weight:500;color:var(--muted);font-size:10.5px">${n} sites</div></div>
     <div class="dv-left"><div class="dv-bar gap" style="width:${g}%"><span>${g}%</span></div></div>
     <div class="dv-right"><div class="dv-bar cov" style="width:${c}%"><span>${c}%</span></div></div></div>`).join('');
 }
@@ -216,8 +233,8 @@ function renderSeverityView(){
   const ds=DATA.districtSev, colors={Severe:'var(--s-crit)',High:'var(--s-high)',Moderate:'var(--s-mod)',Low:'var(--s-low)'};
   $('#districtStacks').innerHTML=ds.map(d=>{
     const segs=BANDS.map(b=>{const v=d[b]; if(!v)return'';
-      return `<div class="stk-seg" style="flex:${v};background:${colors[b]}" data-t="<b>${d.district}</b> · ${b}: ${v} sites (${(v/d.n*100).toFixed(0)}%)">${v/d.n>0.09?v:''}</div>`;}).join('');
-    return `<div class="stk-row"><div class="l" title="${d.district}">${d.district}</div>
+      return `<div class="stk-seg" style="flex:${v};background:${colors[b]}" data-t="<b>${esc(d.district)}</b> · ${b}: ${v} sites (${(v/d.n*100).toFixed(0)}%)">${v/d.n>0.09?v:''}</div>`;}).join('');
+    return `<div class="stk-row"><div class="l" title="${esc(d.district)}">${esc(d.district)}</div>
       <div class="stk-track">${segs}</div><div class="n mono">${d.n}</div></div>`;
   }).join('');
   $$('#districtStacks .stk-seg').forEach(s=>tip(s,()=>s.dataset.t));
@@ -226,7 +243,7 @@ function renderSeverityView(){
   const sample=n=>n>=10?'':n>=5?'<div style="font-size:10px;color:#9a5b13;font-weight:600">5–9 sites — interpret cautiously</div>'
                               :'<div style="font-size:10px;color:var(--gap);font-weight:600">&lt;5 sites — insufficient for ranking</div>';
   $('#districtTable').innerHTML=ds.map(d=>`<tr>
-    <td class="site-nm">${d.district}${sample(d.n)}</td><td>${d.region}</td><td class="ctr mono">${d.n}</td>
+    <td class="site-nm">${esc(d.district)}${sample(d.n)}</td><td>${esc(d.region)}</td><td class="ctr mono">${d.n}</td>
     <td class="ctr"><span class="badge ${d.avg>=55?'Severe':d.avg>=40?'High':d.avg>=25?'Moderate':'Low'}">${d.avg}%</span></td>
     <td class="ctr mono">${d.Severe}</td><td class="ctr mono">${d.High}</td><td class="ctr mono">${d.Moderate}</td><td class="ctr mono">${d.Low}</td>
   </tr>`).join('');
@@ -249,7 +266,7 @@ function renderPartnerTable(){
     const avg=(o.sev/o.n).toFixed(1);
     const cls=avg>=55?'Severe':avg>=40?'High':avg>=25?'Moderate':'Low';
     return `<tr>
-      <td class="site-nm">${o.p}</td><td class="ctr mono">${fmt(o.n)}</td>
+      <td class="site-nm">${esc(o.p)}</td><td class="ctr mono">${fmt(o.n)}</td>
       <td class="ctr mono">${o.d.size}</td><td class="ctr mono">${fmt(o.hh)}</td>
       <td class="ctr mono">${fmt(o.ind)}</td>
       <td class="ctr"><span class="badge ${cls}">${avg}%</span></td>
@@ -263,13 +280,13 @@ let EX={region:'',district:'',band:'',sector:'',partner:'',search:'',sort:'v',di
 function uniq(arr){return [...new Set(arr)].sort();}
 function populateSelects(){
   const regions=uniq(DATA.sites.map(s=>s.r)), districts=uniq(DATA.sites.map(s=>s.d));
-  const regOpts='<option value="">All regions</option>'+regions.map(r=>`<option>${r}</option>`).join('');
-  const distOpts='<option value="">All districts</option>'+districts.map(d=>`<option>${d}</option>`).join('');
+  const regOpts='<option value="">All regions</option>'+regions.map(r=>`<option>${esc(r)}</option>`).join('');
+  const distOpts='<option value="">All districts</option>'+districts.map(d=>`<option>${esc(d)}</option>`).join('');
   const secOpts=SECT.map(c=>`<option value="${c}">${META[c][1]}</option>`).join('');
   $('#fRegion').innerHTML=regOpts; $('#fDistrict').innerHTML=distOpts;
   $('#fSector').innerHTML='<option value="">Any sector</option>'+secOpts;
   const partners=uniq(DATA.sites.map(s=>s.p||'').filter(Boolean));
-  const pOpts='<option value="">All partners</option>'+partners.map(p=>`<option>${p}</option>`).join('');
+  const pOpts='<option value="">All partners</option>'+partners.map(p=>`<option>${esc(p)}</option>`).join('');
   const fp=$('#fPartner'); if(fp) fp.innerHTML=pOpts;
 }
 function filterSites(f){
@@ -284,18 +301,24 @@ function filterSites(f){
     return true;
   });
 }
-function renderExplorer(){
-  let list=filterSites(EX);
-  // sort
+/* Filter + sort in one place so the CSV export writes the same rows in the same order
+   the user is looking at — previously export re-filtered but kept DATA.sites order, so a
+   table sorted severity-desc exported starting at an arbitrary site. */
+function visibleSites(){
+  const list=filterSites(EX);
   list.sort((a,b)=>{
     let av,bv;
     if(EX.sort==='v'){av=a.v;bv=b.v;}
     else if(EX.sort==='s'){av=a.s.toLowerCase();bv=b.s.toLowerCase();}
     else if(EX.sort==='p'){av=(a.p||'').toLowerCase();bv=(b.p||'').toLowerCase();}
     else if(EX.sort==='d'){av=a.d;bv=b.d;}
-    else {const i=SECT.indexOf(EX.sort);const rank={K:4,R:3,Y:2,G:1,NA:0};av=rank[a.sc[i]];bv=rank[b.sc[i]];}
+    else {const i=SECT.indexOf(EX.sort);const rank={K:4,R:3,Y:2,G:1,NA:0};av=rank[a.sc[i]]??-1;bv=rank[b.sc[i]]??-1;}
     if(av<bv)return -EX.dir; if(av>bv)return EX.dir; return 0;
   });
+  return list;
+}
+function renderExplorer(){
+  const list=visibleSites();
   const avg=list.length?(list.reduce((a,s)=>a+s.v,0)/list.length).toFixed(1):'—';
   $('#explorerCount').textContent=fmt(list.length)+' sites';
   $('#explorerAvg').innerHTML=list.length?`avg severity <b>${avg}%</b> · Severe ${list.filter(s=>s.b==='Severe').length} · High ${list.filter(s=>s.b==='High').length}`:'';
@@ -309,14 +332,15 @@ function renderExplorer(){
   if(EX.page>=pages)EX.page=0;
   const slice=list.slice(EX.page*EX.per,(EX.page+1)*EX.per);
   $('#sitesBody').innerHTML=slice.map(s=>`<tr>
-    <td class="site-nm">${s.s}${s.code&&s.code!==s.s?`<div style="font-weight:500;color:var(--muted);font-size:10px;font-family:ui-monospace,monospace">${s.code}</div>`:''}</td>
-    <td style="font-size:11.5px">${s.p||'—'}</td><td>${s.d}</td><td style="color:var(--ink-2)">${s.r}</td>
-    <td style="color:var(--muted)">${s.c||'—'}</td>`+
+    <td class="site-nm">${esc(s.s)}${s.code&&s.code!==s.s?`<div style="font-weight:500;color:var(--muted);font-size:10px;font-family:ui-monospace,monospace">${esc(s.code)}</div>`:''}</td>
+    <td style="font-size:11.5px">${esc(s.p||'—')}</td><td>${esc(s.d)}</td><td style="color:var(--ink-2)">${esc(s.r)}</td>
+    <td style="color:var(--muted)">${esc(s.c||'—')}</td>`+
     s.sc.map((v,i)=>`<td class="ctr"><span class="dot ${v} ${v==='NA'?'sq':''}" data-t="${META[SECT[i]][1]}: ${SCORELAB[v]}"></span></td>`).join('')+
     `<td class="ctr"><span class="badge ${s.b}">${s.v}%</span></td></tr>`).join('');
   $$('#sitesBody .dot').forEach(d=>d.dataset.t&&tip(d,()=>d.dataset.t));
   $('#pagerInfo').textContent=`Showing ${list.length?EX.page*EX.per+1:0}–${Math.min((EX.page+1)*EX.per,list.length)} of ${fmt(list.length)}`;
   $('#pgNum').textContent=`${EX.page+1} / ${pages}`;
+  $('#prevPg').disabled=EX.page<=0; $('#nextPg').disabled=EX.page>=pages-1;
   $$('#sitesHead .sortable').forEach(th=>th.addEventListener('click',()=>{
     const s=th.dataset.s; if(EX.sort===s)EX.dir*=-1; else{EX.sort=s;EX.dir=(s==='s'||s==='d'||s==='p')?1:-1;}
     EX.page=0; renderExplorer();
@@ -331,7 +355,13 @@ function wireExplorer(){
   if(fp) fp.addEventListener('change',e=>{EX.partner=e.target.value;EX.page=0;renderExplorer();});
   $('#fSearch').addEventListener('input',e=>{EX.search=e.target.value;EX.page=0;renderExplorer();});
   $('#prevPg').addEventListener('click',()=>{if(EX.page>0){EX.page--;renderExplorer();}});
-  $('#nextPg').addEventListener('click',()=>{EX.page++;renderExplorer();});
+  // Bound here, not left to the clamp in renderExplorer — that clamp exists so a filter
+  // change can drop you onto a valid page, and it silently wrapped Next-past-the-end
+  // back to page 1.
+  $('#nextPg').addEventListener('click',()=>{
+    const pages=Math.max(1,Math.ceil(visibleSites().length/EX.per));
+    if(EX.page<pages-1){EX.page++;renderExplorer();}
+  });
   $('#clearFilters').addEventListener('click',()=>{
     EX={...EX,region:'',district:'',band:'',sector:'',partner:'',search:'',page:0};
     $('#fRegion').value='';$('#fDistrict').value='';$('#fBand').value='';$('#fSector').value='';$('#fSearch').value='';
@@ -341,15 +371,24 @@ function wireExplorer(){
   $('#exportCsv').addEventListener('click',exportCsv);
   
 }
+/* Quote only what needs quoting: a bare number stays a number in Excel, whereas the
+   previous blanket-quoting imported Households/Individuals/Severity% as text. */
+const csvCell=v=>{const s=String(v??'');return /[",\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;};
 function exportCsv(){
-  const list=filterSites(EX);
+  const list=visibleSites();
+  // The header MUST go through csvCell too. Two sector labels contain commas — "Housing,
+  // Land & Property" and "Water, Sanitation & Hygiene" — and joining them raw produced a
+  // 24-field header over 22-field rows, silently shifting every sector column in Excel.
   const head=['Site','Site code','Partner','District','Region','CA','Households','Individuals',
               'Severity%','Band',...SECT.map(c=>META[c][1])];
-  const rows=list.map(s=>[s.s,s.code||'',s.p||'',s.d,s.r,s.c,s.hh??'',s.ind??'',s.v,s.b,...s.sc]
-    .map(x=>`"${(''+x).replace(/"/g,'""')}"`).join(','));
-  const csv=head.join(',')+'\n'+rows.join('\n');
-  const blob=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);a.download='cccm_sites_q2_2026_filtered.csv';a.click();
+  const rows=list.map(s=>[s.s,s.code||'',s.p||'',s.d,s.r,s.c||'',s.hh??'',s.ind??'',s.v,s.b,...s.sc]
+    .map(csvCell).join(','));
+  const csv=head.map(csvCell).join(',')+'\n'+rows.join('\n');
+  // BOM + charset so Excel reads Somali site names as UTF-8, matching the Reports exports.
+  const url=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'}));
+  const a=document.createElement('a');
+  a.href=url;a.download='cccm_sites_q2_2026_filtered.csv';a.click();
+  URL.revokeObjectURL(url);
   toast('Exported '+list.length+' sites to CSV');
 }
 
@@ -378,7 +417,7 @@ function renderSD(){
   $('#sdTitle').innerHTML=`${SD_LABEL[SD_CUR]} <span class="hint" style="font-weight:500;color:var(--muted)">${rows.length} indicators, sorted by gap</span>`;
   const sorted=[...rows].sort((a,b)=>b[3]-a[3]);
   $('#sdIndicators').innerHTML=sorted.map(([name,g,y,r])=>`<div class="tri-row">
-    <div class="l">${name}</div>
+    <div class="l">${esc(name)}</div>
     <div class="tri-bar" data-t="Green ${g}% · Yellow ${y}% · Red ${r}%">
       ${g?`<div class="tri-seg g" style="width:${g}%"></div>`:''}
       ${y?`<div class="tri-seg y" style="width:${y}%"></div>`:''}
@@ -457,11 +496,11 @@ function renderMap(){
       a?{color:'#1f6b72',weight:1.2,dashArray:'4 3',fillColor:bandColor(a.avgSev),fillOpacity:.62}
        :{color:'#8a938f',weight:1,dashArray:'4 3',fillColor:'#d5dbd9',fillOpacity:.35});
     poly.bindTooltip(a
-      ?`<b>${c.ca}</b> · ${c.d} district<br>${a.n} sites assessed · avg severity <b>${a.avgSev}%</b>
-        <br>HH ${fmt(a.hh)} · Individuals ${fmt(a.ind)}<br>Partners: ${a.partners.join(', ')||'—'}
-        <br><span style="font-size:10px">CCCM agency (shapefile): ${c.agency||'—'}</span>`
-      :`<b>${c.ca}</b> · ${c.d} district<br>No assessed sites this quarter
-        <br><span style="font-size:10px">CCCM agency (shapefile): ${c.agency||'—'} · HH ${fmt(c.hh)} · ind ${fmt(c.ind)}</span>`,
+      ?`<b>${esc(c.ca)}</b> · ${esc(c.d)} district<br>${a.n} sites assessed · avg severity <b>${a.avgSev}%</b>
+        <br>HH ${fmt(a.hh)} · Individuals ${fmt(a.ind)}<br>Partners: ${esc(a.partners.join(', '))||'—'}
+        <br><span style="font-size:10px">CCCM agency (shapefile): ${esc(c.agency||'—')}</span>`
+      :`<b>${esc(c.ca)}</b> · ${esc(c.d)} district<br>No assessed sites this quarter
+        <br><span style="font-size:10px">CCCM agency (shapefile): ${esc(c.agency||'—')} · HH ${fmt(c.hh)} · ind ${fmt(c.ind)}</span>`,
       {sticky:true});
     poly.addTo(gCA);
   });
@@ -471,8 +510,8 @@ function renderMap(){
     if(s.lat<-2||s.lat>12.5||s.lon<40||s.lon>52) return;
     const m=L.circleMarker([s.lat,s.lon],{radius:4.5,color:'#fff',weight:.8,
       fillColor:s.b==='Severe'?'#c0392b':s.b==='High'?'#ee6a3a':s.b==='Moderate'?'#f4a929':'#2ba24d',fillOpacity:.95});
-    m.bindTooltip(`<b>${s.s}</b>${s.code&&s.code!==s.s?' · <span style="font-family:monospace;font-size:10px">'+s.code+'</span>':''}
-      <br>${s.d} · ${s.c||'—'} · ${s.p||'—'}
+    m.bindTooltip(`<b>${esc(s.s)}</b>${s.code&&s.code!==s.s?' · <span style="font-family:monospace;font-size:10px">'+esc(s.code)+'</span>':''}
+      <br>${esc(s.d)} · ${esc(s.c||'—')} · ${esc(s.p||'—')}
       <br>HH ${s.hh!=null?fmt(Math.round(s.hh)):'—'} · Individuals ${s.ind!=null?fmt(Math.round(s.ind)):'—'}
       <br>Severity <b>${s.v}%</b> (${s.b}) · <i>draft — pending validation</i>`,{sticky:true});
     m.on('click',()=>{
@@ -520,13 +559,13 @@ function renderCatchTable(){
   host.innerHTML=rows.map(a=>{
     const cls=a.avgSev>=55?'Severe':a.avgSev>=40?'High':a.avgSev>=25?'Moderate':'Low';
     return `<tr>
-      <td class="site-nm">${a.ca}<div style="font-weight:500;color:var(--muted);font-size:10px;font-family:ui-monospace,monospace">${a.pc}</div></td>
-      <td>${a.district}</td>
+      <td class="site-nm">${esc(a.ca)}<div style="font-weight:500;color:var(--muted);font-size:10px;font-family:ui-monospace,monospace">${esc(a.pc)}</div></td>
+      <td>${esc(a.district)}</td>
       <td class="ctr mono">${a.n}</td>
       <td class="ctr"><span class="badge ${cls}">${a.avgSev}%</span></td>
       <td class="ctr mono">${fmt(a.hh)}</td>
       <td class="ctr mono">${fmt(a.ind)}</td>
-      <td style="font-size:11.5px">${a.partners.join(', ')||'—'}</td>
+      <td style="font-size:11.5px">${esc(a.partners.join(', '))||'—'}</td>
     </tr>`;
   }).join('');
   $('#caNote').textContent=(DATA.catchUnmatched||0)
@@ -542,8 +581,8 @@ function renderGaps(){
   const dn=$('#draftN'); if(dn) dn.textContent=fmt(DATA.kpi.sites);
   $('#gapsTable').innerHTML=g.rows.map((r,i)=>`<tr>
     <td class="ctr mono">${i+1}</td>
-    <td class="site-nm">${r.indicator}</td>
-    <td style="font-size:11.5px">${r.sector}</td>
+    <td class="site-nm">${esc(r.indicator)}</td>
+    <td style="font-size:11.5px">${esc(r.sector)}</td>
     <td class="ctr"><b style="color:var(--gap)">${r.redPct}%</b>
       <div style="font-size:10px;color:var(--muted)">${fmt(r.nRed)} of ${fmt(r.nApplicable)}</div></td>
     <td class="ctr mono">${fmt(r.hhAffected)}</td>
@@ -584,8 +623,8 @@ function renderQuality(){
     row('Site names pending verification',fmt(q.name_pending)),
   ].join('');
   $('#qualityPartners').innerHTML=(q.partners||[]).map(p=>`<tr>
-    <td class="site-nm">${p.partner}</td><td class="ctr mono">${fmt(p.sites)}</td>
-    <td class="ctr mono">${p.latest||'—'}</td></tr>`).join('');
+    <td class="site-nm">${esc(p.partner)}</td><td class="ctr mono">${fmt(p.sites)}</td>
+    <td class="ctr mono">${esc(p.latest||'—')}</td></tr>`).join('');
 }
 
 /* ================= REPORTS ================= */
@@ -693,9 +732,9 @@ function renderMethodology(){
     <li>Kahda and Daynile are monitored separately but render on the Banadir Admin-2 polygon;
       catchment-level analysis keeps them separate.</li>
     <li>Age/sex reflects Q1-2026 verification data on ${fmt(DATA.quality.siteverif_matched)} of
-      ${fmt(rc.final_draft_sites)} sites (~33%) — not the full caseload.</li>
+      ${fmt(rc.final_draft_sites)} sites (~${Math.round(100*DATA.quality.siteverif_matched/rc.final_draft_sites)}%) — not the full caseload.</li>
     <li>Quarter-on-quarter severity is not like-for-like: coverage changed materially
-      (1,902 sites in Q1 → ${fmt(rc.published_sites)} published in Q2).</li>
+      (${fmt(DATA.q1.Sites[1])} sites in Q1 → ${fmt(rc.published_sites)} published in Q2).</li>
     <li>Draft vs published delta (+${rc.delta_vs_published}): ${rc.delta_explanation}</li></ul>`;
 }
 

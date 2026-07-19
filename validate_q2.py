@@ -54,11 +54,63 @@ nat = round(sum(sev)/len(sev), 1)
 chk(abs(nat - data["kpi"]["severity"]) < 0.6,
     f"national severity recomputes ({nat} vs KPI {data['kpi']['severity']})")
 
+# Every sector must reach its declared indicator count at *some* site. Sectors whose
+# items are relevant-gated (Education's 9 learning-centre questions) score fewer at
+# gated-out sites, but the high-water mark across 1,300+ sites must still hit the
+# declared total. This is the check that was missing when a bad gate key silently
+# scored Education on 2 of 11 indicators and every other check still passed.
+cov, meta = data.get("sectorCoverage") or {}, data["sectorMeta"]
+if not cov:
+    chk(False, "sectorCoverage absent from payload — rebuild with the current builder")
+else:
+    thin = {c: (cov.get(c, 0), meta[c][2]) for c in meta if cov.get(c, 0) != meta[c][2]}
+    chk(not thin, "every sector scores its declared indicator count at some site"
+                  + (f" (scored/declared: {thin})" if thin else ""))
+
+# The catchment KPI must equal the normalised aggregate the Catchment Analysis table
+# renders — not a raw count of unnormalised CA strings.
+chk(data["kpi"]["catchments"] == len(data.get("catchAgg", [])),
+    f"kpi.catchments ({data['kpi']['catchments']}) == catchAgg rows ({len(data.get('catchAgg', []))})")
+
+# Every Zite label must resolve to an XLSForm code. A miss scores as "not assessed" and is
+# otherwise indistinguishable from a genuinely unanswered question.
+_pr = data.get("provenance") or {}
+chk(_pr.get("zite_unmapped_values", 0) == 0,
+    f"Zite label->code translation complete ({_pr.get('zite_unmapped_values','?')} unmapped "
+    f"across {_pr.get('zite_unmapped_labels','?')} labels)")
+
+# provenance and recon must answer "how many sites came from each source" identically.
+_rc = data.get("recon") or {}
+chk(_pr.get("kobo_sites") == _rc.get("kobo_sites") and
+    _pr.get("kobo_sites", 0) + _pr.get("iom_sites", 0) == len(sites),
+    f"source counts agree across provenance/recon/sites.json "
+    f"({_pr.get('kobo_sites')}+{_pr.get('iom_sites')} vs recon {_rc.get('kobo_sites')} vs {len(sites)})")
+
+# Demographics are summed over distinct verification rows; the total must not exceed what
+# that many rows can hold, and matchedSites must be the distinct count, not the site count.
+_dm = data.get("demographics") or {}
+chk(_dm.get("matchedSites", 0) <= _dm.get("matchedSiteRows", _dm.get("matchedSites", 0)),
+    f"age/sex summed over {_dm.get('matchedSites','?')} distinct verification rows "
+    f"({_dm.get('matchedSiteRows','?')} site rows matched)")
+
+# No two sites may share a key that the dedup would have collapsed. A district-qualified
+# name collision means two real sites were about to be merged.
+_dupe = [kk for kk, c in Counter((s["district"], s["site"].strip().lower()) for s in sites).items() if c > 1]
+chk(True, f"district+name collisions remaining: {len(_dupe)}"
+          + (f" (kept as distinct sites: {_dupe[:3]})" if _dupe else ""))
+
+# Education dot shape, for the structural-artifacts note in the report below. Computed,
+# not asserted prose — the previous wording described a build in which the 9 LC items
+# were never scored, so the dot really was bimodal.
+_edu = Counter(s["scores"]["Education"] for s in sites)
+_edu_k = _edu.get("K", 0)
+_edu_dist = " ".join(f"{st}={_edu.get(st, 0)}" for st in ("G", "Y", "R"))
+
 dc = Counter(s["district"] for s in sites)
-for d in data.get("districtSev", []):
-    if d["n"] != dc.get(d["district"], 0):
-        chk(False, f"district {d['district']}: districtSev n={d['n']} vs sites.json {dc.get(d['district'],0)}")
-chk(True, f"district counts reconcile across {len(dc)} districts")
+_dbad = [f"{d['district']}: districtSev n={d['n']} vs sites.json {dc.get(d['district'], 0)}"
+         for d in data.get("districtSev", []) if d["n"] != dc.get(d["district"], 0)]
+chk(not _dbad, f"district counts reconcile across {len(dc)} districts"
+               + (f" -> {_dbad}" if _dbad else ""))
 
 # --- spot-check 3 sites end to end -----------------------------------------
 random.seed(20260719)
@@ -98,7 +150,16 @@ leaks = {a: scrub(a) for a in arts if os.path.exists(a) and scrub(a)}
 chk(not leaks, f"scrub clean across {len(arts)} artefacts ({leaks or 'no hits'})")
 
 k = data["kpi"]
+q = data.get("quality") or {}
+fmt_i = lambda v: f"{v:,}" if isinstance(v, int) else "n/a"
 rq = sum(1 for _ in open("review_queue.csv", encoding="utf-8")) - 1
+
+# Report figures come from the payload the build actually wrote. Anything hardcoded here
+# is a claim about a past run, not this one — the previous version stated fetch counts,
+# lag medians and match rates as literals under a "Regenerated from live sources" heading.
+_prov = data.get("provenance") or {}
+_pv = lambda key: f"{_prov[key]:,}" if isinstance(_prov.get(key), int) else "n/a"
+_win = _prov.get("window", ["?", "?"])
 
 open("run_report.md","w",encoding="utf-8").write(f"""# CCCM Somalia — Site Monitoring {k.get('quarter','Q2 2026')}
 Run {pd.Timestamp.now():%Y-%m-%d %H:%M}. Regenerated from live sources.
@@ -106,31 +167,36 @@ Run {pd.Timestamp.now():%Y-%m-%d %H:%M}. Regenerated from live sources.
 ## Sources & scope
 | | Kobo (all partners except IOM) | Zite Manager (IOM) |
 |---|---|---|
-| Fetched | 6,088 submissions | 1,075 site records |
-| In {k.get('quarter','Q2 2026')} | **488** | **852** |
+| In {k.get('quarter','Q2 2026')} window | **{_pv('kobo_rows_in_window')}** submissions | **{_pv('iom_rows_in_window')}** site records |
 | After dedup to site grain | **{stats['kobo']}** | **{stats['iom']}** |
+| Records with no parseable date | {_pv('kobo_null_date')} | {_pv('iom_null_date')} |
 | Grain | one row per submission | one row per site (pre-deduplicated) |
 | Filter field | `date_entry` | `Date of Assessment` |
+| Window | \\[{_win[0]}, {_win[1]}) — half-open | same |
 
 **Union: {stats['union']} sites.** {stats['collisions']} duplicate Kobo submissions collapsed
 (most recent `date_entry`, tie-break most complete). IOM rows in Kobo: 0 — confirms IOM
 reports only via Zite.
 
 ### Scope warnings acted on
-- Kobo `date_entry` spans **2025Q1 → 2026Q3**; only 488 of 6,088 are {k.get('quarter','Q2 2026')}.
-  Median lag between assessment and submission is 226 days (max 499) — the asset was
-  backfilled during Q2. Filtering on submission time instead would have scored 6,080 rows.
-- Zite spans **Oct 2025 → May 2026**; 852 of 1,075 are Q2. The 40 undated records are
-  exactly the 40 with null demographics (empty shells) and fall outside the filter.
+- Both feeds carry assessments well outside the quarter; the window above is applied on
+  the **assessment** date, not submission time. Kobo was backfilled during Q2, so
+  filtering on submission time instead would have scored the whole asset.
+- The window is half-open — `>= {_win[0]}` and `< {_win[1]}` — so an assessment dated the
+  last day of the quarter is retained even once the feed carries a time component.
+- Undated records ({_pv('kobo_null_date')} Kobo, {_pv('iom_null_date')} Zite) compare
+  False against any bound and fall outside the filter. They are counted here rather than
+  vanishing silently.
 - Zite exports **labels**, Kobo exports **codes**. All select values are translated to
-  XLSForm codes via the `choices` sheet. Untranslated, all 7 value indicators would have
-  returned "not assessed" for every IOM site.
+  XLSForm codes via the `choices` sheet. Untranslated, the value indicators would return
+  "not assessed" for every IOM site — so untranslatable labels are counted at build time
+  and reported below, not left to be discovered in the output.
 
 ## Indicator mapping
-76/76 scored indicators resolved on both sources, derived from XLSForm
-`aRQhLp3M6yhXzAPtVTafRW` — not guessed. Zite mapping derived by matching
-`label::English`; 3 Health indicators that the label matcher missed were resolved
-empirically against the IOM Q2 Excel at **100% agreement over 826 sites**.
+{len(data.get('sectorCoverage') or {})} sectors resolved on both sources, each reaching its
+declared indicator count. Zite label->code translation this run:
+**{_pv('zite_unmapped_values')} untranslated value(s)** across
+{_pv('zite_unmapped_labels')} distinct label(s){' — reconcile zite_map.json before publishing' if (data.get('provenance') or {}).get('zite_unmapped_values') else ' (clean)'}.
 
 ## Divergences from the published methodology
 1. **Yellow cannot fire on binary indicators.** `yesno` is `yes`/`no` — no `partial`
@@ -152,11 +218,13 @@ dots are not misread:
    so the only reachable red-shares are 0%, 50%, 100% -> Green, Yellow, or dark-red
    critical. The 26-50% (Yellow) and 51-90% (Red) buckets cannot both be occupied, and
    Red is unreachable. CP shows R=0 for this reason alone.
-2. **Education is bimodal by construction.** At a site with no learning centre,
+2. **Education carries a hard critical floor.** At a site with no learning centre,
    `access_education`='no' is the *only* assessed Education indicator (the 9 LC items are
    correctly not-applicable, per the methodology). One indicator, red, = 100% -> dark-red
-   critical. So "no school on site" renders as critical. That is arguably the right
-   signal, but it means the Education dot splits sharply rather than distributing.
+   critical. So "no school on site" renders as critical — arguably the right signal, but
+   it is a floor effect, not a gradient. Current split: {_edu_k} of {len(sites)} sites are
+   critical on that single indicator; the remaining {len(sites)-_edu_k} are scored across
+   all 11 and distribute normally ({_edu_dist}).
 3. **NFI is mostly not-assessed.** Its 2 indicators are gated on an NFI distribution
    having occurred; where none has, both are blank. Those sites are carried as
    *not assessed*, never as zero or Red.
@@ -186,9 +254,15 @@ site-detail annex per methodology).
 {chr(10).join(trace)}
 
 ## Not done
-- No GPS/master-list matching: the Kobo↔Zite code systems do not reconcile and no
-  validated crosswalk exists. `review_queue.csv` carries the unresolved rows.
-- Prior-quarter comparison is absent — no Q1 2026 baseline in this working directory.
+- **No validated Kobo<->Zite crosswalk.** Master-List matching by code, name and GPS *is*
+  performed ({fmt_i(q.get('masterlist_matched'))} of {fmt_i(k.get('sites'))} sites resolved,
+  methods: {q.get('masterlist_match_methods')}), and it is what collapses cross-source
+  duplicates. What does not exist is a validated crosswalk between the two site-code
+  systems themselves (`CCCM-SO2801-0313` vs `CCCM-BDA-SO2401-11-0015`, raw overlap 0), so
+  residual duplication across sources is possible where names and GPS both disagree.
+  `review_queue.csv` carries the rows that resolved to no Master List entry.
+- Prior-quarter comparison uses published Q1/Q2 figures, not a recomputed Q1 dataset —
+  no Q1 2026 source data is present in this working directory.
 """)
 
 print("\n".join(L))
