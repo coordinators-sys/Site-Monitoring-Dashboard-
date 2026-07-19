@@ -22,3 +22,6 @@ README_pipeline.md
 # ── Local build metadata ───────────────────────────────────────────────
 _build_stats.json
 __pycache__/
+
+.vercel
+public/

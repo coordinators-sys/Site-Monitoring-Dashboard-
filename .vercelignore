@@ -1,0 +1,7 @@
+# Whitelist: upload NOTHING except the dashboard artefact and the platform config.
+# Credentials, raw caches, source datasets and pipeline code never leave this machine
+# via Vercel regardless of what appears in this folder later.
+*
+!public
+!public/**
+!vercel.json
