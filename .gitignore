@@ -1,0 +1,24 @@
+# ── Secrets — never commit ─────────────────────────────────────────────
+.env
+
+# ── Raw data caches: contain focal-point names & phone numbers ─────────
+_cache_kobo.json
+_cache_zite.json
+
+# ── Source datasets (not for publication; obtain through the cluster) ──
+Master List/
+Site verifcation_Demographic/
+IOM_data Submission/
+Somali Maps/
+
+# ── Internal pipeline docs (reference internal endpoints/asset UIDs) ───
+CCCM_Q2_Dashboard_FULL_PROMPT.md
+README_pipeline.md
+
+# ── Invalidated artefacts from a failed early run ──────────────────────
+*.INVALID.json
+*.INVALID.csv
+
+# ── Local build metadata ───────────────────────────────────────────────
+_build_stats.json
+__pycache__/
