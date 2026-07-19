@@ -1,0 +1,65 @@
+name: Refresh dashboard from live Kobo + Zite data
+
+on:
+  schedule:
+    - cron: "0 3 * * *"   # 03:00 UTC daily
+  workflow_dispatch: {}    # manual "Run workflow" button
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-dashboard
+  cancel-in-progress: false   # never abort a run mid-write to the repo
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install requests pandas openpyxl python-dotenv numpy
+
+      - name: Fetch Kobo submissions
+        env:
+          KOBO_API_TOKEN: ${{ secrets.KOBO_API_TOKEN }}
+        run: python fetch_kobo_cache.py --refresh
+
+      - name: Build + score + aggregate
+        env:
+          ZITE_API_URL: ${{ vars.ZITE_API_URL }}
+          ZITE_REPORT_ID: ${{ vars.ZITE_REPORT_ID }}
+          ZITE_FULL_KEY: ${{ secrets.ZITE_FULL_KEY }}
+        run: python build_q2.py
+
+      - name: Validate — 10 integrity checks + secret-leak scrub
+        run: python validate_q2.py
+        # A non-zero exit here (a failed check, or a secret found in an artefact) stops
+        # the workflow before anything is committed. The dashboard in production is
+        # never overwritten by a run that failed its own checks.
+
+      - name: Stage the deployable artefact
+        run: cp CCCM_Site_Monitoring_Dashboard.html public/index.html
+
+      - name: Remove raw caches before commit
+        run: rm -f _cache_kobo.json _cache_zite.json _build_stats.json
+        # Belt-and-braces: these are already gitignored, but a scheduled job runs
+        # unattended, so nothing should rely on that alone.
+
+      - name: Commit and push if anything changed
+        run: |
+          git config user.name "cccm-dashboard-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/index.html CCCM_Site_Monitoring_Dashboard.html \
+                  dashboard_data.json sites.json review_queue.csv run_report.md
+          if git diff --cached --quiet; then
+            echo "No data changes since last run."
+          else
+            git commit -m "Automated refresh: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            git push
+          fi

@@ -547,7 +547,10 @@ def render(data):
     tpl=tpl.replace("/*DATA_PLACEHOLDER*/","const DATA = "+json.dumps(data,ensure_ascii=False)+";")
     tpl=tpl.replace("/*APP_PLACEHOLDER*/",app)
     open(OUT_HTML,"w",encoding="utf-8").write(tpl)
-    print(f"\n✅ Wrote {OUT_HTML}  ({round(os.path.getsize(OUT_HTML)/1024)} KB)  ·  {data['kpi']['sites']} sites")
+    try:
+        print(f"\n✅ Wrote {OUT_HTML}  ({round(os.path.getsize(OUT_HTML)/1024)} KB)  ·  {data['kpi']['sites']} sites")
+    except UnicodeEncodeError:   # some Windows consoles default to a non-UTF-8 codepage
+        print(f"\nWrote {OUT_HTML}  ({round(os.path.getsize(OUT_HTML)/1024)} KB)  - {data['kpi']['sites']} sites")
 
 def main():
     df = fetch()

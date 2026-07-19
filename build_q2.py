@@ -18,7 +18,7 @@ from collections import Counter, defaultdict
 import pandas as pd
 
 Q_START, Q_END, QLABEL = "2026-04-01", "2026-06-30", "Q2 2026"
-FORM  = r"C:\Users\Abdul\Downloads\aRQhLp3M6yhXzAPtVTafRW (3).xlsx"
+FORM  = os.environ.get("XLSFORM_PATH", os.path.join("data", "xlsform.xlsx"))
 BAD   = ["zitemanager", "http", "/api/", "key=", "token"]
 
 # ---------------------------------------------------------------- load the scorer module
@@ -211,8 +211,8 @@ if unmapped:
 # HH / individuals come from the CCCM Master List Q2 (authoritative population figures);
 # age/sex comes from the Site Verification file. Neither is collected by the monitoring
 # form. Join on CCCM site code first, then normalised district|site-name.
-MLP = r"Master List\IDP Site Master List  -2nd Quarter 2026.xlsx"
-SVP = r"Site verifcation_Demographic\IDP_Site_Verification_CLEANED_Q1-2026.xlsx"
+MLP = os.environ.get("MASTERLIST_PATH", os.path.join("data", "masterlist_q2.xlsx"))
+SVP = os.environ.get("SITEVERIF_PATH", os.path.join("data", "site_verification.xlsx"))
 
 def nm(s):
     s = unicodedata.normalize("NFKD", str(s)).lower()
