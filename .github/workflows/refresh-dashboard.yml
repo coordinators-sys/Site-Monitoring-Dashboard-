@@ -57,14 +57,23 @@ jobs:
         # anything a later step or a stray "cp ... public/" could reach by habit.
         # It is NEVER the deployable artefact — see build_public.py below.
 
-      - name: Build the PUBLIC dashboard (published Q2 2026 data only)
+      - name: Build the operational snapshot (Q1/Q2 catchment rollup, unreconciled)
+        run: python build_operational.py
+        # Deliberate, narrow exception to "public has no code path to draft data",
+        # made at the Cluster Coordinator's explicit written request: catchment- and
+        # district-level aggregates only (never a site name or site code — the script
+        # asserts this on itself before writing operational.json), clearly labelled on
+        # the public site as unreconciled and kept out of every reconciled KPI total.
+
+      - name: Build the PUBLIC dashboard (published Q2 2026 data + operational layer)
         run: python build_public.py
-        # Reads ONLY published_data.py (hand-transcribed, page-verified from the
-        # released PDF report) - never the live fetch caches or the draft rebuild
-        # above. Writes public/index.html directly; fails the build (exit 1) if its
-        # own QA reconciliation or secret/draft-figure scrub finds anything wrong.
-        # This script has no code path to the draft dataset, which is the actual
-        # publication safeguard - not a UI label on top of shared data.
+        # KPI totals / sector-gap / district tables / downloads still come ONLY from
+        # published_data.py (hand-transcribed, page-verified from the released PDF
+        # report) — that reconciliation guarantee is unchanged. The one addition is
+        # operational.json (aggregate-only, see above), rendered in a visually and
+        # textually separate "Operational Snapshot (unreconciled)" block that never
+        # feeds the published KPIs/downloads. Fails the build (exit 1) if its own QA
+        # reconciliation or secret/draft-figure scrub finds anything wrong.
 
       - name: Remove raw caches before commit
         run: rm -f _cache_kobo.json _cache_zite.json _build_stats.json
@@ -76,7 +85,7 @@ jobs:
           git config user.name "cccm-dashboard-bot"
           git config user.email "actions@users.noreply.github.com"
           git add public/index.html CCCM_Site_Monitoring_Dashboard_INTERNAL.html \
-                  dashboard_data.json sites.json review_queue.csv run_report.md
+                  dashboard_data.json sites.json review_queue.csv run_report.md operational.json
           if git diff --cached --quiet; then
             echo "No data changes since last run."
           else

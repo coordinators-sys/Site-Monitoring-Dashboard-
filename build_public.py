@@ -3,11 +3,17 @@
 Builds the PUBLIC dashboard — the only artefact ever deployed to
 site-monitoring.cccmclustersomalia.org.
 
-Data source: published_data.py ONLY (hand-transcribed, page-verified from the
-officially released Q2 2026 PDF report). This script never reads the live draft
-rebuild (_cache_kobo.json, _cache_zite.json, sites.json) — there is no code path by
-which draft numbers could reach this output, which is the actual publication
-safeguard, not a label.
+Every reconciled figure (KPI totals, sector-gap %, district table, downloads) comes
+from published_data.py ONLY (hand-transcribed, page-verified from the officially
+released Q2 2026 PDF report) — this script has no code path from those figures to
+the live draft rebuild (_cache_kobo.json, _cache_zite.json, sites.json).
+
+One deliberate, narrow exception, added at the Cluster Coordinator's explicit written
+request: operational.json (built by build_operational.py) supplies a catchment/
+district-level "Operational Snapshot (unreconciled)" block — aggregate counts only,
+never a site name or site code, never blended into the reconciled KPIs/downloads
+above, and rendered under its own distinct badge and caveat so it can never be
+mistaken for PUBLISHED RESULTS.
 
 Writes: public/index.html
 """
@@ -90,6 +96,21 @@ data = {
            if os.path.exists(os.path.join("data", "geo.json")) else None,
     "assets": assets,
 }
+
+# ---------------------------------------------------------------- operational layer
+# Aggregate-only (catchment/district), unreconciled, from the live pipeline. See the
+# module docstring above and build_operational.py for the scope this is limited to.
+OP_PATH = "operational.json"
+if os.path.exists(OP_PATH):
+    op = json.load(open(OP_PATH, encoding="utf-8"))
+    op_blob = json.dumps(op)
+    for forbidden in ("_site_id", '"s":', '"site":', "final_site_name"):
+        if forbidden in op_blob:
+            print(f"QA FAILED: operational.json appears to carry site-identifying key {forbidden!r}")
+            sys.exit(1)
+    data["operational"] = {"available": True, "note": op["generatedNote"], "quarters": op["quarters"]}
+else:
+    data["operational"] = {"available": False, "note": "", "quarters": {}}
 
 # ---------------------------------------------------------------- QA: internal reconciliation
 errs = []

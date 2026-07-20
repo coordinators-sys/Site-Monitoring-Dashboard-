@@ -182,6 +182,40 @@ function renderDistricts(){
   $('#distFootnote').innerHTML=DATA.districtFootnote;
   $('#partnerChips').innerHTML=DATA.partners.map(p=>
     `<span class="pub-chip-sm" style="padding:5px 11px;font-size:12px">${esc(p)}</span>`).join('');
+  renderOperational();
+}
+
+/* ================= OPERATIONAL SNAPSHOT (unreconciled) ================= */
+let OP_Q=null;
+function paintOpRows(rows){
+  $('#opTable').innerHTML=rows.length?rows.map(c=>`<tr>
+      <td style="font-weight:600">${esc(c.catchment)}</td><td>${esc(c.district)}</td><td>${esc(c.region)}</td>
+      <td class="ctr">${fmt(c.n)}</td>
+      <td class="ctr"><span class="badge ${sevBand(c.avgSeverity)}">${c.avgSeverity}%</span></td>
+      <td class="ctr">${fmt(c.Severe)}</td><td class="ctr">${fmt(c.High)}</td>
+      <td class="ctr">${fmt(c.Moderate)}</td><td class="ctr">${fmt(c.Low)}</td>
+    </tr>`).join('') : `<tr><td colspan="9"><p class="empty-note">No catchments match this filter.</p></td></tr>`;
+}
+function renderOperational(){
+  const op=DATA.operational;
+  if(!op||!op.available||!Object.keys(op.quarters).length){ return; }
+  $('#opSection').hidden=false;
+  const qkeys=Object.keys(op.quarters);
+  OP_Q=OP_Q&&qkeys.includes(OP_Q)?OP_Q:qkeys[qkeys.length-1];
+  $('#opQuarterTabs').innerHTML=qkeys.map(k=>
+    `<button class="op-tab ${k===OP_Q?'active':''}" data-q="${esc(k)}">${esc(k)}</button>`).join('');
+  $$('#opQuarterTabs .op-tab').forEach(b=>b.addEventListener('click',()=>{OP_Q=b.dataset.q;renderOperational();}));
+  const q=op.quarters[OP_Q];
+  const all=[...(q.catchments||[])].sort((a,b)=>b.avgSeverity-a.avgSeverity);
+  paintOpRows(all);
+  const input=$('#opFilter');
+  const apply=()=>{
+    const s=input.value.trim().toLowerCase();
+    const rows=s?all.filter(c=>c.catchment.toLowerCase().includes(s)||c.district.toLowerCase().includes(s)):all;
+    paintOpRows(rows);
+    $('#opFilterCount').textContent=s?`${rows.length} of ${all.length} catchments`:`${all.length} catchments · ${q.kpi.sites} sites (${OP_Q})`;
+  };
+  input.value=''; input.oninput=apply; apply();
 }
 
 /* ================= DOWNLOADS ================= */

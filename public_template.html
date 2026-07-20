@@ -53,6 +53,15 @@ header.top{background:var(--surface);color:var(--ink);padding:14px 0 12px;border
 .top .meta{text-align:right;font-size:11px;color:var(--muted);line-height:1.5}
 .pub-badge{display:inline-block;background:var(--teal-l);color:var(--teal-d);border:1px solid var(--teal);
   border-radius:8px;padding:4px 12px;font-size:11px;font-weight:700;letter-spacing:.02em;margin-top:4px}
+.op-badge{display:inline-block;background:#FDF0E1;color:#9A5B13;border:1px solid #E9A23B;
+  border-radius:8px;padding:3px 10px;font-size:10.5px;font-weight:700;letter-spacing:.02em}
+[data-theme="dark"] .op-badge{background:#3a2c12;color:#f0b969;border-color:#9A5B13}
+.op-card{border:1px dashed #E9A23B;background:#FFFBF3}
+[data-theme="dark"] .op-card{background:#241d10}
+.op-tabs{display:flex;gap:6px;margin-bottom:12px}
+.op-tab{appearance:none;border:1px solid var(--line);background:var(--surface);font-family:inherit;font-size:12px;font-weight:600;
+  color:var(--ink-2);padding:6px 13px;border-radius:20px;cursor:pointer}
+.op-tab.active{background:#9A5B13;color:#fff;border-color:#7a4610}
 .help-btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);
   width:34px;height:34px;border-radius:50%;font-size:15px;font-weight:700;cursor:pointer;flex:0 0 auto}
 .help-btn:hover{background:var(--plane-2);color:var(--teal-d)}
@@ -338,6 +347,36 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
       <p style="font-size:12.5px;color:var(--ink-2);margin:0 0 10px">Severity reflects conditions in the sites a partner
         monitors — it is not a measure of partner performance.</p>
       <div id="partnerChips" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    </div>
+
+    <div class="card p op-card block" id="opSection" style="margin-top:16px" hidden>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+        <h3>Operational Snapshot</h3>
+        <span class="op-badge">OPERATIONAL — UNRECONCILED</span>
+      </div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 14px">This section reflects the live
+        field-data pipeline, updated automatically and grouped by catchment and district only — it has not been
+        through Information Management review or cross-checked against the Master List, so its totals will not
+        match the PUBLISHED RESULTS figures above. Households/individuals, where present, are enumerator-reported
+        at the time of assessment, not the verified population figures. Do not cite this section for donor reporting.</p>
+      <div class="op-tabs" id="opQuarterTabs"></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+        <label for="opFilter" style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em">Filter</label>
+        <input id="opFilter" type="text" placeholder="Search by catchment or district…"
+          style="flex:1;min-width:200px;max-width:320px;appearance:none;border:1px solid var(--line);background:var(--surface);
+          color:var(--ink);border-radius:8px;padding:8px 12px;font-size:12.5px;font-family:inherit">
+        <span id="opFilterCount" style="font-size:11.5px;color:var(--muted)"></span>
+      </div>
+      <div class="tbl-scroll">
+        <table class="plain">
+          <thead><tr>
+            <th>Catchment</th><th>District</th><th>Region</th><th class="ctr">Sites</th>
+            <th class="ctr">Avg. severity</th><th class="ctr">Severe</th><th class="ctr">High</th>
+            <th class="ctr">Moderate</th><th class="ctr">Low</th>
+          </tr></thead>
+          <tbody id="opTable"></tbody>
+        </table>
+      </div>
     </div>
   </section>
 
