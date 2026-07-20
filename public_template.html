@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCCM Cluster Somalia Site Monitoring Dashboard — Q2 2026</title>
+<meta name="description" content="CCCM Cluster Somalia Site Monitoring Dashboard, Q2 2026 — published results for 1,275 assessed IDP sites across 16 districts.">
+<meta name="theme-color" content="#104E5D">
+<link rel="icon" href="/*FAVICON_INLINE*/">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CCCM Cluster Somalia">
+<meta property="og:title" content="CCCM Cluster Somalia Site Monitoring Dashboard — Q2 2026">
+<meta property="og:description" content="Published results for 1,275 assessed IDP sites across 16 districts, Q2 2026 (April–June).">
+<meta property="og:image" content="https://site-monitoring.cccmclustersomalia.org/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://site-monitoring.cccmclustersomalia.org/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CCCM Cluster Somalia Site Monitoring Dashboard — Q2 2026">
+<meta name="twitter:image" content="https://site-monitoring.cccmclustersomalia.org/og-image.png">
+<meta name="robots" content="index, follow">
+<style>
+/*INTER_CSS*/
+:root{
+  --teal:#17677A; --teal-d:#104E5D; --teal-l:#E8F4F6; --orange:#EC6B4D; --orange-d:#c84e30;
+  --ink:#26343A; --ink-2:#4c5a60; --muted:#6B777C; --line:#DCE3E5; --line-2:#ECF0F1;
+  --surface:#FFFFFF; --plane:#F5F5F1; --plane-2:#EFEFEA;
+  --s-low:#3A8D68; --s-mod:#E9A23B; --s-high:#EC6B4D; --s-crit:#D9534F; --s-na:#9AA5B1;
+  --good:#3A8D68; --gap:#D9534F; --cov:#17677A;
+  --shadow:0 1px 2px rgba(18,33,31,.06),0 4px 14px rgba(18,33,31,.05);
+  --radius:12px; --radius-s:10px;
+  --sans:Inter,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;overflow-x:clip}
+body{font-family:var(--sans);color:var(--ink);background:var(--plane);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0;font-weight:700;letter-spacing:-.01em}
+a{color:var(--teal-d)}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+
+header.top{background:var(--surface);color:var(--ink);padding:14px 0 12px;border-bottom:3px solid var(--teal-d)}
+.top .wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:13px}
+.logo-mark{height:50px;width:auto;max-width:160px;object-fit:contain}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--teal);text-transform:uppercase}
+.logo h1{font-size:19px;line-height:1.2;color:var(--ink)}
+.logo .sub{font-size:12.5px;color:var(--muted);font-weight:500;margin-top:2px}
+.top .spacer{flex:1}
+.top .meta{text-align:right;font-size:11px;color:var(--muted);line-height:1.5}
+.pub-badge{display:inline-block;background:var(--teal-l);color:var(--teal-d);border:1px solid var(--teal);
+  border-radius:8px;padding:4px 12px;font-size:11px;font-weight:700;letter-spacing:.02em;margin-top:4px}
+.help-btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);
+  width:34px;height:34px;border-radius:50%;font-size:15px;font-weight:700;cursor:pointer;flex:0 0 auto}
+.help-btn:hover{background:var(--plane-2);color:var(--teal-d)}
+
+nav.tabs{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:0 1px 0 rgba(18,33,31,.03)}
+nav.tabs .wrap{display:flex;gap:2px;overflow-x:auto}
+.tab{appearance:none;border:none;background:none;font-family:inherit;font-size:13.5px;font-weight:600;color:var(--ink-2);
+  padding:14px 15px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:.15s}
+.tab:hover{color:var(--teal-d);background:var(--plane-2)}
+.tab.active{color:var(--teal-d);border-bottom-color:var(--teal)}
+
+main{padding:24px 0 56px}
+.view{display:none;animation:fade .2s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.sec-head{margin:4px 0 16px}
+.sec-head h2{font-size:20px}
+.sec-head p{margin:6px 0 0;color:var(--ink-2);font-size:13px;max-width:76ch;line-height:1.6}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.card.p{padding:18px 20px}
+.grid{display:grid;gap:16px}
+.grid>*{min-width:0}
+.cols2{grid-template-columns:1fr 1fr}
+@media(max-width:900px){.cols2{grid-template-columns:1fr}}
+.block{margin-bottom:26px}
+.block>h3{font-size:14.5px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.block>h3 .hint{font-weight:500;color:var(--muted);font-size:11.5px}
+
+.kpis{grid-template-columns:repeat(6,1fr)}
+@media(max-width:960px){.kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:15px;box-shadow:var(--shadow);
+  transition:box-shadow .15s,transform .15s}
+.kpi:hover{box-shadow:0 4px 14px rgba(0,0,0,.08);transform:translateY(-1px)}
+.kpi .k-val{font-size:25px;font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
+.kpi .k-lab{font-size:11px;color:var(--muted);margin-top:5px;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.kpi .k-sub{font-size:10.5px;color:var(--muted);margin-top:2px}
+.kpi.accent .k-val{color:var(--s-crit)}
+
+.findings{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px}
+.findings h4{color:var(--muted);font-size:11px;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:.03em}
+.finding{padding:9px 0;border-bottom:1px solid var(--line-2)}
+.finding:last-child{border-bottom:none}
+.finding .flab{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.02em}
+.finding .fval{font-size:14px;font-weight:700;margin-top:2px}
+.finding .fsub{font-size:12px;color:var(--ink-2);margin-top:2px}
+
+.dv-row{display:grid;grid-template-columns:180px 1fr 1fr;align-items:center;gap:0;padding:4px 0;font-size:12.5px;min-height:26px}
+.dv-row .lab{color:var(--ink);font-weight:600;text-align:right;padding-right:12px;font-size:12px;
+  display:flex;align-items:center;justify-content:flex-end;gap:5px}
+.dv-left{display:flex;justify-content:flex-end}
+.dv-right{display:flex;justify-content:flex-start}
+.dv-bar{height:20px;min-width:2px;display:flex;align-items:center;position:relative;transition:.2s}
+.dv-bar.gap{background:var(--gap);border-radius:5px 0 0 5px;justify-content:flex-start;color:#fff;padding-left:6px}
+.dv-bar.cov{background:var(--cov);border-radius:0 5px 5px 0;justify-content:flex-end;color:#fff;padding-right:6px}
+.dv-bar span{font-size:10.5px;font-weight:700}
+.dv-head{display:grid;grid-template-columns:180px 1fr 1fr;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-bottom:6px}
+.dv-head .g{text-align:right;padding-right:52px;color:var(--gap)}
+.dv-head .c{text-align:left;padding-left:52px;color:var(--cov)}
+.sec-ic{width:16px;height:16px;object-fit:contain;flex:0 0 auto}
+
+.hbar-row{display:grid;grid-template-columns:230px 1fr 42px;align-items:center;gap:10px;padding:3px 0;font-size:12.5px}
+.hbar-row .l{color:var(--ink);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbar-track{background:var(--plane-2);border-radius:5px;height:16px;overflow:hidden}
+.hbar-fill{height:100%;border-radius:5px}
+.hbar-row .v{font-weight:700;text-align:right;font-size:12px}
+
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;color:#fff}
+.badge.Severe{background:var(--s-crit)} .badge.High{background:var(--s-high)}
+.badge.Moderate{background:var(--s-mod)} .badge.Low{background:var(--s-low)}
+.badge.na{background:var(--s-na)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--ink-2)}
+.legend .it{display:flex;align-items:center;gap:6px}
+.legend .dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+
+table.plain{width:100%;border-collapse:collapse;font-size:13px}
+table.plain th{text-align:left;font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;
+  font-weight:700;padding:8px 10px;border-bottom:2px solid var(--line)}
+table.plain td{padding:9px 10px;border-bottom:1px solid var(--line-2)}
+table.plain .ctr{text-align:center}
+.tbl-scroll{overflow-x:auto}
+.sample-flag{font-size:10px;font-weight:600;margin-top:2px}
+.sample-flag.warn{color:#9a5b13}
+.sample-flag.bad{color:var(--gap)}
+.dash{color:var(--muted)}
+
+.sd-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.sd-tab{appearance:none;border:1px solid var(--line);background:var(--surface);font-family:inherit;font-size:12.5px;font-weight:600;
+  color:var(--ink-2);padding:8px 13px;border-radius:20px;cursor:pointer;display:flex;align-items:center;gap:6px}
+.sd-tab.active{background:var(--teal);color:#fff;border-color:var(--teal-d)}
+.sd-tab img{width:15px;height:15px}
+.tri-row{display:grid;grid-template-columns:1fr 2fr 40px;align-items:center;gap:10px;padding:5px 0;font-size:12px}
+.tri-bar{height:15px;border-radius:5px;overflow:hidden;background:var(--plane-2);display:flex}
+.tri-seg.g{background:var(--s-low)} .tri-seg.y{background:var(--s-mod)} .tri-seg.r{background:var(--s-high)}
+
+.dl-btn{display:flex;justify-content:space-between;align-items:center;text-align:left;width:100%;
+  appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:12px 15px;
+  cursor:pointer;font-family:inherit;font-size:13.5px;font-weight:600;color:var(--ink)}
+.dl-btn:hover{border-color:var(--teal);background:var(--teal-l)}
+.dl-btn .dmeta{font-size:11px;font-weight:600;color:var(--muted)}
+.pub-chip-sm{display:inline-block;background:var(--teal-l);color:var(--teal-d);border-radius:6px;padding:1px 7px;font-size:10px;font-weight:700}
+
+.method-b{font-size:13px;color:var(--ink-2);line-height:1.7}
+.method-b b{color:var(--ink)}
+.method-b ul{margin:6px 0;padding-left:18px}
+.method-b li{margin:4px 0}
+
+/* map */
+#pubMap{width:100%;height:600px}
+.map-layer.active{background:var(--teal);color:#fff;border-color:var(--teal-d)}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;
+  padding:8px 14px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--plane-2)}
+.btn.sm{padding:6px 11px;font-size:12px}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:18px 0;font-size:11.5px;color:var(--muted)}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+/* help modal */
+.modal-back{position:fixed;inset:0;background:rgba(18,33,31,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-back[hidden]{display:none}
+.modal{background:var(--surface);border-radius:var(--radius);max-width:560px;width:100%;max-height:82vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line)}
+.modal-body{padding:16px 20px}
+.modal-x{appearance:none;border:none;background:none;font-size:20px;cursor:pointer;color:var(--muted);line-height:1}
+dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:var(--ink-2)}
+
+/* toast / loading / empty states */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--teal-d);color:#fff;
+  padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.2s;z-index:300}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.empty-note{padding:20px;text-align:center;color:var(--muted);font-size:12.5px}
+[data-theme="dark"]{--surface:#1E2427;--card-bg:#1E2427;--plane:#14181A;--plane-2:#1B2529;--ink:#E8ECED;--ink-2:#c7cdce;--muted:#9AA5AA;--line:#2C3438;--line-2:#232B2E;--teal-l:#123640}
+
+@media print{
+  nav.tabs,.map-layer,.btn,button,.help-btn,.toast{display:none!important}
+  .view{display:none!important}.view.active{display:block!important}
+  .card{box-shadow:none!important;border:1px solid #ccc!important;break-inside:avoid}
+  body{background:#fff}
+}
+@media(max-width:640px){
+  nav.tabs .wrap{gap:0}
+  .dv-row,.dv-head{grid-template-columns:110px 1fr 1fr}
+  .hbar-row{grid-template-columns:1fr 1fr 36px}
+}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">
+      <img class="logo-mark" id="brandLogo" alt="CCCM Cluster Somalia">
+      <div>
+        <div class="eyebrow">CCCM Cluster Somalia</div>
+        <h1>Site Monitoring Dashboard</h1>
+        <div class="sub">Q2 2026 (April–June)</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="top .meta" style="text-align:right">
+      <div class="pub-badge">PUBLISHED RESULTS</div>
+    </div>
+    <button class="help-btn" id="helpBtn" aria-haspopup="dialog" title="Help &amp; glossary">?</button>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="wrap">
+    <button class="tab active" data-view="overview">Overview</button>
+    <button class="tab" data-view="map">Geographic Priorities</button>
+    <button class="tab" data-view="sectors">Sector Gaps</button>
+    <button class="tab" data-view="districts">District Analysis</button>
+    <button class="tab" data-view="downloads">Downloads</button>
+    <button class="tab" data-view="about">About the Data</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ============ OVERVIEW ============ -->
+  <section class="view active" id="view-overview">
+    <div class="sec-head">
+      <h2>National Overview</h2>
+      <p id="ovIntro"></p>
+    </div>
+    <div class="grid kpis block" id="kpiRow"></div>
+    <div class="grid cols2 block">
+      <div class="findings">
+        <h4>Key Findings</h4>
+        <div id="findingsList"></div>
+      </div>
+      <div class="card p">
+        <h3 style="margin-bottom:10px">Coverage change since Q1 2026</h3>
+        <p id="coverageNote" style="font-size:13px;color:var(--ink-2);line-height:1.7;margin:0"></p>
+      </div>
+    </div>
+    <div class="block">
+      <h3>Sector Performance <span class="hint">gap vs coverage, % of applicable indicators</span></h3>
+      <div class="card p">
+        <div class="dv-head"><div></div><div class="g">◀ Gap</div><div class="c">Coverage ▶</div></div>
+        <div id="sectorDiverge"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GEOGRAPHIC PRIORITIES ============ -->
+  <section class="view" id="view-map">
+    <div class="sec-head">
+      <h2>Geographic Priorities</h2>
+      <p>District severity based on published Q2 2026 results. Grey districts were not individually reported this quarter.</p>
+    </div>
+    <div class="card p">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase">View</span>
+        <button class="btn sm map-layer active" data-layer="sev">District severity</button>
+        <button class="btn sm map-layer" data-layer="cov">Assessment coverage</button>
+        <div style="flex:1"></div>
+        <span style="font-size:11.5px;color:var(--muted)">OpenStreetMap basemap</span>
+      </div>
+      <div id="pubMap"></div>
+      <div class="legend" id="mapLegend" style="margin-top:10px"></div>
+    </div>
+  </section>
+
+  <!-- ============ SECTOR GAPS ============ -->
+  <section class="view" id="view-sectors">
+    <div class="sec-head">
+      <h2>Sector Gaps</h2>
+      <p>Twelve sectors ranked by service gap. Missing and Not Applicable responses are excluded from every percentage shown.</p>
+    </div>
+    <div class="sd-tabs" id="sdTabs"></div>
+    <div class="grid cols2">
+      <div class="card p">
+        <h3 id="sdTitle" style="margin-bottom:10px"></h3>
+        <div id="sdBody"></div>
+      </div>
+      <div class="card p">
+        <h3 style="margin-bottom:10px">Top service gaps nationally</h3>
+        <div id="topGapsList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DISTRICT ANALYSIS ============ -->
+  <section class="view" id="view-districts">
+    <div class="sec-head">
+      <h2>District Analysis</h2>
+      <p>Districts with at least 10 assessed sites are eligible for national comparison. Smaller samples are shown separately.</p>
+    </div>
+    <div class="card p block">
+      <div class="tbl-scroll">
+        <table class="plain">
+          <thead><tr>
+            <th>District</th><th>Region</th><th class="ctr">Sites</th>
+            <th class="ctr">Avg. severity</th><th class="ctr">Severe</th><th class="ctr">High</th>
+            <th class="ctr">Moderate</th><th class="ctr">Low</th><th>Main service gap</th>
+          </tr></thead>
+          <tbody id="distTable"></tbody>
+        </table>
+      </div>
+      <p id="distFootnote" style="margin:12px 0 0;font-size:11.5px;color:var(--muted)"></p>
+    </div>
+    <div class="card p">
+      <h3 style="margin-bottom:8px">Reporting partners</h3>
+      <p style="font-size:12.5px;color:var(--ink-2);margin:0 0 10px">Severity reflects conditions in the sites a partner
+        monitors — it is not a measure of partner performance.</p>
+      <div id="partnerChips" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    </div>
+  </section>
+
+  <!-- ============ DOWNLOADS ============ -->
+  <section class="view" id="view-downloads">
+    <div class="sec-head">
+      <h2>Downloads</h2>
+      <p>All downloads are published Q2 2026 results and carry the reporting period, data source and generation date.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px" id="dlList"></div>
+  </section>
+
+  <!-- ============ ABOUT THE DATA ============ -->
+  <section class="view" id="view-about">
+    <div class="sec-head"><h2>About the Data</h2></div>
+    <div class="grid cols2">
+      <div class="card p"><h3>Purpose</h3><div class="method-b" id="mPurpose"></div></div>
+      <div class="card p"><h3>Reporting period &amp; sources</h3><div class="method-b" id="mSources"></div></div>
+      <div class="card p"><h3>Severity definition</h3><div class="method-b" id="mSeverity"></div></div>
+      <div class="card p"><h3>Important limitations</h3><div class="method-b" id="mLimits"></div></div>
+    </div>
+    <div class="card p" style="margin-top:16px"><h3>Contact</h3><div class="method-b" id="mContact"></div></div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>CCCM Cluster Somalia · Site Monitoring Dashboard · Q2 2026 (April–June)</span>
+    <span id="genLine"></span>
+  </div>
+</footer>
+
+<!-- Help modal: glossary, reached only via the info icon, never a nav tab -->
+<div class="modal-back" id="helpModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="modal-head">
+      <h3 id="helpTitle">Help &amp; Glossary</h3>
+      <button class="modal-x" id="helpX" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--ink-2);margin:0 0 6px">This dashboard shows officially published CCCM Cluster
+        Q2 2026 results only. Terms used throughout:</p>
+      <dl class="gloss">
+        <dt>CA (Catchment Area)</dt><dd>A cluster of nearby IDP sites managed as one operational unit.</dd>
+        <dt>Severity Score</dt><dd>The share of assessed indicators scoring Red at a site, district or nationally.</dd>
+        <dt>Applicable base / denominator</dt><dd>The number of sites where a question could actually be answered — sites where it was Not Applicable are excluded.</dd>
+        <dt>Green / Yellow / Red</dt><dd>Green = standard met. Yellow = partially met. Red = gap or not met.</dd>
+        <dt>CFM</dt><dd>Complaint and Feedback Mechanism.</dd>
+        <dt>CMC</dt><dd>Camp Management Committee.</dd>
+        <dt>HLP</dt><dd>Housing, Land and Property.</dd>
+        <dt>GBV</dt><dd>Gender-Based Violence.</dd>
+        <dt>NFI</dt><dd>Non-Food Items.</dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<script>
+/*LEAFLET_JS*/
+</script>
+<script>
+/*DATA_PLACEHOLDER*/
+</script>
+<script>
+/*APP_PLACEHOLDER*/
+</script>
+</body>
+</html>

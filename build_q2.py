@@ -765,6 +765,23 @@ with open("review_queue.csv", "w", newline="", encoding="utf-8") as f:
 
 bd.render(data)
 
+# This file is the INTERNAL analytical build: the live draft rebuild (1,315 site rows,
+# Data Quality, Site Explorer, reconciliation). It is git-tracked for CCCM IM staff but
+# is never copied into public/ and is not deployed anywhere - see build_public.py for
+# the artefact that actually goes to site-monitoring.cccmclustersomalia.org. A banner
+# makes that unmistakable to anyone who opens this file directly.
+_INTERNAL_BANNER = (
+    '<div style="background:#7a1f1f;color:#fff;text-align:center;font:700 13px/1.4 '
+    'system-ui,sans-serif;padding:9px 14px">'
+    '&#9888; INTERNAL ANALYTICAL BUILD &mdash; contains draft, unpublished site-level data '
+    '(1,315 rows) &mdash; do not share externally or quote publicly. '
+    'The public dashboard is a separate artefact built by build_public.py.</div>')
+with open("CCCM_Site_Monitoring_Dashboard.html", "r", encoding="utf-8") as _f:
+    _html = _f.read()
+_html = _html.replace("<body>", "<body>" + _INTERNAL_BANNER, 1)
+with open("CCCM_Site_Monitoring_Dashboard.html", "w", encoding="utf-8") as _f:
+    _f.write(_html)
+
 # ---------------------------------------------------------------- scrub
 # Precise patterns. A bare "http"/"key=" substring test false-positives on the SVG
 # xmlns namespace and on JS arrow params (`key=>{}`), which trains people to ignore

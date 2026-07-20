@@ -50,8 +50,21 @@ jobs:
         # the workflow before anything is committed. The dashboard in production is
         # never overwritten by a run that failed its own checks.
 
-      - name: Stage the deployable artefact
-        run: cp CCCM_Site_Monitoring_Dashboard.html public/index.html
+      - name: Rename the internal artefact — never deployable
+        run: mv CCCM_Site_Monitoring_Dashboard.html CCCM_Site_Monitoring_Dashboard_INTERNAL.html
+        # This file (the live rebuild: 1,315 draft site rows, Data Quality, Site
+        # Explorer) stays git-tracked for CCCM IM staff but is renamed away from
+        # anything a later step or a stray "cp ... public/" could reach by habit.
+        # It is NEVER the deployable artefact — see build_public.py below.
+
+      - name: Build the PUBLIC dashboard (published Q2 2026 data only)
+        run: python build_public.py
+        # Reads ONLY published_data.py (hand-transcribed, page-verified from the
+        # released PDF report) - never the live fetch caches or the draft rebuild
+        # above. Writes public/index.html directly; fails the build (exit 1) if its
+        # own QA reconciliation or secret/draft-figure scrub finds anything wrong.
+        # This script has no code path to the draft dataset, which is the actual
+        # publication safeguard - not a UI label on top of shared data.
 
       - name: Remove raw caches before commit
         run: rm -f _cache_kobo.json _cache_zite.json _build_stats.json
@@ -62,7 +75,7 @@ jobs:
         run: |
           git config user.name "cccm-dashboard-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add public/index.html CCCM_Site_Monitoring_Dashboard.html \
+          git add public/index.html CCCM_Site_Monitoring_Dashboard_INTERNAL.html \
                   dashboard_data.json sites.json review_queue.csv run_report.md
           if git diff --cached --quiet; then
             echo "No data changes since last run."
