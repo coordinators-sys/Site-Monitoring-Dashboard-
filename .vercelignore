@@ -1,7 +1,20 @@
-# Whitelist: upload NOTHING except the dashboard artefact and the platform config.
-# Credentials, raw caches, source datasets and pipeline code never leave this machine
-# via Vercel regardless of what appears in this folder later.
+# Whitelist: upload only the dashboard artefact, the API function (and its specific
+# runtime dependencies), and platform config. Credentials, raw caches, and everything
+# else in "source datasets" (Master List, Site Verification, IOM submissions, maps)
+# never leave this machine via Vercel regardless of what appears in this folder later.
 *
 !public
 !public/**
 !vercel.json
+!api
+!api/**
+api/__pycache__
+!requirements.txt
+
+# api/operational.py's own runtime dependencies — nothing broader than this.
+!live_fetch.py
+!build_operational.py
+!build_dashboard_from_live_data.py
+!zite_map.json
+!data
+!data/xlsform.xlsx
