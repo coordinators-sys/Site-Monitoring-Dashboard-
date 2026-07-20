@@ -65,10 +65,19 @@ function renderOverview(){
   $('#kpiRow').innerHTML=cards.map(c=>`<div class="kpi">
     <div class="k-val">${c.v}</div><div class="k-lab">${esc(c.l)}</div></div>`).join('');
 
-  $('#findingsList').innerHTML=DATA.keyFindings.map(f=>`<div class="finding">
-    <div class="flab">${esc(f[0])}</div>
-    <div class="fval">${esc(f[1])}</div>
-    <div class="fsub">${esc(f[2])}</div></div>`).join('');
+  // Key Findings and the Sector Performance chart are analytical results from the
+  // full-granularity report — for a headline-totals-only period they are hidden
+  // outright, never left on screen carrying another period's numbers.
+  $('#findingsCard').hidden=!p.full;
+  $('#sectorPerfBlock').hidden=!p.full;
+  const fc=$('#findingsChip'); if(fc) fc.textContent=p.id;
+  const sc=$('#sectorPerfChip'); if(sc) sc.textContent=p.id;
+  if(p.full){
+    $('#findingsList').innerHTML=DATA.keyFindings.map(f=>`<div class="finding">
+      <div class="flab">${esc(f[0])}</div>
+      <div class="fval">${esc(f[1])}</div>
+      <div class="fsub">${esc(f[2])}</div></div>`).join('');
+  }
 
   const q1=DATA.q1;
   const q1q2Rows=[
@@ -82,7 +91,7 @@ function renderOverview(){
   $('#q1q2Table').innerHTML=q1q2Rows.map(([l,a,b])=>`<tr>
     <td>${esc(l)}</td><td class="ctr">${fmt(a)}</td><td class="ctr" style="font-weight:700">${fmt(b)}</td></tr>`).join('');
   $('#coverageNote').textContent=DATA.coverageNote;
-  renderSectorDiverge();
+  if(p.full) renderSectorDiverge();
 }
 function renderSectorDiverge(){
   const max=Math.max(...DATA.sectors.map(s=>Math.max(s.gap,s.cov)));

@@ -276,8 +276,10 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
     <div class="period-note" id="ovPeriodNote" hidden></div>
     <div class="grid kpis block" id="kpiRow"></div>
     <div class="grid cols2 block">
-      <div class="findings">
-        <h4>Key Findings</h4>
+      <!-- Key Findings come from the full-granularity report only; hidden for a
+           headline-totals-only period so its figures never appear under that label. -->
+      <div class="findings" id="findingsCard">
+        <h4>Key Findings <span class="period-chip" id="findingsChip"></span></h4>
         <div id="findingsList"></div>
       </div>
       <div class="card p">
@@ -289,8 +291,9 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
         <p id="coverageNote" style="font-size:12px;color:var(--muted);line-height:1.6;margin:10px 0 0"></p>
       </div>
     </div>
-    <div class="block">
-      <h3>Sector Performance <span class="hint">gap vs coverage, % of applicable indicators</span></h3>
+    <div class="block" id="sectorPerfBlock">
+      <h3>Sector Performance <span class="period-chip" id="sectorPerfChip"></span>
+        <span class="hint">gap vs coverage, % of applicable indicators</span></h3>
       <div class="card p">
         <div class="dv-head"><div></div><div class="g">◀ Gap</div><div class="c">Coverage ▶</div></div>
         <div id="sectorDiverge"></div>
