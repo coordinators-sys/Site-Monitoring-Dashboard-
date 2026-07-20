@@ -59,12 +59,33 @@ data = {
     "source": P.SOURCE,
     "generated": pd.Timestamp.now().strftime("%d %B %Y"),
     "contact": P.CONTACT,
+    # Period-neutral: the reporting period is a user-selectable filter, so the standing
+    # copy must not name one. The period itself is stated by the chip beside the heading
+    # and by the selector in the header.
     "intro": ("The CCCM Cluster Somalia Site Monitoring provides a quarterly overview "
               "of service availability and priority gaps in displacement sites assessed "
-              "by CCCM partners. Results represent assessed locations during Q2 2026 and "
-              "should not be interpreted as a census of all displacement sites."),
+              "by CCCM partners. Results represent the locations assessed in the selected "
+              "reporting period and should not be interpreted as a census of all "
+              "displacement sites."),
     "keyFindings": P.KEY_FINDINGS,
     "q1": P.Q1,
+    # Reporting periods the user can select. Q2 2026 is the only period the Cluster has
+    # published at analytical granularity; Q1 2026 appears in the same report only as
+    # headline coverage totals (p.3 / p.5 tables), so it is marked full=False and the
+    # sector / district / indicator surfaces say so rather than silently showing Q2 data
+    # under a Q1 label.
+    "periods": [
+        {"id": "Q2 2026", "label": P.PERIOD, "full": True, "kpi": P.KPI, "note": ""},
+        {"id": "Q1 2026", "label": "Q1 2026 (January–March)", "full": False,
+         "kpi": {"sites": P.Q1["sites"], "catchments": P.Q1["catchments"],
+                 "districts": P.Q1["districts"], "partners": P.Q1["partners"],
+                 "hhs": P.Q1["hhs"], "individuals": P.Q1["individuals"]},
+         "note": ("For Q1 2026 the published report discloses headline coverage totals only. "
+                  "Sector gap percentages, district rankings and indicator-level results were "
+                  "not published at that granularity for Q1, so those sections are not "
+                  "available for this period. The live Operational Snapshot does cover Q1 "
+                  "2026, but it is unreconciled and must not be quoted as a published figure.")},
+    ],
     "coverageNote": ("Direct trend comparison is not recommended because the sites assessed "
                      "in Q1 and Q2 2026 were not the same locations — fewer sites and "
                      "catchments were assessed this quarter than last."),
@@ -130,6 +151,14 @@ check(data["kpi"]["catchments"] == 36, "KPI catchments != 36")
 check(data["kpi"]["districts"] == 16, "KPI districts != 16")
 check(len(data["partners"]) == 7, "partner list length != 7")
 check(data["q1"]["sites"] == 1902, "Q1 sites != 1902")
+# exactly one period may claim analytical (full) granularity, and its KPIs must be the
+# published Q2 set — this is what stops a future edit quietly promoting Q1 to "full".
+_full = [p for p in data["periods"] if p["full"]]
+check(len(_full) == 1, "expected exactly one full-granularity period")
+check(_full and _full[0]["kpi"]["sites"] == 1275, "full period KPI sites != 1275")
+for _p in data["periods"]:
+    check(_p["kpi"]["sites"] > 0, f"period {_p['id']} has no site count")
+    check(_p["full"] or _p["note"], f"period {_p['id']} is partial but carries no explanation")
 for d in districts:
     if d["bands"]:
         check(sum(d["bands"].values()) == d["n"],

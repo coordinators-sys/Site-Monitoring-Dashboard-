@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CCCM Cluster Somalia Site Monitoring Dashboard — Q2 2026</title>
-<meta name="description" content="CCCM Cluster Somalia Site Monitoring Dashboard, Q2 2026 — published results for 1,275 assessed IDP sites across 16 districts.">
+<title>CCCM Cluster Somalia Site Monitoring Dashboard</title>
+<meta name="description" content="CCCM Cluster Somalia Site Monitoring Dashboard — service availability and priority gaps in assessed displacement sites, by reporting period.">
 <meta name="theme-color" content="#104E5D">
 <link rel="icon" href="/*FAVICON_INLINE*/">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -13,14 +13,14 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CCCM Cluster Somalia">
-<meta property="og:title" content="CCCM Cluster Somalia Site Monitoring Dashboard — Q2 2026">
-<meta property="og:description" content="Published results for 1,275 assessed IDP sites across 16 districts, Q2 2026 (April–June).">
+<meta property="og:title" content="CCCM Cluster Somalia Site Monitoring Dashboard">
+<meta property="og:description" content="Service availability and priority gaps in assessed displacement sites across Somalia, by reporting period.">
 <meta property="og:image" content="https://site-monitoring.cccmclustersomalia.org/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://site-monitoring.cccmclustersomalia.org/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="CCCM Cluster Somalia Site Monitoring Dashboard — Q2 2026">
+<meta name="twitter:title" content="CCCM Cluster Somalia Site Monitoring Dashboard">
 <meta name="twitter:image" content="https://site-monitoring.cccmclustersomalia.org/og-image.png">
 <meta name="robots" content="index, follow">
 <style>
@@ -62,6 +62,18 @@ header.top{background:var(--surface);color:var(--ink);padding:14px 0 12px;border
 .op-tab{appearance:none;border:1px solid var(--line);background:var(--surface);font-family:inherit;font-size:12px;font-weight:600;
   color:var(--ink-2);padding:6px 13px;border-radius:20px;cursor:pointer}
 .op-tab.active{background:#9A5B13;color:#fff;border-color:#7a4610}
+.period-pick{display:flex;flex-direction:column;gap:3px;align-items:flex-start}
+.period-pick label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.period-pick select{appearance:none;border:1px solid var(--teal);background:var(--surface);color:var(--teal-d);
+  font-family:inherit;font-size:12.5px;font-weight:700;border-radius:8px;padding:6px 30px 6px 11px;cursor:pointer;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2317677A' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 11px center}
+.period-note{font-size:12.5px;color:#9A5B13;background:#FDF0E1;border:1px solid #E9A23B;border-radius:8px;
+  padding:10px 13px;margin-bottom:16px;line-height:1.6}
+.period-note[hidden]{display:none}
+[data-theme="dark"] .period-note{background:#3a2c12;color:#f0b969}
+.period-chip{display:inline-block;background:var(--teal-l);color:var(--teal-d);border-radius:6px;
+  padding:2px 9px;font-size:11px;font-weight:700;vertical-align:middle;margin-left:6px}
 .help-btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);
   width:34px;height:34px;border-radius:50%;font-size:15px;font-weight:700;cursor:pointer;flex:0 0 auto}
 .help-btn:hover{background:var(--plane-2);color:var(--teal-d)}
@@ -224,10 +236,14 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
       <div>
         <div class="eyebrow">CCCM Cluster Somalia</div>
         <h1>Site Monitoring Dashboard</h1>
-        <div class="sub">Q2 2026 (April–June)</div>
+        <div class="sub">Service availability &amp; priority gaps in assessed displacement sites</div>
       </div>
     </div>
     <div class="spacer"></div>
+    <div class="period-pick">
+      <label for="periodSel">Reporting period</label>
+      <select id="periodSel"></select>
+    </div>
     <div class="top .meta" style="text-align:right">
       <div class="pub-badge">PUBLISHED RESULTS</div>
     </div>
@@ -251,9 +267,10 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
   <!-- ============ OVERVIEW ============ -->
   <section class="view active" id="view-overview">
     <div class="sec-head">
-      <h2>National Overview</h2>
+      <h2>National Overview <span class="period-chip" id="ovPeriodChip"></span></h2>
       <p id="ovIntro"></p>
     </div>
+    <div class="period-note" id="ovPeriodNote" hidden></div>
     <div class="grid kpis block" id="kpiRow"></div>
     <div class="grid cols2 block">
       <div class="findings">
@@ -281,28 +298,59 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
   <!-- ============ GEOGRAPHIC PRIORITIES ============ -->
   <section class="view" id="view-map">
     <div class="sec-head">
-      <h2>Geographic Priorities</h2>
-      <p>District severity based on published Q2 2026 results. Grey districts were not individually reported this quarter.</p>
+      <h2>Geographic Priorities <span class="period-chip" id="mapPeriodChip"></span></h2>
+      <p id="mapIntro">District severity from published results. Grey districts were not individually reported.</p>
     </div>
+    <div class="period-note" id="mapPeriodNote" hidden></div>
     <div class="card p">
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
         <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase">View</span>
         <button class="btn sm map-layer active" data-layer="sev">District severity</button>
         <button class="btn sm map-layer" data-layer="cov">Assessment coverage</button>
+        <button class="btn sm map-layer" data-layer="ca">Catchment severity</button>
         <div style="flex:1"></div>
         <span style="font-size:11.5px;color:var(--muted)">OpenStreetMap basemap</span>
       </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+        <label for="mapFilter" style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em">Find</label>
+        <input id="mapFilter" type="text" placeholder="Zoom to a district or region…"
+          style="flex:1;min-width:200px;max-width:300px;appearance:none;border:1px solid var(--line);background:var(--surface);
+          color:var(--ink);border-radius:8px;padding:7px 12px;font-size:12.5px;font-family:inherit">
+        <button class="btn sm" id="mapReset">Reset view</button>
+        <span id="mapFilterMsg" style="font-size:11.5px;color:var(--muted)"></span>
+      </div>
+      <div id="caBanner" class="period-note" hidden style="margin-bottom:10px"></div>
       <div id="pubMap"></div>
       <div class="legend" id="mapLegend" style="margin-top:10px"></div>
+    </div>
+
+    <div class="card p block" id="caPanel" style="margin-top:16px" hidden>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+        <h3>Catchment analysis</h3>
+        <span class="op-badge">OPERATIONAL — UNRECONCILED</span>
+        <span class="period-chip" id="caPeriodChip"></span>
+      </div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 12px" id="caPanelNote"></p>
+      <div class="tbl-scroll">
+        <table class="plain">
+          <thead><tr>
+            <th>Catchment</th><th>District</th><th>Region</th><th class="ctr">Sites</th>
+            <th class="ctr">Avg. severity</th><th class="ctr">Severe</th><th class="ctr">High</th>
+            <th class="ctr">Moderate</th><th class="ctr">Low</th><th class="ctr">On map</th>
+          </tr></thead>
+          <tbody id="caTable"></tbody>
+        </table>
+      </div>
     </div>
   </section>
 
   <!-- ============ SECTOR GAPS ============ -->
   <section class="view" id="view-sectors">
     <div class="sec-head">
-      <h2>Sector Gaps</h2>
+      <h2>Sector Gaps <span class="period-chip" id="secPeriodChip"></span></h2>
       <p>Twelve sectors ranked by service gap. Missing and Not Applicable responses are excluded from every percentage shown.</p>
     </div>
+    <div class="period-note" id="secPeriodNote" hidden></div>
     <div class="sd-tabs" id="sdTabs"></div>
     <div class="grid cols2">
       <div class="card p">
@@ -319,9 +367,10 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
   <!-- ============ DISTRICT ANALYSIS ============ -->
   <section class="view" id="view-districts">
     <div class="sec-head">
-      <h2>District Analysis</h2>
+      <h2>District Analysis <span class="period-chip" id="distPeriodChip"></span></h2>
       <p>Districts with at least 10 assessed sites are eligible for national comparison. Smaller samples are shown separately.</p>
     </div>
+    <div class="period-note" id="distPeriodNote" hidden></div>
     <div class="card p block">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
         <label for="distFilter" style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em">Filter</label>
@@ -385,7 +434,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
   <section class="view" id="view-downloads">
     <div class="sec-head">
       <h2>Downloads</h2>
-      <p>All downloads are published Q2 2026 results and carry the reporting period, data source and generation date.</p>
+      <p>All downloads are published results and carry the reporting period, data source and generation date.</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:10px" id="dlList"></div>
   </section>
@@ -406,7 +455,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
 
 <footer>
   <div class="wrap">
-    <span>CCCM Cluster Somalia · Site Monitoring Dashboard · Q2 2026 (April–June)</span>
+    <span id="footLine">CCCM Cluster Somalia · Site Monitoring Dashboard</span>
     <span id="genLine"></span>
   </div>
 </footer>
@@ -420,7 +469,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
     </div>
     <div class="modal-body">
       <p style="font-size:13px;color:var(--ink-2);margin:0 0 6px">This dashboard shows officially published CCCM Cluster
-        Q2 2026 results only. Terms used throughout:</p>
+        results for the selected reporting period. Terms used throughout:</p>
       <dl class="gloss">
         <dt>CA (Catchment Area)</dt><dd>A cluster of nearby IDP sites managed as one operational unit.</dd>
         <dt>Severity Score</dt><dd>The share of assessed indicators scoring Red at a site, district or nationally.</dd>

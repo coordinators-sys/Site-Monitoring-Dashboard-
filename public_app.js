@@ -9,18 +9,50 @@ function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');se
 function bandColor(b){return b==='Severe'?'#D9534F':b==='High'?'#EC6B4D':b==='Moderate'?'#E9A23B':b==='Low'?'#3A8D68':'#9AA5B1';}
 function sevBand(pct){return pct>=55?'Severe':pct>=40?'High':pct>=25?'Moderate':'Low';}
 
+/* ================= REPORTING PERIOD ================= */
+/* The dashboard is a standing product, not a single-quarter report, so the period is
+   a user-selectable filter rather than site branding. Every analytical surface still
+   declares which period its numbers belong to — a general product must never let a
+   figure appear without its period attached. */
+const PERIODS = (DATA.periods && DATA.periods.length) ? DATA.periods
+  : [{id:'Q2 2026', label:DATA.period, full:true, kpi:DATA.kpi, note:''}];
+let CUR_PERIOD = PERIODS[0].id;
+const period = () => PERIODS.find(p=>p.id===CUR_PERIOD) || PERIODS[0];
+function setPeriodChips(){
+  const p=period();
+  [['#ovPeriodChip',p.id],['#mapPeriodChip',p.id],['#secPeriodChip',p.id],['#distPeriodChip',p.id]]
+    .forEach(([sel,txt])=>{ const el=$(sel); if(el) el.textContent=txt; });
+  const foot=$('#footLine');
+  if(foot) foot.textContent='CCCM Cluster Somalia · Site Monitoring Dashboard · '+p.label;
+}
+/* Shows the "this period is not published at this granularity" note on a surface, and
+   returns true when that surface must NOT render published analytics for this period. */
+function periodBlocked(noteSel){
+  const p=period(), el=$(noteSel);
+  if(el){ el.hidden = !!p.full; el.textContent = p.full ? '' : p.note; }
+  return !p.full;
+}
+function renderPeriodSelector(){
+  const sel=$('#periodSel');
+  if(!sel) return;
+  sel.innerHTML=PERIODS.map(p=>`<option value="${esc(p.id)}">${esc(p.label)}</option>`).join('');
+  sel.value=CUR_PERIOD;
+  sel.addEventListener('change',()=>{ CUR_PERIOD=sel.value; renderAll(); });
+}
+
 /* ================= TAB NAV ================= */
 $$('.tab').forEach(b=>b.addEventListener('click',()=>{
   $$('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');
   $$('.view').forEach(v=>v.classList.remove('active'));
   $('#view-'+b.dataset.view).classList.add('active');
-  if(b.dataset.view==='map'){renderMap();if(window.__pubMap)setTimeout(()=>window.__pubMap.invalidateSize(),60);}
+  if(b.dataset.view==='map') renderMap().catch(e=>console.error('[public dashboard] "map" failed:', e));
   window.scrollTo({top:0,behavior:'smooth'});
 }));
 
 /* ================= OVERVIEW ================= */
 function renderOverview(){
-  const K=DATA.kpi;
+  const p=period(), K=p.kpi;
+  periodBlocked('#ovPeriodNote');   // headline KPIs exist for every period; the note explains what doesn't
   $('#ovIntro').textContent=DATA.intro;
   const cards=[
     {v:fmt(K.sites),l:'Sites assessed'},
@@ -66,51 +98,163 @@ function renderSectorDiverge(){
 }
 
 /* ================= GEOGRAPHIC PRIORITIES (Leaflet + OSM) ================= */
-let MAP_FILL='sev';
-function renderMap(){
-  const geo=DATA.geo;
-  if(window.__pubMap||!geo||typeof L==='undefined') { if(window.__pubMap) return; }
-  if(!geo||typeof L==='undefined'){
-    $('#pubMap').innerHTML='<p class="empty-note">Map not available in this build.</p>'; return;
-  }
-  const alias=geo.pcodeAlias||{};
-  const byPc={}; DATA.districts.forEach(d=>{ if(d.pc) byPc[d.pc]=d; });
-  const fillFor=pc=>{
-    const rp=(alias[pc]||pc||'').toUpperCase();
-    const d=byPc[rp];
-    if(!d) return '#E2E5E0';
-    return MAP_FILL==='cov' ? (d.cov>=60?'#104E5D':d.cov>=45?'#17677A':d.cov>=25?'#6FAEBD':'#C9E0E6')
-                            : bandColor(sevBand(d.gap));
-  };
+/* Three layers. 'sev' and 'cov' shade DISTRICTS from published results and are only
+   available for a period the Cluster published at that granularity. 'ca' shades
+   CATCHMENTS from the live operational feed — unreconciled, so it carries its own
+   amber banner and is never mixed into the published district layers. */
+let MAP_FILL='sev', MAP_HOME=null, MAP_D_LAYER=null, MAP_CA_LAYER=null, MAP_INDEX=[], MAP_FOCUS=[];
+const swapRing=r=>r.map(([x,y])=>[y,x]);
+const caKey=(pc,ca)=>String(pc||'').toUpperCase()+String(ca||'').toUpperCase();
+
+function opCatchments(){
+  /* Operational catchment rows for the selected period, or the nearest available one. */
+  if(!OP_DATA||!OP_DATA.quarters) return {rows:[],label:null};
+  const keys=Object.keys(OP_DATA.quarters);
+  if(!keys.length) return {rows:[],label:null};
+  const k=keys.includes(CUR_PERIOD)?CUR_PERIOD:keys[keys.length-1];
+  return {rows:(OP_DATA.quarters[k].catchments||[]),label:k};
+}
+
+function buildMapShell(){
   const map=L.map('pubMap',{zoomSnap:.5});
   window.__pubMap=map;
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
     maxZoom:17,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
   }).addTo(map);
-  const swap=r=>r.map(([x,y])=>[y,x]);
-  const polys=[];
-  geo.districts.forEach(gd=>{
-    const rp=(alias[gd.pc]||gd.pc||'').toUpperCase();
-    const d=byPc[rp];
-    const poly=L.polygon(gd.rings.map(swap),{color:'#fff',weight:.8,fillColor:fillFor(gd.pc),fillOpacity:.6});
-    poly._pc=gd.pc;
-    poly.bindTooltip(d
-      ? `<b>${esc(gd.n)}</b><br>${fmt(d.n)} sites assessed · Gap ${d.gap}% / Coverage ${d.cov}%`
-      : `<b>${esc(gd.n)}</b><br>Not individually reported this quarter`, {sticky:true});
-    poly.addTo(map); polys.push(poly);
-  });
-  map.fitBounds(L.featureGroup(polys).getBounds());
+  MAP_D_LAYER=L.layerGroup().addTo(map);
+  MAP_CA_LAYER=L.layerGroup().addTo(map);
   $$('.map-layer').forEach(b=>{
-    b.classList.toggle('active',b.dataset.layer===MAP_FILL);
-    b.onclick=()=>{ MAP_FILL=b.dataset.layer;
-      polys.forEach(p=>p.setStyle({fillColor:fillFor(p._pc)}));
-      $$('.map-layer').forEach(x=>x.classList.toggle('active',x.dataset.layer===MAP_FILL));
-      renderMapLegend(); };
+    b.onclick=()=>{ MAP_FILL=b.dataset.layer; renderMap(); };
   });
-  renderMapLegend();
+  const fi=$('#mapFilter');
+  if(fi) fi.oninput=()=>applyMapFilter(fi.value);
+  const rb=$('#mapReset');
+  if(rb) rb.onclick=()=>{ if(fi) fi.value=''; $('#mapFilterMsg').textContent='';
+                          if(MAP_HOME) map.fitBounds(MAP_HOME); };
 }
+
+function applyMapFilter(q){
+  const map=window.__pubMap, msg=$('#mapFilterMsg');
+  if(!map) return;
+  const s=String(q||'').trim().toLowerCase();
+  if(!s){ msg.textContent=''; if(MAP_HOME) map.fitBounds(MAP_HOME); return; }
+  const hits=MAP_INDEX.filter(e=>e.hay.includes(s));
+  if(!hits.length){ msg.textContent='No match on this layer'; return; }
+  let b=hits[0].bounds;
+  hits.slice(1).forEach(h=>{ b=b.extend(h.bounds); });
+  map.fitBounds(b,{maxZoom:11});
+  msg.textContent=`${hits.length} area${hits.length>1?'s':''} matched`;
+}
+
+async function renderMap(){
+  const geo=DATA.geo;
+  if(!geo||typeof L==='undefined'){
+    $('#pubMap').innerHTML='<p class="empty-note">Map not available in this build.</p>'; return;
+  }
+  if(!window.__pubMap) buildMapShell();
+  const map=window.__pubMap;
+  $$('.map-layer').forEach(x=>x.classList.toggle('active',x.dataset.layer===MAP_FILL));
+
+  const alias=geo.pcodeAlias||{};
+  MAP_D_LAYER.clearLayers(); MAP_CA_LAYER.clearLayers(); MAP_INDEX=[]; MAP_FOCUS=[];
+  const caMode=MAP_FILL==='ca';
+  const p=period();
+
+  // The published district layers only exist for a period published at that granularity.
+  const blocked=!caMode && !p.full;
+  const note=$('#mapPeriodNote');
+  if(note){ note.hidden=!blocked; note.textContent=blocked?p.note:''; }
+  $('#caBanner').hidden=!caMode;
+  $('#caPanel').hidden=!caMode;
+  $('#mapIntro').textContent=caMode
+    ? 'Catchment severity from the live operational feed. Catchments without published boundaries are listed in the table below but cannot be shaded.'
+    : 'District severity from published results. Grey districts were not individually reported.';
+
+  if(caMode){
+    await ensureOperational();
+    const {rows,label}=opCatchments();
+    const byKey={}; rows.forEach(r=>{ byKey[String(r.catchment).toUpperCase()]=r; });
+    const chip=$('#caPeriodChip'); if(chip) chip.textContent=label||'—';
+    let drawn=0;
+    (geo.catchments||[]).forEach(gc=>{
+      const rec=byKey[caKey(gc.pc,gc.ca)];
+      const poly=L.polygon(gc.rings.map(swapRing),{
+        color:'#fff',weight:.8,
+        fillColor:rec?bandColor(sevBand(rec.avgSeverity)):'#E2E5E0',
+        fillOpacity:rec?.65:.25});
+      poly.bindTooltip(rec
+        ? `<b>${esc(gc.ca)} — ${esc(gc.d)}</b><br>${fmt(rec.n)} sites · Avg. severity ${rec.avgSeverity}%`
+          +`<br>Severe ${rec.Severe} · High ${rec.High} · Moderate ${rec.Moderate} · Low ${rec.Low}`
+          +'<br><i>Operational — unreconciled</i>'
+        : `<b>${esc(gc.ca)} — ${esc(gc.d)}</b><br>Not assessed in this period`,{sticky:true});
+      poly.addTo(MAP_CA_LAYER);
+      if(rec){ drawn++; MAP_FOCUS.push(poly.getBounds()); }
+      MAP_INDEX.push({hay:`${gc.ca} ${gc.d}`.toLowerCase(),bounds:poly.getBounds()});
+    });
+    const unmapped=rows.filter(r=>!(geo.catchments||[]).some(gc=>caKey(gc.pc,gc.ca)===String(r.catchment).toUpperCase()));
+    $('#caBanner').textContent='Operational, unreconciled — live from the field data pipeline, not '
+      +'Information-Management reviewed and not comparable with the published figures. '
+      +`${drawn} of ${rows.length} assessed catchments have published boundaries and are shaded`
+      +(unmapped.length?`; ${unmapped.length} more are listed in the table below without a map shape.`:'.');
+    renderCatchmentPanel(rows,geo,label);
+  }else if(!blocked){
+    const byPc={}; DATA.districts.forEach(d=>{ if(d.pc) byPc[d.pc]=d; });
+    const fillFor=pc=>{
+      const d=byPc[(alias[pc]||pc||'').toUpperCase()];
+      if(!d) return '#E2E5E0';
+      return MAP_FILL==='cov' ? (d.cov>=60?'#104E5D':d.cov>=45?'#17677A':d.cov>=25?'#6FAEBD':'#C9E0E6')
+                              : bandColor(sevBand(d.gap));
+    };
+    geo.districts.forEach(gd=>{
+      const d=byPc[(alias[gd.pc]||gd.pc||'').toUpperCase()];
+      const poly=L.polygon(gd.rings.map(swapRing),
+        {color:'#fff',weight:.8,fillColor:fillFor(gd.pc),fillOpacity:.6});
+      poly.bindTooltip(d
+        ? `<b>${esc(gd.n)}</b><br>${fmt(d.n)} sites assessed · Gap ${d.gap}% / Coverage ${d.cov}%`
+        : `<b>${esc(gd.n)}</b><br>Not individually reported this period`,{sticky:true});
+      poly.addTo(MAP_D_LAYER);
+      if(d) MAP_FOCUS.push(poly.getBounds());
+      MAP_INDEX.push({hay:`${gd.n} ${gd.r||''}`.toLowerCase(),bounds:poly.getBounds()});
+    });
+  }
+
+  // Default view frames the areas that actually have data for this period; unassessed
+  // areas stay on the map (greyed) but don't drag the viewport out to the whole country.
+  const frame = MAP_FOCUS.length ? MAP_FOCUS : MAP_INDEX.map(e=>e.bounds);
+  if(frame.length){
+    let b=frame[0];
+    frame.slice(1).forEach(x=>{ b=b.extend(x); });
+    MAP_HOME=b; map.fitBounds(b,{padding:[18,18]});
+  }
+  const fi=$('#mapFilter');
+  if(fi){ fi.value=''; $('#mapFilterMsg').textContent=''; }
+  renderMapLegend();
+  setTimeout(()=>map.invalidateSize(),60);
+}
+
+function renderCatchmentPanel(rows,geo,label){
+  const hasGeo=k=>(geo.catchments||[]).some(gc=>caKey(gc.pc,gc.ca)===String(k).toUpperCase());
+  const sorted=[...rows].sort((a,b)=>b.avgSeverity-a.avgSeverity);
+  $('#caPanelNote').textContent=`${sorted.length} catchments assessed in ${label||'this period'}, `
+    +'ranked by average severity. Severity is the share of applicable indicators scoring Red '
+    +'across the sites in that catchment.';
+  $('#caTable').innerHTML=sorted.length?sorted.map(c=>`<tr>
+      <td style="font-weight:600">${esc(c.catchment)}</td><td>${esc(c.district)}</td><td>${esc(c.region)}</td>
+      <td class="ctr">${fmt(c.n)}</td>
+      <td class="ctr"><span class="badge ${sevBand(c.avgSeverity)}">${c.avgSeverity}%</span></td>
+      <td class="ctr">${fmt(c.Severe)}</td><td class="ctr">${fmt(c.High)}</td>
+      <td class="ctr">${fmt(c.Moderate)}</td><td class="ctr">${fmt(c.Low)}</td>
+      <td class="ctr">${hasGeo(c.catchment)?'✓':'<span class="dash">—</span>'}</td>
+    </tr>`).join('') : '<tr><td colspan="10"><p class="empty-note">No catchment data for this period.</p></td></tr>';
+}
+
 function renderMapLegend(){
   const it=(c,l)=>`<span class="it"><span class="dot" style="background:${c}"></span>${l}</span>`;
+  if(MAP_FILL==='ca'){
+    $('#mapLegend').innerHTML=it('#D9534F','Severe ≥55%')+it('#EC6B4D','High 40–55%')
+      +it('#E9A23B','Moderate 25–40%')+it('#3A8D68','Low <25%')+it('#E2E5E0','Not assessed this period');
+    return;
+  }
   $('#mapLegend').innerHTML = MAP_FILL==='sev'
     ? it('#D9534F','Severe ≥55%')+it('#EC6B4D','High 40–55%')+it('#E9A23B','Moderate 25–40%')+it('#3A8D68','Low <25%')+it('#E2E5E0','Not reported')
     : it('#104E5D','60%+ coverage')+it('#17677A','45–59%')+it('#6FAEBD','25–44%')+it('#C9E0E6','<25%')+it('#E2E5E0','Not reported');
@@ -119,6 +263,13 @@ function renderMapLegend(){
 /* ================= SECTOR GAPS ================= */
 let SD_CUR=null;
 function renderSectorTabs(){
+  if(periodBlocked('#secPeriodNote')){
+    $('#sdTabs').innerHTML='';
+    $('#sdTitle').textContent='';
+    $('#sdBody').innerHTML='<p class="empty-note">Sector results are not published for this reporting period.</p>';
+    $('#topGapsList').innerHTML='<p class="empty-note">Indicator-level gaps are not published for this reporting period.</p>';
+    return;
+  }
   SD_CUR=SD_CUR||DATA.sectors[0].code;
   $('#sdTabs').innerHTML=DATA.sectors.map(s=>{
     const icon=DATA.assets.icons[s.code]?`<img src="${DATA.assets.icons[s.code]}" alt="">`:'';
@@ -143,6 +294,7 @@ function renderSectorBody(){
     +(rows.some(r=>r.lc)?`<p style="margin:10px 0 0;font-size:11px;color:var(--muted)">${esc(DATA.lcNote)}</p>`:'');
 }
 function renderTopGaps(){
+  if(!period().full) return;   // renderSectorTabs already wrote the unavailable note
   const rows=[...DATA.topRed].sort((a,b)=>b.pct-a.pct);
   $('#topGapsList').innerHTML=rows.map(r=>`<div class="hbar-row">
     <div class="l" title="${esc(r.indicator)}">${esc(r.indicator)}</div>
@@ -167,6 +319,18 @@ function paintDistrictRows(rows){
   }).join('') : `<tr><td colspan="9"><p class="empty-note">No districts match this filter.</p></td></tr>`;
 }
 function renderDistricts(){
+  $('#partnerChips').innerHTML=DATA.partners.map(p=>
+    `<span class="pub-chip-sm" style="padding:5px 11px;font-size:12px">${esc(p)}</span>`).join('');
+  renderOperational().catch(e=>console.error('[public dashboard] "operational" failed:', e));
+  if(periodBlocked('#distPeriodNote')){
+    $('#distTable').innerHTML='<tr><td colspan="9"><p class="empty-note">District rankings are not '
+      +'published for this reporting period.</p></td></tr>';
+    $('#distFootnote').textContent='';
+    $('#distFilterCount').textContent='';
+    const fi=$('#distFilter'); if(fi){ fi.value=''; fi.disabled=true; }
+    return;
+  }
+  const fi=$('#distFilter'); if(fi) fi.disabled=false;
   const all=DIST_ROWS();
   paintDistrictRows(all);
   const total=all.length;
@@ -180,9 +344,6 @@ function renderDistricts(){
   input.value='';
   input.oninput=apply;
   $('#distFootnote').innerHTML=DATA.districtFootnote;
-  $('#partnerChips').innerHTML=DATA.partners.map(p=>
-    `<span class="pub-chip-sm" style="padding:5px 11px;font-size:12px">${esc(p)}</span>`).join('');
-  renderOperational().catch(e=>console.error('[public dashboard] "operational" failed:', e));
 }
 
 /* ================= OPERATIONAL SNAPSHOT (unreconciled) ================= */
@@ -195,6 +356,13 @@ function paintOpRows(rows){
       <td class="ctr">${fmt(c.Severe)}</td><td class="ctr">${fmt(c.High)}</td>
       <td class="ctr">${fmt(c.Moderate)}</td><td class="ctr">${fmt(c.Low)}</td>
     </tr>`).join('') : `<tr><td colspan="9"><p class="empty-note">No catchments match this filter.</p></td></tr>`;
+}
+let OP_PROMISE=null;
+/* One fetch per page load, shared by the Operational Snapshot table and the map's
+   catchment layer — switching period or tab must not re-hit the endpoint. */
+function ensureOperational(){
+  if(!OP_PROMISE) OP_PROMISE=loadOperationalData().then(op=>{ OP_DATA=op; return op; });
+  return OP_PROMISE;
 }
 async function loadOperationalData(){
   // Prefer the live endpoint (queries Kobo/Zite server-side, token never reaches the
@@ -234,14 +402,16 @@ function paintOperational(op){
   input.value=''; input.oninput=apply; apply();
 }
 async function renderOperational(){
-  const op=await loadOperationalData();
+  const op=await ensureOperational();
   if(!op||!op.quarters||!Object.keys(op.quarters).length){ return; }
-  OP_DATA=op;
   $('#opSection').hidden=false;
   const src=$('#opSourceNote');
   if(src) src.textContent=OP_LIVE
     ? 'Live — queried directly from Kobo/Zite'+(op.generatedAt?` as of ${esc(op.generatedAt)}`:'')+'.'
     : 'Live endpoint unreachable right now — showing the last snapshot generated at deploy time, not a real-time read.';
+  // The header period selector drives this section too; the chips below still let a
+  // user compare periods without changing the whole page.
+  if(Object.keys(op.quarters).includes(CUR_PERIOD)) OP_Q=CUR_PERIOD;
   paintOperational(op);
 }
 
@@ -253,29 +423,41 @@ function csvDownload(name, rows){
   a.download=name; a.click(); toast('Downloaded '+name);
 }
 function metaHeader(title){
+  const p=period();
   return [['CCCM Cluster Somalia — Site Monitoring Dashboard'],[title],
-    ['Status','PUBLISHED'],['Reporting period', DATA.period],
+    ['Status','PUBLISHED'],['Reporting period', p.label],
     ['Data source', DATA.source],['Generated', DATA.generated],
     ['Contact', DATA.contact.im],['Methodology','See the About the Data page'],[]];
 }
 function renderDownloads(){
+  const p=period(), K=p.kpi, slug='cccm_'+p.id.toLowerCase().replace(/[^a-z0-9]+/g,'_');
+  // Every period publishes headline coverage; only a full-granularity period publishes
+  // the district and sector tables, so those buttons simply are not offered otherwise —
+  // an export must never be able to carry another period's numbers under this label.
   const items=[
-    ['Published Q2 KPI summary',()=>csvDownload('cccm_q2_2026_kpi_summary.csv',[...metaHeader('KPI summary'),
-      ['Metric','Value'],['Sites assessed',DATA.kpi.sites],['Catchment areas',DATA.kpi.catchments],
-      ['Districts',DATA.kpi.districts],['Reporting partners',DATA.kpi.partners],
-      ['Households',DATA.kpi.hhs],['Individuals',DATA.kpi.individuals],['National severity %',DATA.kpi.severity]])],
-    ['Published district summary',()=>csvDownload('cccm_q2_2026_district_summary.csv',[...metaHeader('District summary'),
-      ['District','Region','Sites','Gap %','Coverage %','Severe','High','Moderate','Low'],
-      ...DATA.districts.map(d=>[d.district,d.region,d.n,d.gap,d.cov,
-        d.bands?d.bands.Severe:'',d.bands?d.bands.High:'',d.bands?d.bands.Moderate:'',d.bands?d.bands.Low:''])])],
-    ['Published sector-gap table',()=>csvDownload('cccm_q2_2026_sector_gaps.csv',[...metaHeader('Sector gaps'),
-      ['Sector','Gap %','Coverage %'],...DATA.sectors.map(s=>[s.name,s.gap,s.cov])])],
-    ['Methodology note',()=>csvDownload('cccm_q2_2026_methodology_note.csv',[...metaHeader('Methodology note'),
-      ['Section','Content'],['Purpose',DATA.about.purpose],['Severity definition',DATA.about.severity],
-      ...DATA.about.limits.map((l,i)=>['Limitation '+(i+1),l])])],
+    ['KPI summary',()=>csvDownload(slug+'_kpi_summary.csv',[...metaHeader('KPI summary'),
+      ['Metric','Value'],['Sites assessed',K.sites],['Catchment areas',K.catchments],
+      ['Districts',K.districts],['Reporting partners',K.partners],
+      ['Households',K.hhs],['Individuals',K.individuals]]
+      .concat(K.severity!=null?[['National severity %',K.severity]]:[]))],
   ];
+  if(p.full){
+    items.push(
+      ['District summary',()=>csvDownload(slug+'_district_summary.csv',[...metaHeader('District summary'),
+        ['District','Region','Sites','Gap %','Coverage %','Severe','High','Moderate','Low'],
+        ...DATA.districts.map(d=>[d.district,d.region,d.n,d.gap,d.cov,
+          d.bands?d.bands.Severe:'',d.bands?d.bands.High:'',d.bands?d.bands.Moderate:'',d.bands?d.bands.Low:''])])],
+      ['Sector-gap table',()=>csvDownload(slug+'_sector_gaps.csv',[...metaHeader('Sector gaps'),
+        ['Sector','Gap %','Coverage %'],...DATA.sectors.map(s=>[s.name,s.gap,s.cov])])]);
+  }
+  items.push(['Methodology note',()=>csvDownload(slug+'_methodology_note.csv',[...metaHeader('Methodology note'),
+    ['Section','Content'],['Purpose',DATA.about.purpose],['Severity definition',DATA.about.severity],
+    ...DATA.about.limits.map((l,i)=>['Limitation '+(i+1),l])])]);
+
   $('#dlList').innerHTML=items.map(([t],i)=>`<button class="dl-btn" data-di="${i}">
-    <span>⬇ ${esc(t)}</span><span class="dmeta"><span class="pub-chip-sm">PUBLISHED</span> · Q2 2026</span></button>`).join('');
+    <span>⬇ ${esc(t)}</span><span class="dmeta"><span class="pub-chip-sm">PUBLISHED</span> · ${esc(p.id)}</span></button>`).join('')
+    +(p.full?'':`<p class="empty-note" style="text-align:left">District and sector exports are not offered for `
+      +`${esc(p.id)} because they were not published at that granularity.</p>`);
   $$('#dlList .dl-btn').forEach(b=>b.addEventListener('click',()=>items[+b.dataset.di][1]()));
 }
 
@@ -283,9 +465,11 @@ function renderDownloads(){
 function renderAbout(){
   const a=DATA.about;
   $('#mPurpose').innerHTML=`<p>${esc(a.purpose)}</p>`;
-  $('#mSources').innerHTML=`<p><b>Reporting period:</b> ${esc(DATA.period)}</p>
+  $('#mSources').innerHTML=`<p><b>Reporting period shown:</b> ${esc(period().label)}</p>
     <p><b>Source:</b> ${esc(DATA.source)}</p>
-    <p><b>Data sources:</b> CCCM partner site-monitoring submissions, reported quarterly.</p>`;
+    <p><b>Data sources:</b> CCCM partner site-monitoring submissions, reported quarterly.</p>
+    <p><b>Periods available:</b> ${PERIODS.map(p=>esc(p.id)+(p.full?'':' (headline totals only)')).join(' · ')}. `
+    +`Use the reporting-period selector in the header to switch.</p>`;
   $('#mSeverity').innerHTML=`<p>${esc(a.severity)}</p>`;
   $('#mLimits').innerHTML=`<ul>${a.limits.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>`;
   $('#mContact').innerHTML=`<p>Information Management: <a href="mailto:${DATA.contact.im}">${DATA.contact.im}</a></p>
@@ -308,7 +492,17 @@ function renderBrand(){
   const lg=$('#brandLogo');
   if(lg&&DATA.assets.logo) lg.src=DATA.assets.logo;
 }
-[['brand',renderBrand],['overview',renderOverview],['sector tabs',renderSectorTabs],
- ['top gaps',renderTopGaps],['districts',renderDistricts],['downloads',renderDownloads],
- ['about',renderAbout],['help modal',wireHelp]
+/* Everything that depends on the selected reporting period. Each renderer is isolated
+   so one failure can't blank the page. */
+function renderAll(){
+  [['period chips',setPeriodChips],['overview',renderOverview],['sector tabs',renderSectorTabs],
+   ['top gaps',renderTopGaps],['districts',renderDistricts],['downloads',renderDownloads],
+   ['about',renderAbout]
+  ].forEach(([label,fn])=>{ try{ fn(); } catch(e){ console.error('[public dashboard] "'+label+'" failed:', e); } });
+  // Only re-draw the map if it has already been built (it lazy-inits on first tab visit).
+  if(window.__pubMap) renderMap().catch(e=>console.error('[public dashboard] "map" failed:', e));
+}
+
+[['brand',renderBrand],['period selector',renderPeriodSelector],['help modal',wireHelp]
 ].forEach(([label,fn])=>{ try{ fn(); } catch(e){ console.error('[public dashboard] "'+label+'" failed:', e); } });
+renderAll();
