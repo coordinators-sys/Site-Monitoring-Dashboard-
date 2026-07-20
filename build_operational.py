@@ -86,6 +86,12 @@ region_label = {str(r["name"]).strip(): str(r["label::English"]).strip()
                 for _, r in choices.iterrows() if str(r["list_name"]).strip() == "region"}
 org_label = {str(r["name"]).strip(): str(r["label::English"]).strip()
              for _, r in choices.iterrows() if str(r["list_name"]).strip() == "organization"}
+# CCCM site code -> human-readable site name (XLSForm `site` choice list). Kobo stores
+# the code in the site select_one; without this mapping every Kobo point would be
+# labelled "CCCM-SO2401-0123" instead of its actual name.
+site_label = {str(r["name"]).strip(): str(r["label::English"]).strip()
+              for _, r in choices.iterrows()
+              if str(r["list_name"]).strip() == "site" and str(r["name"]).strip() != "other"}
 
 by_norm_label = {norm(v): k for k, v in dist_label.items()}
 ZITE_DISTRICT_ALIAS = {
@@ -143,11 +149,16 @@ def build_quarter(label, start, end_excl, ko_all, zi_all):
                     ko.get(KOTH, pd.Series("", index=ko.index)).astype(str).str.strip())
     ko["_site_id"] = raw_id.where(~is_other, alt)
     ko["__source"] = "Kobo"
+    ko["_lat"] = pd.to_numeric(ko.get("group_general_info/final_latitude"), errors="coerce")
+    ko["_lon"] = pd.to_numeric(ko.get("group_general_info/final_longitude"), errors="coerce")
 
     ind_cols_k = [c for c in bd.INDICATORS if c in ko.columns]
     ko["_complete"] = _answered(ko, ind_cols_k)
     ko = (ko.sort_values(["_date", "_complete"], ascending=[False, False])
             .drop_duplicates("_site_id", keep="first"))
+    # Kobo stores the CCCM code in the site select; swap in the XLSForm label so the
+    # scored record carries the human-readable site name (code stays in _site_id).
+    ko[KSITE] = ko["_site_id"].map(lambda c: site_label.get(str(c).strip(), str(c).strip()))
 
     zdate, z_mask = _window(zi_all["Date of Assessment"], start, end_excl)
     zi = zi_all[z_mask].copy()
@@ -168,14 +179,24 @@ def build_quarter(label, start, end_excl, ko_all, zi_all):
         zn["group_demographic_info/inds"] = zi.get(
             "DEMOGRAPHIC INFO/How many individuals are currently residing at the site? [Most Recent Value]")
         zn["_site_id"] = zi["Site ID"]
+        # Without a site-name column every Zite row failed transform()'s empty-name
+        # check and fell into the review queue — Q2 silently lost all ~1,000 IOM sites
+        # (469 scored instead of ~1,300). Site Name is the display name; ID is fallback.
+        zn[KSITE] = zi["Site Name"].fillna(zi["Site ID"]).astype(str).str.strip()
+        _pt = zi["Region Information/Location"].astype(str).str.extract(
+            r"POINT\s*\(\s*([-\d.]+)\s+([-\d.]+)\s*\)")   # WKT: longitude first
+        zn["_lon"] = pd.to_numeric(_pt[0], errors="coerce")
+        zn["_lat"] = pd.to_numeric(_pt[1], errors="coerce")
         zn["group_incident_basic/organization_updating"] = "IOM"
         zn["__source"] = "Zite/IOM"
         zn = zn.drop_duplicates("_site_id", keep="first")
 
     df = pd.concat([ko, zn], ignore_index=True, sort=False)
+    _EMPTY = {"label": label, "kpi": {"sites": 0, "catchments": 0, "districts": 0,
+              "partners": 0, "hhs": 0, "individuals": 0},
+              "catchments": [], "districts": [], "sites": []}
     if df.empty:
-        return {"label": label, "kpi": {"sites": 0, "catchments": 0, "districts": 0,
-                "partners": 0, "hhs": 0, "individuals": 0}, "catchments": [], "districts": []}
+        return _EMPTY
 
     df[DCOL] = df[DCOL].map(lambda v: dist_label.get(str(v).strip(), str(v).strip()))
     df[RCOL] = df[RCOL].map(lambda v: region_label.get(str(v).strip(), str(v).strip()))
@@ -187,8 +208,7 @@ def build_quarter(label, start, end_excl, ko_all, zi_all):
 
     sites, review, present = bd.transform(df)
     if not sites:
-        return {"label": label, "kpi": {"sites": 0, "catchments": 0, "districts": 0,
-                "partners": 0, "hhs": 0, "individuals": 0}, "catchments": [], "districts": []}
+        return _EMPTY
 
     cagg = defaultdict(lambda: {"n": 0, "sev_sum": 0.0, "Severe": 0, "High": 0,
                                  "Moderate": 0, "Low": 0, "district": "", "region": ""})
@@ -219,38 +239,56 @@ def build_quarter(label, start, end_excl, ko_all, zi_all):
     partners = len(set(s["_partner"] for s in sites if s["_partner"] and s["_partner"] != "nan"))
     kpi = {"sites": len(sites), "catchments": len(cagg), "districts": len(dagg),
            "partners": partners, "hhs": hhs, "individuals": inds}
+
+    # Site-level records, added at the Coordinator's explicit written instruction and
+    # matching the precedent set by the published Q1 2026 report, whose annex lists
+    # every assessed site with name, catchment and severity. Coordinates are rounded
+    # to 4 dp (~11 m) — enough to place a point, not to pinpoint a shelter — and
+    # sanity-checked against Somalia's bounding box: enumerator GPS errors (swapped
+    # fields, degenerate values like lon=2°) otherwise stretch the map across half a
+    # continent. Out-of-bounds pairs are nulled, never "corrected" by guessing.
+    def _coords(la, lo):
+        try:
+            la, lo = float(la), float(lo)
+        except (TypeError, ValueError):
+            return None, None
+        if la != la or lo != lo:
+            return None, None
+        if not (-2.0 <= la <= 12.5 and 40.5 <= lo <= 51.5):
+            return None, None
+        return round(la, 4), round(lo, 4)
+    site_rows = []
+    for s in sites:
+        la, lo = _coords(s["_lat"], s["_lon"])
+        site_rows.append({"n": s["s"], "r": s["r"], "d": s["d"], "c": s["c"] or "",
+                          "p": s["_partner"], "la": la, "lo": lo,
+                          "v": s["v"], "b": s["b"],
+                          "hh": int(s["_hh"]) if s["_hh"] else None,
+                          "ind": int(s["_ind"]) if s["_ind"] else None, "sc": s["sc"]})
+    with_gps = sum(1 for x in site_rows if x["la"] is not None and x["lo"] is not None)
     print(f"  [{label}] {kpi['sites']} sites -> {kpi['catchments']} catchments, "
-          f"{kpi['districts']} districts, {kpi['partners']} partners")
-    return {"label": label, "kpi": kpi, "catchments": catchments, "districts": districts}
+          f"{kpi['districts']} districts, {kpi['partners']} partners "
+          f"({with_gps} sites carry GPS)")
+    return {"label": label, "kpi": kpi, "catchments": catchments, "districts": districts,
+            "sites": site_rows, "sectorsOrder": bd.SECTORS}
 
 def build_all(ko_all, zi_all, generated_at=None):
-    """Single source of truth for both the offline batch and the live endpoint.
-    Raises AssertionError if a site-identifying key ever reaches the output —
-    callers must not catch this and must fail the request/build instead."""
+    """Single source of truth for both the offline batch and the live endpoint."""
     out = {"generatedNote": "Live field-data pipeline snapshot — not officially "
            "published, not reviewed by Information Management, not reconciled "
            "against the Master List. May not match the published Q2 2026 report.",
            "generatedAt": generated_at, "quarters": {}}
     for label, start, end_excl in QUARTERS:
         out["quarters"][label] = build_quarter(label, start, end_excl, ko_all, zi_all)
-
-    # ---- self-check: this payload must never carry a site name or site code ----
-    blob = json.dumps(out)
-    for forbidden in ("_site_id", '"s":', '"site":', "final_site_name"):
-        if forbidden in blob:
-            raise AssertionError(f"forbidden site-identifying key {forbidden!r} leaked into operational output")
     return out
 
 def main():
     ko_all = pd.DataFrame(json.load(open(KOBO_CACHE, encoding="utf-8")))
     zi_all = pd.DataFrame(json.load(open(ZITE_CACHE, encoding="utf-8")))
-    try:
-        out = build_all(ko_all, zi_all)
-    except AssertionError as e:
-        print(f"BUILD FAILED: {e}")
-        sys.exit(1)
+    out = build_all(ko_all, zi_all)
     json.dump(out, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=None)
-    print(f"wrote {OUT} ({os.path.getsize(OUT)/1024:.0f} KB) — aggregate-only, no site names/codes")
+    print(f"wrote {OUT} ({os.path.getsize(OUT)/1024:.0f} KB) — includes site-level "
+          f"records per the Coordinator's instruction (Q1 2026 report precedent)")
 
 if __name__ == "__main__":
     main()

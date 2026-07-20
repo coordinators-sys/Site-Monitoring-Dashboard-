@@ -9,6 +9,76 @@ function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');se
 function bandColor(b){return b==='Severe'?'#D9534F':b==='High'?'#EC6B4D':b==='Moderate'?'#E9A23B':b==='Low'?'#3A8D68':'#9AA5B1';}
 function sevBand(pct){return pct>=55?'Severe':pct>=40?'High':pct>=25?'Moderate':'Low';}
 
+/* ================= LANGUAGE (English / Soomaali) ================= */
+/* Partial, accessibility-focused translation: navigation, headings, controls, KPI
+   labels, legends and site tooltips. Long methodology/caveat prose stays English —
+   the visible banner states the English version is authoritative. Somali strings
+   are an IM-drafted first pass and should be reviewed by a native speaker before
+   the next formal dissemination round. */
+let LANG=(function(){try{return localStorage.getItem('smd_lang')||'en';}catch(e){return 'en';}})();
+const I18N={
+ en:{
+  'nav.overview':'Overview','nav.map':'Geographic Priorities','nav.sectors':'Sector Gaps',
+  'nav.districts':'District Analysis','nav.downloads':'Downloads','nav.about':'About the Data',
+  'h.overview':'National Overview','h.map':'Geographic Priorities','h.sectors':'Sector Gaps',
+  'h.districts':'District Analysis','h.downloads':'Downloads','h.about':'About the Data',
+  'h.sectorperf':'Sector Performance','h.findings':'Key Findings','h.opsnapshot':'Operational Snapshot',
+  'h.caanalysis':'Catchment analysis','h.partners':'Reporting partners',
+  'label.period':'Reporting period','badge.published':'PUBLISHED RESULTS','label.view':'View',
+  'label.find':'Find','btn.reset':'Reset view','label.sitefilter':'Site filter','btn.clear':'Clear',
+  'layer.sev':'District severity','layer.cov':'Assessment coverage','layer.ca':'Catchment severity',
+  'layer.sites':'IDP sites',
+  'kpi.sites':'Sites assessed','kpi.cas':'Catchment areas assessed','kpi.districts':'Districts assessed',
+  'kpi.partners':'Reporting partners','kpi.hhs':'Households','kpi.ind':'Individuals',
+  'ph.find':'Zoom to a district or region…','ph.site':'Search a site name…',
+  'ph.dist':'Search by district or region…','ph.ca':'Search by catchment or district…',
+  'opt.allregions':'All regions','opt.alldistricts':'All districts',
+  'tip.severity':'Severity','tip.partner':'Partner','tip.hh':'Households','tip.ind':'Individuals','tip.ca':'Catchment',
+  'band.Severe':'Severe','band.High':'High','band.Moderate':'Moderate','band.Low':'Low',
+  'legend.notreported':'Not reported','legend.notassessed':'Not assessed this period',
+  'sites.of':'{a} of {b} sites plotted (sites without GPS are listed in data but cannot be mapped)',
+ },
+ so:{
+  'nav.overview':'Guudmar','nav.map':'Mudnaanta Juqraafi','nav.sectors':'Daldaloolada Qaybaha',
+  'nav.districts':'Falanqaynta Degmooyinka','nav.downloads':'Soo dejin','nav.about':'Ku saabsan Xogta',
+  'h.overview':'Guudmarka Qaranka','h.map':'Mudnaanta Juqraafiga','h.sectors':'Daldaloolada Qaybaha',
+  'h.districts':'Falanqaynta Degmooyinka','h.downloads':'Soo dejinta','h.about':'Ku saabsan Xogta',
+  'h.sectorperf':'Waxqabadka Qaybaha','h.findings':'Natiijooyinka Muhiimka ah','h.opsnapshot':'Muuqaal Hawleed',
+  'h.caanalysis':'Falanqaynta Aagagga (CA)','h.partners':'Wada-hawlgalayaasha Warbixinaya',
+  'label.period':'Muddada Warbixinta','badge.published':'NATIIJOOYIN LA DAABACAY','label.view':'Muuqaal',
+  'label.find':'Raadi','btn.reset':'Dib u deji','label.sitefilter':'Shaandhaynta Goobaha','btn.clear':'Tirtir',
+  'layer.sev':'Darnaanta Degmada','layer.cov':'Daboolka Qiimaynta','layer.ca':'Darnaanta Aagga (CA)',
+  'layer.sites':'Goobaha IDP',
+  'kpi.sites':'Goobaha la qiimeeyay','kpi.cas':'Aagagga (CA) la qiimeeyay','kpi.districts':'Degmooyinka la qiimeeyay',
+  'kpi.partners':'Wada-hawlgalayaasha','kpi.hhs':'Qoysas','kpi.ind':'Shakhsiyaad',
+  'ph.find':'U dhaqaaq degmo ama gobol…','ph.site':'Raadi magaca goobta…',
+  'ph.dist':'Raadi degmo ama gobol…','ph.ca':'Raadi aag (CA) ama degmo…',
+  'opt.allregions':'Dhammaan gobollada','opt.alldistricts':'Dhammaan degmooyinka',
+  'tip.severity':'Darnaanta','tip.partner':'Wada-hawlgale','tip.hh':'Qoysas','tip.ind':'Shakhsiyaad','tip.ca':'Aagga (CA)',
+  'band.Severe':'Daran','band.High':'Sare','band.Moderate':'Dhexdhexaad','band.Low':'Hooseeya',
+  'legend.notreported':'Lama soo sheegin','legend.notassessed':'Muddadan lama qiimayn',
+  'sites.of':'{a} ka mid ah {b} goobood ayaa la muujiyay (kuwa aan GPS lahayn lama muujin karo)',
+ }
+};
+const t=k=>(I18N[LANG]&&I18N[LANG][k])||I18N.en[k]||k;
+function applyLang(){
+  document.documentElement.lang = LANG==='so'?'so':'en';
+  const lb=$('#langBtn'); if(lb) lb.textContent = LANG==='so'?'English':'Soomaali';
+  const ln=$('#langNote'); if(ln) ln.hidden = LANG!=='so';
+  $$('[data-i18n]').forEach(el=>{ el.textContent=t(el.dataset.i18n); });
+  [['#mapFilter','ph.find'],['#sfSite','ph.site'],['#distFilter','ph.dist'],['#opFilter','ph.ca']]
+    .forEach(([sel,key])=>{ const el=$(sel); if(el) el.placeholder=t(key); });
+}
+function wireLang(){
+  const lb=$('#langBtn');
+  if(lb) lb.addEventListener('click',()=>{
+    LANG = LANG==='so'?'en':'so';
+    try{localStorage.setItem('smd_lang',LANG);}catch(e){}
+    applyLang(); renderAll();
+  });
+  applyLang();
+}
+
 /* ================= REPORTING PERIOD ================= */
 /* The dashboard is a standing product, not a single-quarter report, so the period is
    a user-selectable filter rather than site branding. Every analytical surface still
@@ -55,12 +125,12 @@ function renderOverview(){
   periodBlocked('#ovPeriodNote');   // headline KPIs exist for every period; the note explains what doesn't
   $('#ovIntro').textContent=DATA.intro;
   const cards=[
-    {v:fmt(K.sites),l:'Sites assessed'},
-    {v:fmt(K.catchments),l:'Catchment areas assessed'},
-    {v:fmt(K.districts),l:'Districts assessed'},
-    {v:fmt(K.partners),l:'Reporting partners'},
-    {v:fmt(K.hhs),l:'Households'},
-    {v:fmt(K.individuals),l:'Individuals'},
+    {v:fmt(K.sites),l:t('kpi.sites')},
+    {v:fmt(K.catchments),l:t('kpi.cas')},
+    {v:fmt(K.districts),l:t('kpi.districts')},
+    {v:fmt(K.partners),l:t('kpi.partners')},
+    {v:fmt(K.hhs),l:t('kpi.hhs')},
+    {v:fmt(K.individuals),l:t('kpi.ind')},
   ];
   $('#kpiRow').innerHTML=cards.map(c=>`<div class="kpi">
     <div class="k-val">${c.v}</div><div class="k-lab">${esc(c.l)}</div></div>`).join('');
@@ -112,6 +182,7 @@ function renderSectorDiverge(){
    CATCHMENTS from the live operational feed — unreconciled, so it carries its own
    amber banner and is never mixed into the published district layers. */
 let MAP_FILL='sev', MAP_HOME=null, MAP_D_LAYER=null, MAP_CA_LAYER=null, MAP_INDEX=[], MAP_FOCUS=[];
+let SHOW_SITES=false, SITE_LAYER=null, SITE_RENDERER=null, SF={region:'',district:'',q:''};
 const swapRing=r=>r.map(([x,y])=>[y,x]);
 const caKey=(pc,ca)=>String(pc||'').toUpperCase()+String(ca||'').toUpperCase();
 
@@ -132,14 +203,100 @@ function buildMapShell(){
   }).addTo(map);
   MAP_D_LAYER=L.layerGroup().addTo(map);
   MAP_CA_LAYER=L.layerGroup().addTo(map);
+  SITE_LAYER=L.layerGroup().addTo(map);
   $$('.map-layer').forEach(b=>{
     b.onclick=()=>{ MAP_FILL=b.dataset.layer; renderMap(); };
   });
+  const st=$('#sitesToggle');
+  if(st) st.onclick=async()=>{
+    SHOW_SITES=!SHOW_SITES;
+    if(SHOW_SITES) await ensureOperational();
+    renderSitePoints();
+  };
+  [['#sfRegion','region'],['#sfDistrict','district']].forEach(([sel,key])=>{
+    const el=$(sel);
+    if(el) el.onchange=()=>{ SF[key]=el.value; if(key==='region') SF.district=''; renderSitePoints(); };
+  });
+  const ss=$('#sfSite');
+  if(ss) ss.oninput=()=>{ SF.q=ss.value; renderSitePoints(); };
+  const sc=$('#sfClear');
+  if(sc) sc.onclick=()=>{ SF={region:'',district:'',q:''}; const el=$('#sfSite'); if(el) el.value='';
+                          renderSitePoints(); if(MAP_HOME) map.fitBounds(MAP_HOME); };
   const fi=$('#mapFilter');
   if(fi) fi.oninput=()=>applyMapFilter(fi.value);
   const rb=$('#mapReset');
   if(rb) rb.onclick=()=>{ if(fi) fi.value=''; $('#mapFilterMsg').textContent='';
                           if(MAP_HOME) map.fitBounds(MAP_HOME); };
+}
+
+/* ---------------- IDP site points (live operational feed) ---------------- */
+function opSites(){
+  if(!OP_DATA||!OP_DATA.quarters) return {rows:[],order:[]};
+  const keys=Object.keys(OP_DATA.quarters);
+  if(!keys.length) return {rows:[],order:[]};
+  const k=keys.includes(CUR_PERIOD)?CUR_PERIOD:keys[keys.length-1];
+  const q=OP_DATA.quarters[k];
+  return {rows:q.sites||[],order:q.sectorsOrder||[]};
+}
+function siteTip(s,order){
+  const dotColor={G:'#3A8D68',Y:'#E9A23B',R:'#D9534F',K:'#8a8f93',NA:'#d4d7d9'};
+  const secs=(s.sc||[]).map((d,i)=>
+    `<span class="sd"><i style="background:${dotColor[d]||'#d4d7d9'}"></i>${esc(order[i]||'')}</span>`).join('');
+  return `<div class="site-tip"><b>${esc(s.n)}</b>
+    <div class="meta">${esc(s.d)}, ${esc(s.r)}${s.c?' · '+esc(t('tip.ca'))+' '+esc(s.c):''}</div>
+    ${esc(t('tip.severity'))}: <span class="badge ${esc(s.b)}">${s.v}%</span> <b>${esc(t('band.'+s.b))}</b><br>
+    ${esc(t('tip.partner'))}: ${esc(s.p||'—')}<br>
+    ${esc(t('tip.hh'))}: ${fmt(s.hh)} · ${esc(t('tip.ind'))}: ${fmt(s.ind)}
+    <div class="secs">${secs}</div></div>`;
+}
+function populateSiteFilters(rows){
+  const regs=[...new Set(rows.map(s=>s.r).filter(Boolean))].sort();
+  if(SF.region&&!regs.includes(SF.region)) SF.region='';
+  const dists=[...new Set(rows.filter(s=>!SF.region||s.r===SF.region).map(s=>s.d).filter(Boolean))].sort();
+  if(SF.district&&!dists.includes(SF.district)) SF.district='';
+  $('#sfRegion').innerHTML=`<option value="">${esc(t('opt.allregions'))}</option>`
+    +regs.map(r=>`<option value="${esc(r)}"${r===SF.region?' selected':''}>${esc(r)}</option>`).join('');
+  $('#sfDistrict').innerHTML=`<option value="">${esc(t('opt.alldistricts'))}</option>`
+    +dists.map(d=>`<option value="${esc(d)}"${d===SF.district?' selected':''}>${esc(d)}</option>`).join('');
+}
+function renderSitePoints(){
+  const row=$('#siteFilterRow');
+  if(row) row.style.display=SHOW_SITES?'flex':'none';
+  const st=$('#sitesToggle'); if(st) st.classList.toggle('active',SHOW_SITES);
+  if(!SITE_LAYER) return;
+  SITE_LAYER.clearLayers();
+  if(!SHOW_SITES){ const c=$('#sfCount'); if(c) c.textContent=''; return; }
+  const {rows,order}=opSites();
+  populateSiteFilters(rows);
+  const q=SF.q.trim().toLowerCase();
+  const filtered=rows.filter(s=>(!SF.region||s.r===SF.region)
+    &&(!SF.district||s.d===SF.district)
+    &&(!q||String(s.n).toLowerCase().includes(q)));
+  if(!SITE_RENDERER) SITE_RENDERER=L.canvas({padding:.3});
+  let plotted=0; const pts=[];
+  filtered.forEach(s=>{
+    if(s.la==null||s.lo==null) return;
+    const m=L.circleMarker([s.la,s.lo],{renderer:SITE_RENDERER,radius:5,weight:1,
+      color:'#fff',fillColor:bandColor(s.b),fillOpacity:.85});
+    m.bindTooltip(siteTip(s,order),{sticky:true,opacity:1});
+    m.addTo(SITE_LAYER); plotted++; pts.push([s.la,s.lo]);
+  });
+  const c=$('#sfCount');
+  if(c) c.textContent=t('sites.of').replace('{a}',fmt(plotted)).replace('{b}',fmt(rows.length));
+  if((SF.region||SF.district||q)&&pts.length){
+    // Fit the view to the 5th–95th percentile of points: a single mistagged GPS
+    // (in-country but hundreds of km off) must not zoom the map out to all Somalia.
+    // Every point is still plotted — only the automatic framing ignores outliers.
+    let frame=pts;
+    if(pts.length>20){
+      const lats=pts.map(p=>p[0]).sort((a,b)=>a-b), lons=pts.map(p=>p[1]).sort((a,b)=>a-b);
+      const lo=Math.floor(pts.length*.05), hi=Math.ceil(pts.length*.95)-1;
+      frame=pts.filter(p=>p[0]>=lats[lo]&&p[0]<=lats[hi]&&p[1]>=lons[lo]&&p[1]<=lons[hi]);
+      if(!frame.length) frame=pts;
+    }
+    const b=L.latLngBounds(frame);
+    if(b.isValid()) window.__pubMap.fitBounds(b.pad(0.2),{maxZoom:13});
+  }
 }
 
 function applyMapFilter(q){
@@ -237,6 +394,8 @@ async function renderMap(){
   }
   const fi=$('#mapFilter');
   if(fi){ fi.value=''; $('#mapFilterMsg').textContent=''; }
+  if(SHOW_SITES){ await ensureOperational(); }
+  renderSitePoints();
   renderMapLegend();
   setTimeout(()=>map.invalidateSize(),60);
 }
@@ -259,14 +418,15 @@ function renderCatchmentPanel(rows,geo,label){
 
 function renderMapLegend(){
   const it=(c,l)=>`<span class="it"><span class="dot" style="background:${c}"></span>${l}</span>`;
+  const bands=it('#D9534F',t('band.Severe')+' ≥55%')+it('#EC6B4D',t('band.High')+' 40–55%')
+    +it('#E9A23B',t('band.Moderate')+' 25–40%')+it('#3A8D68',t('band.Low')+' <25%');
   if(MAP_FILL==='ca'){
-    $('#mapLegend').innerHTML=it('#D9534F','Severe ≥55%')+it('#EC6B4D','High 40–55%')
-      +it('#E9A23B','Moderate 25–40%')+it('#3A8D68','Low <25%')+it('#E2E5E0','Not assessed this period');
+    $('#mapLegend').innerHTML=bands+it('#E2E5E0',t('legend.notassessed'));
     return;
   }
   $('#mapLegend').innerHTML = MAP_FILL==='sev'
-    ? it('#D9534F','Severe ≥55%')+it('#EC6B4D','High 40–55%')+it('#E9A23B','Moderate 25–40%')+it('#3A8D68','Low <25%')+it('#E2E5E0','Not reported')
-    : it('#104E5D','60%+ coverage')+it('#17677A','45–59%')+it('#6FAEBD','25–44%')+it('#C9E0E6','<25%')+it('#E2E5E0','Not reported');
+    ? bands+it('#E2E5E0',t('legend.notreported'))
+    : it('#104E5D','60%+')+it('#17677A','45–59%')+it('#6FAEBD','25–44%')+it('#C9E0E6','<25%')+it('#E2E5E0',t('legend.notreported'));
 }
 
 /* ================= SECTOR GAPS ================= */
@@ -512,6 +672,7 @@ function renderAll(){
   if(window.__pubMap) renderMap().catch(e=>console.error('[public dashboard] "map" failed:', e));
 }
 
-[['brand',renderBrand],['period selector',renderPeriodSelector],['help modal',wireHelp]
+[['brand',renderBrand],['period selector',renderPeriodSelector],['help modal',wireHelp],
+ ['language',wireLang]
 ].forEach(([label,fn])=>{ try{ fn(); } catch(e){ console.error('[public dashboard] "'+label+'" failed:', e); } });
 renderAll();

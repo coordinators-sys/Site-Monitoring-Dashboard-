@@ -77,6 +77,23 @@ header.top{background:var(--surface);color:var(--ink);padding:14px 0 12px;border
 .help-btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);
   width:34px;height:34px;border-radius:50%;font-size:15px;font-weight:700;cursor:pointer;flex:0 0 auto}
 .help-btn:hover{background:var(--plane-2);color:var(--teal-d)}
+.lang-btn{appearance:none;border:1px solid var(--teal);background:var(--surface);color:var(--teal-d);
+  border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;flex:0 0 auto}
+.lang-btn:hover{background:var(--teal-l)}
+.lang-note{background:var(--teal-l);color:var(--teal-d);font-size:12px;padding:7px 0;text-align:center}
+.lang-note[hidden]{display:none}
+.map-sel{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  border-radius:8px;padding:7px 26px 7px 10px;font-size:12.5px;font-family:inherit;cursor:pointer;min-width:130px;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B777C' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 9px center}
+.sites-toggle.active{background:#9A5B13;color:#fff;border-color:#7a4610}
+.site-tip{font-size:12px;line-height:1.5;max-width:270px}
+.site-tip b{font-size:12.5px}
+.site-tip .meta{color:#555;margin:2px 0 5px}
+.site-tip .secs{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px}
+.site-tip .sd{display:inline-flex;align-items:center;gap:3px;font-size:10px;background:#f4f4f0;
+  border-radius:4px;padding:1px 5px}
+.site-tip .sd i{width:8px;height:8px;border-radius:50%;display:inline-block}
 
 nav.tabs{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:0 1px 0 rgba(18,33,31,.03)}
 nav.tabs .wrap{display:flex;gap:2px;overflow-x:auto}
@@ -241,27 +258,32 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
     </div>
     <div class="spacer"></div>
     <div class="period-pick">
-      <label for="periodSel">Reporting period</label>
+      <label for="periodSel" data-i18n="label.period">Reporting period</label>
       <!-- autocomplete=off: browsers restore a <select>'s previous value on reload, which
            would land a returning visitor on whichever period they last viewed instead of
            the latest published results. The default view must be deterministic. -->
       <select id="periodSel" autocomplete="off"></select>
     </div>
     <div class="top .meta" style="text-align:right">
-      <div class="pub-badge">PUBLISHED RESULTS</div>
+      <div class="pub-badge" data-i18n="badge.published">PUBLISHED RESULTS</div>
     </div>
+    <button class="lang-btn" id="langBtn" aria-label="Beddel luqadda / Switch language">Soomaali</button>
     <button class="help-btn" id="helpBtn" aria-haspopup="dialog" title="Help &amp; glossary">?</button>
   </div>
 </header>
 
+<div class="lang-note" id="langNote" hidden>Turjumaadda Soomaaliga waa mid qayb ah oo la siiyay si loo fududeeyo akhriska —
+  nuqulka Ingiriisiga ayaa ah kan rasmiga ah. <i>The Somali translation is partial and provided for accessibility;
+  the English version is authoritative.</i></div>
+
 <nav class="tabs">
   <div class="wrap">
-    <button class="tab active" data-view="overview">Overview</button>
-    <button class="tab" data-view="map">Geographic Priorities</button>
-    <button class="tab" data-view="sectors">Sector Gaps</button>
-    <button class="tab" data-view="districts">District Analysis</button>
-    <button class="tab" data-view="downloads">Downloads</button>
-    <button class="tab" data-view="about">About the Data</button>
+    <button class="tab active" data-view="overview" data-i18n="nav.overview">Overview</button>
+    <button class="tab" data-view="map" data-i18n="nav.map">Geographic Priorities</button>
+    <button class="tab" data-view="sectors" data-i18n="nav.sectors">Sector Gaps</button>
+    <button class="tab" data-view="districts" data-i18n="nav.districts">District Analysis</button>
+    <button class="tab" data-view="downloads" data-i18n="nav.downloads">Downloads</button>
+    <button class="tab" data-view="about" data-i18n="nav.about">About the Data</button>
   </div>
 </nav>
 
@@ -270,7 +292,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
   <!-- ============ OVERVIEW ============ -->
   <section class="view active" id="view-overview">
     <div class="sec-head">
-      <h2>National Overview <span class="period-chip" id="ovPeriodChip"></span></h2>
+      <h2><span data-i18n="h.overview">National Overview</span> <span class="period-chip" id="ovPeriodChip"></span></h2>
       <p id="ovIntro"></p>
     </div>
     <div class="period-note" id="ovPeriodNote" hidden></div>
@@ -279,7 +301,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
       <!-- Key Findings come from the full-granularity report only; hidden for a
            headline-totals-only period so its figures never appear under that label. -->
       <div class="findings" id="findingsCard">
-        <h4>Key Findings <span class="period-chip" id="findingsChip"></span></h4>
+        <h4><span data-i18n="h.findings">Key Findings</span> <span class="period-chip" id="findingsChip"></span></h4>
         <div id="findingsList"></div>
       </div>
       <div class="card p">
@@ -292,7 +314,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
       </div>
     </div>
     <div class="block" id="sectorPerfBlock">
-      <h3>Sector Performance <span class="period-chip" id="sectorPerfChip"></span>
+      <h3><span data-i18n="h.sectorperf">Sector Performance</span> <span class="period-chip" id="sectorPerfChip"></span>
         <span class="hint">gap vs coverage, % of applicable indicators</span></h3>
       <div class="card p">
         <div class="dv-head"><div></div><div class="g">◀ Gap</div><div class="c">Coverage ▶</div></div>
@@ -304,26 +326,37 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
   <!-- ============ GEOGRAPHIC PRIORITIES ============ -->
   <section class="view" id="view-map">
     <div class="sec-head">
-      <h2>Geographic Priorities <span class="period-chip" id="mapPeriodChip"></span></h2>
+      <h2><span data-i18n="h.map">Geographic Priorities</span> <span class="period-chip" id="mapPeriodChip"></span></h2>
       <p id="mapIntro">District severity from published results. Grey districts were not individually reported.</p>
     </div>
     <div class="period-note" id="mapPeriodNote" hidden></div>
     <div class="card p">
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase">View</span>
-        <button class="btn sm map-layer active" data-layer="sev">District severity</button>
-        <button class="btn sm map-layer" data-layer="cov">Assessment coverage</button>
-        <button class="btn sm map-layer" data-layer="ca">Catchment severity</button>
+        <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase" data-i18n="label.view">View</span>
+        <button class="btn sm map-layer active" data-layer="sev" data-i18n="layer.sev">District severity</button>
+        <button class="btn sm map-layer" data-layer="cov" data-i18n="layer.cov">Assessment coverage</button>
+        <button class="btn sm map-layer" data-layer="ca" data-i18n="layer.ca">Catchment severity</button>
+        <button class="btn sm sites-toggle" id="sitesToggle" data-i18n="layer.sites">IDP sites</button>
         <div style="flex:1"></div>
         <span style="font-size:11.5px;color:var(--muted)">OpenStreetMap basemap</span>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
-        <label for="mapFilter" style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em">Find</label>
+        <label for="mapFilter" style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em" data-i18n="label.find">Find</label>
         <input id="mapFilter" type="text" placeholder="Zoom to a district or region…"
           style="flex:1;min-width:200px;max-width:300px;appearance:none;border:1px solid var(--line);background:var(--surface);
           color:var(--ink);border-radius:8px;padding:7px 12px;font-size:12.5px;font-family:inherit">
-        <button class="btn sm" id="mapReset">Reset view</button>
+        <button class="btn sm" id="mapReset" data-i18n="btn.reset">Reset view</button>
         <span id="mapFilterMsg" style="font-size:11.5px;color:var(--muted)"></span>
+      </div>
+      <div id="siteFilterRow" style="display:none;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+        <span style="font-size:11px;font-weight:700;color:#9A5B13;text-transform:uppercase;letter-spacing:.03em" data-i18n="label.sitefilter">Site filter</span>
+        <select id="sfRegion" class="map-sel" autocomplete="off"></select>
+        <select id="sfDistrict" class="map-sel" autocomplete="off"></select>
+        <input id="sfSite" type="text" placeholder="Search a site name…" autocomplete="off"
+          style="flex:1;min-width:170px;max-width:260px;appearance:none;border:1px solid var(--line);background:var(--surface);
+          color:var(--ink);border-radius:8px;padding:7px 12px;font-size:12.5px;font-family:inherit">
+        <button class="btn sm" id="sfClear" data-i18n="btn.clear">Clear</button>
+        <span id="sfCount" style="font-size:11.5px;color:var(--muted)"></span>
       </div>
       <div id="caBanner" class="period-note" hidden style="margin-bottom:10px"></div>
       <div id="pubMap"></div>
@@ -332,7 +365,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
 
     <div class="card p block" id="caPanel" style="margin-top:16px" hidden>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
-        <h3>Catchment analysis</h3>
+        <h3 data-i18n="h.caanalysis">Catchment analysis</h3>
         <span class="op-badge">OPERATIONAL — UNRECONCILED</span>
         <span class="period-chip" id="caPeriodChip"></span>
       </div>
@@ -353,7 +386,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
   <!-- ============ SECTOR GAPS ============ -->
   <section class="view" id="view-sectors">
     <div class="sec-head">
-      <h2>Sector Gaps <span class="period-chip" id="secPeriodChip"></span></h2>
+      <h2><span data-i18n="h.sectors">Sector Gaps</span> <span class="period-chip" id="secPeriodChip"></span></h2>
       <p>Twelve sectors ranked by service gap. Missing and Not Applicable responses are excluded from every percentage shown.</p>
     </div>
     <div class="period-note" id="secPeriodNote" hidden></div>
@@ -373,7 +406,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
   <!-- ============ DISTRICT ANALYSIS ============ -->
   <section class="view" id="view-districts">
     <div class="sec-head">
-      <h2>District Analysis <span class="period-chip" id="distPeriodChip"></span></h2>
+      <h2><span data-i18n="h.districts">District Analysis</span> <span class="period-chip" id="distPeriodChip"></span></h2>
       <p>Districts with at least 10 assessed sites are eligible for national comparison. Smaller samples are shown separately.</p>
     </div>
     <div class="period-note" id="distPeriodNote" hidden></div>
@@ -398,7 +431,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
       <p id="distFootnote" style="margin:12px 0 0;font-size:11.5px;color:var(--muted)"></p>
     </div>
     <div class="card p">
-      <h3 style="margin-bottom:8px">Reporting partners</h3>
+      <h3 style="margin-bottom:8px" data-i18n="h.partners">Reporting partners</h3>
       <p style="font-size:12.5px;color:var(--ink-2);margin:0 0 10px">Severity reflects conditions in the sites a partner
         monitors — it is not a measure of partner performance.</p>
       <div id="partnerChips" style="display:flex;flex-wrap:wrap;gap:8px"></div>
@@ -406,7 +439,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
 
     <div class="card p op-card block" id="opSection" style="margin-top:16px" hidden>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
-        <h3>Operational Snapshot</h3>
+        <h3 data-i18n="h.opsnapshot">Operational Snapshot</h3>
         <span class="op-badge">OPERATIONAL — UNRECONCILED</span>
       </div>
       <p id="opSourceNote" style="font-size:11px;color:#9A5B13;font-weight:600;margin:0 0 10px">Connecting to Kobo/Zite…</p>
@@ -439,7 +472,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
   <!-- ============ DOWNLOADS ============ -->
   <section class="view" id="view-downloads">
     <div class="sec-head">
-      <h2>Downloads</h2>
+      <h2 data-i18n="h.downloads">Downloads</h2>
       <p>All downloads are published results and carry the reporting period, data source and generation date.</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:10px" id="dlList"></div>
@@ -447,7 +480,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
 
   <!-- ============ ABOUT THE DATA ============ -->
   <section class="view" id="view-about">
-    <div class="sec-head"><h2>About the Data</h2></div>
+    <div class="sec-head"><h2 data-i18n="h.about">About the Data</h2></div>
     <div class="grid cols2">
       <div class="card p"><h3>Purpose</h3><div class="method-b" id="mPurpose"></div></div>
       <div class="card p"><h3>Reporting period &amp; sources</h3><div class="method-b" id="mSources"></div></div>

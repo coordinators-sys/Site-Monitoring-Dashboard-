@@ -125,16 +125,25 @@ data = {
 # Operational Snapshot is the live /api/operational endpoint (queries Kobo/Zite at
 # request time, see api/operational.py). Baked in here purely so the section still
 # shows *something* — clearly labelled as a stale snapshot — if that endpoint is ever
-# unreachable. Same aggregate-only (catchment/district) scope either way.
+# unreachable.
+#
+# Site-level records (names, GPS, per-sector scores) ARE part of the live payload —
+# added at the Cluster Coordinator's explicit written instruction, matching the
+# precedent of the published Q1 2026 report whose annex lists every assessed site
+# with name and severity. They are STRIPPED from this embedded fallback: keeps the
+# page ~550 KB lighter, and if the live endpoint is down the map simply shows no
+# site points rather than months-stale ones.
 OP_PATH = "operational.json"
 if os.path.exists(OP_PATH):
     op = json.load(open(OP_PATH, encoding="utf-8"))
-    op_blob = json.dumps(op)
-    for forbidden in ("_site_id", '"s":', '"site":', "final_site_name"):
-        if forbidden in op_blob:
-            print(f"QA FAILED: operational.json appears to carry site-identifying key {forbidden!r}")
-            sys.exit(1)
-    data["operational"] = {"available": True, "note": op["generatedNote"], "quarters": op["quarters"]}
+    fallback_quarters = {}
+    for qk, qv in op["quarters"].items():
+        fallback_quarters[qk] = {k: v for k, v in qv.items() if k != "sites"}
+    if any("sites" in q for q in fallback_quarters.values()):
+        print("QA FAILED: embedded operational fallback must stay aggregate-only")
+        sys.exit(1)
+    data["operational"] = {"available": True, "note": op["generatedNote"],
+                           "quarters": fallback_quarters}
 else:
     data["operational"] = {"available": False, "note": "", "quarters": {}}
 
