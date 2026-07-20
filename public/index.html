@@ -908,7 +908,10 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
     <div class="spacer"></div>
     <div class="period-pick">
       <label for="periodSel">Reporting period</label>
-      <select id="periodSel"></select>
+      <!-- autocomplete=off: browsers restore a <select>'s previous value on reload, which
+           would land a returning visitor on whichever period they last viewed instead of
+           the latest published results. The default view must be deterministic. -->
+      <select id="periodSel" autocomplete="off"></select>
     </div>
     <div class="top .meta" style="text-align:right">
       <div class="pub-badge">PUBLISHED RESULTS</div>
