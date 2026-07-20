@@ -112,26 +112,35 @@ def _silhouette(span):
         (1, 1, ink.width + 1, ink.height + 1))
 
 
-def tile(px, pad=0.06):
-    """Icon at `px`: the full official lockup on a white ground, exactly as the
-    Service Mapping dashboard's tab icon shows it (that site serves the raw logo
-    PNG as its favicon). No derived silhouettes, no invented teal tile - the mark
-    users already recognise, letterboxed on white."""
+def tile(px, pad=0.06, source=None):
+    """Icon at `px` on a white ground: the official artwork, unmodified colours -
+    no derived silhouette, no invented teal tile. `source` picks which crop of the
+    lockup to use; defaults to the full logo."""
+    src = source if source is not None else logo
+    sw, sh = src.size
     canvas = Image.new("RGBA", (px, px), (255, 255, 255, 255))
     inner = int(px * (1 - 2 * pad))
-    scale = min(inner / W, inner / H)
-    w, h = max(1, int(W * scale)), max(1, int(H * scale))
-    sized = logo.resize((w, h), Image.LANCZOS)
+    scale = min(inner / sw, inner / sh)
+    w, h = max(1, int(sw * scale)), max(1, int(sh * scale))
+    sized = src.resize((w, h), Image.LANCZOS)
     canvas.paste(sized, ((px - w) // 2, (px - h) // 2), sized)
     return canvas
 
 
-# --- favicons: full lockup on white, matching the Service Mapping tab ---------------
+# --- favicons: figure mark only. The full lockup (5 figures + two lines of
+# wordmark) is illegible below ~64px regardless of who scales it - the reference
+# site accepts that tradeoff by serving its raw file directly and letting the
+# browser downscale live, but the result is the same unreadable blur, just
+# produced at request time instead of build time. `mark` (defined above: the
+# lockup cropped to its inked figure row, wordmark excluded) stays legible at
+# tab size because it drops the one element that can't survive the downscale.
 for px in (16, 32):
-    tile(px).save(os.path.join(OUT, f"favicon-{px}x{px}.png"))
+    tile(px, pad=0.1, source=mark).save(os.path.join(OUT, f"favicon-{px}x{px}.png"))
 
-tile(48).save(os.path.join(OUT, "favicon.ico"), sizes=[(16, 16), (32, 32), (48, 48)])
+tile(48, pad=0.1, source=mark).save(
+    os.path.join(OUT, "favicon.ico"), sizes=[(16, 16), (32, 32), (48, 48)])
 
+# --- install / home-screen icons: full lockup, legible at this size ----------------
 tile(180, pad=0.08).save(os.path.join(OUT, "apple-touch-icon.png"))
 for px in (192, 512):
     tile(px, pad=0.08).save(os.path.join(OUT, f"android-chrome-{px}x{px}.png"))
