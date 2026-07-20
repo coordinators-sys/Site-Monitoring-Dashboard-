@@ -38,6 +38,17 @@ function renderOverview(){
     <div class="fval">${esc(f[1])}</div>
     <div class="fsub">${esc(f[2])}</div></div>`).join('');
 
+  const q1=DATA.q1;
+  const q1q2Rows=[
+    ['Sites assessed',q1.sites,DATA.kpi.sites],
+    ['Catchment areas',q1.catchments,DATA.kpi.catchments],
+    ['Districts',q1.districts,DATA.kpi.districts],
+    ['Reporting partners',q1.partners,DATA.kpi.partners],
+    ['Households',q1.hhs,DATA.kpi.hhs],
+    ['Individuals',q1.individuals,DATA.kpi.individuals],
+  ];
+  $('#q1q2Table').innerHTML=q1q2Rows.map(([l,a,b])=>`<tr>
+    <td>${esc(l)}</td><td class="ctr">${fmt(a)}</td><td class="ctr" style="font-weight:700">${fmt(b)}</td></tr>`).join('');
   $('#coverageNote').textContent=DATA.coverageNote;
   renderSectorDiverge();
 }
@@ -47,7 +58,7 @@ function renderSectorDiverge(){
     const gw=s.gap/max*100, cw=s.cov/max*100;
     const icon=DATA.assets.icons[s.code]?`<img class="sec-ic" src="${DATA.assets.icons[s.code]}" alt="">`:'';
     return `<div class="dv-row">
-      <div class="lab">${icon}${esc(s.name)}</div>
+      <div class="lab">${icon}<span class="lab-text" title="${esc(s.name)}">${esc(s.name)}</span></div>
       <div class="dv-left"><div class="dv-bar gap" style="width:${gw}%"><span>${s.gap}%</span></div></div>
       <div class="dv-right"><div class="dv-bar cov" style="width:${cw}%"><span>${s.cov}%</span></div></div>
     </div>`;
@@ -140,9 +151,9 @@ function renderTopGaps(){
 }
 
 /* ================= DISTRICT ANALYSIS ================= */
-function renderDistricts(){
-  const rows=[...DATA.districts].sort((a,b)=>b.gap-a.gap);
-  $('#distTable').innerHTML=rows.map(d=>{
+const DIST_ROWS=()=>[...DATA.districts].sort((a,b)=>b.gap-a.gap);
+function paintDistrictRows(rows){
+  $('#distTable').innerHTML=rows.length?rows.map(d=>{
     const band=sevBand(d.gap);
     const bandCell=k=>d.bands?fmt(d.bands[k]):'<span class="dash">—</span>';
     return `<tr>
@@ -153,7 +164,21 @@ function renderDistricts(){
       <td class="ctr">${bandCell('Moderate')}</td><td class="ctr">${bandCell('Low')}</td>
       <td style="font-size:12px">${esc(d.mainGap||'—')}</td>
     </tr>`;
-  }).join('');
+  }).join('') : `<tr><td colspan="9"><p class="empty-note">No districts match this filter.</p></td></tr>`;
+}
+function renderDistricts(){
+  const all=DIST_ROWS();
+  paintDistrictRows(all);
+  const total=all.length;
+  const input=$('#distFilter');
+  const apply=()=>{
+    const q=input.value.trim().toLowerCase();
+    const rows=q?all.filter(d=>d.district.toLowerCase().includes(q)||d.region.toLowerCase().includes(q)):all;
+    paintDistrictRows(rows);
+    $('#distFilterCount').textContent=q?`${rows.length} of ${total} districts`:'';
+  };
+  input.value='';
+  input.oninput=apply;
   $('#distFootnote').innerHTML=DATA.districtFootnote;
   $('#partnerChips').innerHTML=DATA.partners.map(p=>
     `<span class="pub-chip-sm" style="padding:5px 11px;font-size:12px">${esc(p)}</span>`).join('');

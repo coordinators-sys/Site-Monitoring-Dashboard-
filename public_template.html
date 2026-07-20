@@ -101,16 +101,18 @@ main{padding:24px 0 56px}
 .finding .fval{font-size:14px;font-weight:700;margin-top:2px}
 .finding .fsub{font-size:12px;color:var(--ink-2);margin-top:2px}
 
-.dv-row{display:grid;grid-template-columns:180px 1fr 1fr;align-items:center;gap:0;padding:4px 0;font-size:12.5px;min-height:26px}
-.dv-row .lab{color:var(--ink);font-weight:600;text-align:right;padding-right:12px;font-size:12px;
-  display:flex;align-items:center;justify-content:flex-end;gap:5px}
+.dv-row{display:grid;grid-template-columns:200px 1fr 1fr;align-items:center;gap:0;padding:6px 0;font-size:12.5px;min-height:44px;border-bottom:1px solid var(--line-2)}
+.dv-row:last-child{border-bottom:none}
+.dv-row .lab{color:var(--ink);font-weight:600;text-align:right;padding-right:12px;font-size:11.5px;
+  display:flex;align-items:center;justify-content:flex-end;gap:6px}
+.dv-row .lab .lab-text{line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:158px}
 .dv-left{display:flex;justify-content:flex-end}
 .dv-right{display:flex;justify-content:flex-start}
 .dv-bar{height:20px;min-width:2px;display:flex;align-items:center;position:relative;transition:.2s}
 .dv-bar.gap{background:var(--gap);border-radius:5px 0 0 5px;justify-content:flex-start;color:#fff;padding-left:6px}
 .dv-bar.cov{background:var(--cov);border-radius:0 5px 5px 0;justify-content:flex-end;color:#fff;padding-right:6px}
 .dv-bar span{font-size:10.5px;font-weight:700}
-.dv-head{display:grid;grid-template-columns:180px 1fr 1fr;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-bottom:6px}
+.dv-head{display:grid;grid-template-columns:200px 1fr 1fr;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-bottom:6px}
 .dv-head .g{text-align:right;padding-right:52px;color:var(--gap)}
 .dv-head .c{text-align:left;padding-left:52px;color:var(--cov)}
 .sec-ic{width:16px;height:16px;object-fit:contain;flex:0 0 auto}
@@ -197,7 +199,8 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
 }
 @media(max-width:640px){
   nav.tabs .wrap{gap:0}
-  .dv-row,.dv-head{grid-template-columns:110px 1fr 1fr}
+  .dv-row,.dv-head{grid-template-columns:120px 1fr 1fr}
+  .dv-row .lab .lab-text{max-width:96px}
   .hbar-row{grid-template-columns:1fr 1fr 36px}
 }
 </style>
@@ -249,8 +252,12 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
         <div id="findingsList"></div>
       </div>
       <div class="card p">
-        <h3 style="margin-bottom:10px">Coverage change since Q1 2026</h3>
-        <p id="coverageNote" style="font-size:13px;color:var(--ink-2);line-height:1.7;margin:0"></p>
+        <h3 style="margin-bottom:10px">Q1 vs Q2 2026 coverage</h3>
+        <table class="plain" style="font-size:12.5px">
+          <thead><tr><th></th><th class="ctr">Q1 2026</th><th class="ctr">Q2 2026</th></tr></thead>
+          <tbody id="q1q2Table"></tbody>
+        </table>
+        <p id="coverageNote" style="font-size:12px;color:var(--muted);line-height:1.6;margin:10px 0 0"></p>
       </div>
     </div>
     <div class="block">
@@ -307,6 +314,13 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
       <p>Districts with at least 10 assessed sites are eligible for national comparison. Smaller samples are shown separately.</p>
     </div>
     <div class="card p block">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+        <label for="distFilter" style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em">Filter</label>
+        <input id="distFilter" type="text" placeholder="Search by district or region…"
+          style="flex:1;min-width:200px;max-width:320px;appearance:none;border:1px solid var(--line);background:var(--surface);
+          color:var(--ink);border-radius:8px;padding:8px 12px;font-size:12.5px;font-family:inherit">
+        <span id="distFilterCount" style="font-size:11.5px;color:var(--muted)"></span>
+      </div>
       <div class="tbl-scroll">
         <table class="plain">
           <thead><tr>

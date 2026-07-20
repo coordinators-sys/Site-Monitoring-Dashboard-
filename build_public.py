@@ -56,9 +56,10 @@ data = {
               "by CCCM partners. Results represent assessed locations during Q2 2026 and "
               "should not be interpreted as a census of all displacement sites."),
     "keyFindings": P.KEY_FINDINGS,
-    "coverageNote": ("Assessment coverage changed between Q1 and Q2 2026 (1,902 sites in "
-                     "Q1 versus 1,275 in Q2). Direct trend comparison is not recommended "
-                     "because the assessed locations were not consistent between periods."),
+    "q1": P.Q1,
+    "coverageNote": ("Direct trend comparison is not recommended because the sites assessed "
+                     "in Q1 and Q2 2026 were not the same locations — fewer sites and "
+                     "catchments were assessed this quarter than last."),
     "sectors": P.SECTORS,
     "topRed": P.TOP_RED,
     "topGreen": P.TOP_GREEN,
@@ -102,6 +103,7 @@ check(data["kpi"]["partners"] == 7, "KPI partners != 7")
 check(data["kpi"]["catchments"] == 36, "KPI catchments != 36")
 check(data["kpi"]["districts"] == 16, "KPI districts != 16")
 check(len(data["partners"]) == 7, "partner list length != 7")
+check(data["q1"]["sites"] == 1902, "Q1 sites != 1902")
 for d in districts:
     if d["bands"]:
         check(sum(d["bands"].values()) == d["n"],
