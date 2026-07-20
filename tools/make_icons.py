@@ -112,42 +112,29 @@ def _silhouette(span):
         (1, 1, ink.width + 1, ink.height + 1))
 
 
-def tile(px, pad=0.14):
-    """Icon at `px`: white figure(s) knocked out of a solid teal tile.
-
-    Thin outline art on transparency renders as a pale smudge on light chrome and
-    disappears on dark chrome, so the mark is inverted onto a solid ground. Five
-    figures across 16px gives each one ~2px of width — illegible at any stroke
-    weight — so small sizes show a single figure instead of the full row. The tile
-    stays recognisably CCCM; the full lockup is still used for the social preview.
-    """
-    if px <= 48 and FIGS:
-        src = _silhouette(SMALL_FIG)
-        pad = 0.17
-    else:
-        src = mark
-    sw, sh = src.size
-    canvas = Image.new("RGBA", (px, px), TEAL + (255,))
+def tile(px, pad=0.06):
+    """Icon at `px`: the full official lockup on a white ground, exactly as the
+    Service Mapping dashboard's tab icon shows it (that site serves the raw logo
+    PNG as its favicon). No derived silhouettes, no invented teal tile - the mark
+    users already recognise, letterboxed on white."""
+    canvas = Image.new("RGBA", (px, px), (255, 255, 255, 255))
     inner = int(px * (1 - 2 * pad))
-    scale = min(inner / sw, inner / sh)
-    w, h = max(1, int(sw * scale)), max(1, int(sh * scale))
-    alpha = src.resize((w, h), Image.LANCZOS).split()[3]
-    white = Image.new("RGBA", (w, h), (255, 255, 255, 255))
-    canvas.paste(white, ((px - w) // 2, (px - h) // 2), alpha)
+    scale = min(inner / W, inner / H)
+    w, h = max(1, int(W * scale)), max(1, int(H * scale))
+    sized = logo.resize((w, h), Image.LANCZOS)
+    canvas.paste(sized, ((px - w) // 2, (px - h) // 2), sized)
     return canvas
 
 
-# --- favicons: solid tile, legible on light and dark browser chrome ----------------
+# --- favicons: full lockup on white, matching the Service Mapping tab ---------------
 for px in (16, 32):
     tile(px).save(os.path.join(OUT, f"favicon-{px}x{px}.png"))
 
-# .ico carries 16/32/48 so the browser picks the right one per context
 tile(48).save(os.path.join(OUT, "favicon.ico"), sizes=[(16, 16), (32, 32), (48, 48)])
 
-# --- touch / installed icons: opaque. iOS composites transparency onto black. ------
-tile(180, pad=0.16).save(os.path.join(OUT, "apple-touch-icon.png"))
+tile(180, pad=0.08).save(os.path.join(OUT, "apple-touch-icon.png"))
 for px in (192, 512):
-    tile(px, pad=0.16).save(os.path.join(OUT, f"android-chrome-{px}x{px}.png"))
+    tile(px, pad=0.08).save(os.path.join(OUT, f"android-chrome-{px}x{px}.png"))
 
 # --- social preview: 1200x630, the full lockup on white ---------------------------
 og = Image.new("RGBA", (1200, 630), (255, 255, 255, 255))
@@ -165,8 +152,8 @@ with open(os.path.join(OUT, "site.webmanifest"), "w", encoding="utf-8") as f:
             {"src": "/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png"},
             {"src": "/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png"},
         ],
-        "theme_color": "#1f6b72",
-        "background_color": "#f4f6f5",
+        "theme_color": "#104E5D",
+        "background_color": "#F5F5F1",
         "display": "standalone",
     }, f, indent=2)
 
