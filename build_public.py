@@ -9,11 +9,13 @@ released Q2 2026 PDF report) — this script has no code path from those figures
 the live draft rebuild (_cache_kobo.json, _cache_zite.json, sites.json).
 
 One deliberate, narrow exception, added at the Cluster Coordinator's explicit written
-request: operational.json (built by build_operational.py) supplies a catchment/
-district-level "Operational Snapshot (unreconciled)" block — aggregate counts only,
-never a site name or site code, never blended into the reconciled KPIs/downloads
-above, and rendered under its own distinct badge and caveat so it can never be
-mistaken for PUBLISHED RESULTS.
+request: a catchment/district-level "Operational Snapshot (unreconciled)" block —
+aggregate counts only, never a site name or site code, never blended into the
+reconciled KPIs/downloads above, rendered under its own distinct badge and caveat so
+it can never be mistaken for PUBLISHED RESULTS. Its primary source at runtime is the
+live api/operational.py endpoint (queries Kobo/Zite server-side on each request,
+credentials never reach the browser); operational.json here is only the offline
+fallback snapshot baked in at build time for when that endpoint is unreachable.
 
 Writes: public/index.html
 """
@@ -98,8 +100,11 @@ data = {
 }
 
 # ---------------------------------------------------------------- operational layer
-# Aggregate-only (catchment/district), unreconciled, from the live pipeline. See the
-# module docstring above and build_operational.py for the scope this is limited to.
+# This is now only the FALLBACK snapshot: the public page's primary source for the
+# Operational Snapshot is the live /api/operational endpoint (queries Kobo/Zite at
+# request time, see api/operational.py). Baked in here purely so the section still
+# shows *something* — clearly labelled as a stale snapshot — if that endpoint is ever
+# unreachable. Same aggregate-only (catchment/district) scope either way.
 OP_PATH = "operational.json"
 if os.path.exists(OP_PATH):
     op = json.load(open(OP_PATH, encoding="utf-8"))

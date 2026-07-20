@@ -126,8 +126,12 @@ def _answered(frame, cols):
     return (~blank).sum(axis=1)
 
 # ---------------------------------------------------------------- per-quarter build
-def build_quarter(label, start, end_excl):
-    ko_all = pd.DataFrame(json.load(open(KOBO_CACHE, encoding="utf-8")))
+def build_quarter(label, start, end_excl, ko_all, zi_all):
+    """ko_all / zi_all are raw Kobo / Zite DataFrames (records as returned by their
+    respective APIs, or loaded from a local cache of the same shape). Kept as
+    parameters — not loaded from disk here — so this function is identical whether
+    called from the offline batch (build_operational.py, reads _cache_*.json) or the
+    live Vercel endpoint (api/operational.py, fetches Kobo/Zite directly)."""
     kd, k_mask = _window(ko_all[KD], start, end_excl)
     ko = ko_all[k_mask].copy()
     ko["_date"] = kd[k_mask]
@@ -145,7 +149,6 @@ def build_quarter(label, start, end_excl):
     ko = (ko.sort_values(["_date", "_complete"], ascending=[False, False])
             .drop_duplicates("_site_id", keep="first"))
 
-    zi_all = pd.DataFrame(json.load(open(ZITE_CACHE, encoding="utf-8")))
     zdate, z_mask = _window(zi_all["Date of Assessment"], start, end_excl)
     zi = zi_all[z_mask].copy()
     zi["_date"] = zdate[z_mask]
@@ -220,21 +223,32 @@ def build_quarter(label, start, end_excl):
           f"{kpi['districts']} districts, {kpi['partners']} partners")
     return {"label": label, "kpi": kpi, "catchments": catchments, "districts": districts}
 
-def main():
+def build_all(ko_all, zi_all, generated_at=None):
+    """Single source of truth for both the offline batch and the live endpoint.
+    Raises AssertionError if a site-identifying key ever reaches the output —
+    callers must not catch this and must fail the request/build instead."""
     out = {"generatedNote": "Live field-data pipeline snapshot — not officially "
            "published, not reviewed by Information Management, not reconciled "
            "against the Master List. May not match the published Q2 2026 report.",
-           "quarters": {}}
+           "generatedAt": generated_at, "quarters": {}}
     for label, start, end_excl in QUARTERS:
-        out["quarters"][label] = build_quarter(label, start, end_excl)
+        out["quarters"][label] = build_quarter(label, start, end_excl, ko_all, zi_all)
 
-    # ---- self-check: this file must never carry a site name or site code ----
+    # ---- self-check: this payload must never carry a site name or site code ----
     blob = json.dumps(out)
     for forbidden in ("_site_id", '"s":', '"site":', "final_site_name"):
         if forbidden in blob:
-            print(f"BUILD FAILED: forbidden site-identifying key {forbidden!r} leaked into {OUT}")
-            sys.exit(1)
+            raise AssertionError(f"forbidden site-identifying key {forbidden!r} leaked into operational output")
+    return out
 
+def main():
+    ko_all = pd.DataFrame(json.load(open(KOBO_CACHE, encoding="utf-8")))
+    zi_all = pd.DataFrame(json.load(open(ZITE_CACHE, encoding="utf-8")))
+    try:
+        out = build_all(ko_all, zi_all)
+    except AssertionError as e:
+        print(f"BUILD FAILED: {e}")
+        sys.exit(1)
     json.dump(out, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=None)
     print(f"wrote {OUT} ({os.path.getsize(OUT)/1024:.0f} KB) — aggregate-only, no site names/codes")
 

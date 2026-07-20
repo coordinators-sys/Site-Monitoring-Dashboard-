@@ -1020,6 +1020,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
         <h3>Operational Snapshot</h3>
         <span class="op-badge">OPERATIONAL — UNRECONCILED</span>
       </div>
+      <p id="opSourceNote" style="font-size:11px;color:#9A5B13;font-weight:600;margin:0 0 10px">Connecting to Kobo/Zite…</p>
       <p style="font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 14px">This section reflects the live
         field-data pipeline, updated automatically and grouped by catchment and district only — it has not been
         through Information Management review or cross-checked against the Master List, so its totals will not
@@ -1297,11 +1298,11 @@ function renderDistricts(){
   $('#distFootnote').innerHTML=DATA.districtFootnote;
   $('#partnerChips').innerHTML=DATA.partners.map(p=>
     `<span class="pub-chip-sm" style="padding:5px 11px;font-size:12px">${esc(p)}</span>`).join('');
-  renderOperational();
+  renderOperational().catch(e=>console.error('[public dashboard] "operational" failed:', e));
 }
 
 /* ================= OPERATIONAL SNAPSHOT (unreconciled) ================= */
-let OP_Q=null;
+let OP_Q=null, OP_DATA=null, OP_LIVE=false;
 function paintOpRows(rows){
   $('#opTable').innerHTML=rows.length?rows.map(c=>`<tr>
       <td style="font-weight:600">${esc(c.catchment)}</td><td>${esc(c.district)}</td><td>${esc(c.region)}</td>
@@ -1311,15 +1312,31 @@ function paintOpRows(rows){
       <td class="ctr">${fmt(c.Moderate)}</td><td class="ctr">${fmt(c.Low)}</td>
     </tr>`).join('') : `<tr><td colspan="9"><p class="empty-note">No catchments match this filter.</p></td></tr>`;
 }
-function renderOperational(){
-  const op=DATA.operational;
-  if(!op||!op.available||!Object.keys(op.quarters).length){ return; }
-  $('#opSection').hidden=false;
+async function loadOperationalData(){
+  // Prefer the live endpoint (queries Kobo/Zite server-side, token never reaches the
+  // browser, edge-cached ~10 min). Fall back to the snapshot baked in at build time —
+  // labelled as such — if the live call fails (network issue, Kobo/Zite outage, etc.)
+  // so the section degrades gracefully instead of breaking.
+  try{
+    const r=await fetch('/api/operational',{headers:{'Accept':'application/json'}});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const j=await r.json();
+    if(!j||!j.quarters) throw new Error('malformed response');
+    OP_LIVE=true;
+    return j;
+  }catch(e){
+    console.warn('[public dashboard] live operational endpoint unavailable, using build-time snapshot:', e);
+    OP_LIVE=false;
+    return DATA.operational&&DATA.operational.available?
+      {generatedNote:DATA.operational.note,generatedAt:null,quarters:DATA.operational.quarters}:null;
+  }
+}
+function paintOperational(op){
   const qkeys=Object.keys(op.quarters);
   OP_Q=OP_Q&&qkeys.includes(OP_Q)?OP_Q:qkeys[qkeys.length-1];
   $('#opQuarterTabs').innerHTML=qkeys.map(k=>
     `<button class="op-tab ${k===OP_Q?'active':''}" data-q="${esc(k)}">${esc(k)}</button>`).join('');
-  $$('#opQuarterTabs .op-tab').forEach(b=>b.addEventListener('click',()=>{OP_Q=b.dataset.q;renderOperational();}));
+  $$('#opQuarterTabs .op-tab').forEach(b=>b.addEventListener('click',()=>{OP_Q=b.dataset.q;paintOperational(OP_DATA);}));
   const q=op.quarters[OP_Q];
   const all=[...(q.catchments||[])].sort((a,b)=>b.avgSeverity-a.avgSeverity);
   paintOpRows(all);
@@ -1331,6 +1348,17 @@ function renderOperational(){
     $('#opFilterCount').textContent=s?`${rows.length} of ${all.length} catchments`:`${all.length} catchments · ${q.kpi.sites} sites (${OP_Q})`;
   };
   input.value=''; input.oninput=apply; apply();
+}
+async function renderOperational(){
+  const op=await loadOperationalData();
+  if(!op||!op.quarters||!Object.keys(op.quarters).length){ return; }
+  OP_DATA=op;
+  $('#opSection').hidden=false;
+  const src=$('#opSourceNote');
+  if(src) src.textContent=OP_LIVE
+    ? 'Live — queried directly from Kobo/Zite'+(op.generatedAt?` as of ${esc(op.generatedAt)}`:'')+'.'
+    : 'Live endpoint unreachable right now — showing the last snapshot generated at deploy time, not a real-time read.';
+  paintOperational(op);
 }
 
 /* ================= DOWNLOADS ================= */
