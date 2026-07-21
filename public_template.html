@@ -123,6 +123,26 @@ th.sortable .sarrow{display:inline-block;width:12px;color:var(--teal);font-weigh
 .op-reveal{border:1px dashed #E9A23B;background:#FFFBF3;border-radius:10px;padding:12px;margin-top:12px}
 [data-theme="dark"] .op-reveal{background:#241d10}
 .op-reveal .warn{font-size:11px;color:#9A5B13;font-weight:700;margin:0 0 8px}
+
+/* global cross-filter bar */
+.gfbar .gf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end}
+.gf-grid label{display:flex;flex-direction:column;gap:3px;font-size:10px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.03em}
+.gf-grid .map-sel,.gf-grid .gf-input{width:100%;min-width:0}
+.gf-input{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  border-radius:8px;padding:7px 10px;font-size:12.5px;font-family:inherit}
+.gf-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:4px}
+.gf-chip{display:inline-flex;align-items:center;gap:6px;background:var(--teal-l);color:var(--teal-d);
+  border:1px solid var(--teal);border-radius:20px;padding:3px 6px 3px 11px;font-size:12px;font-weight:600}
+.gf-chip button{appearance:none;border:none;background:var(--teal-d);color:#fff;width:16px;height:16px;
+  border-radius:50%;cursor:pointer;font-size:11px;line-height:1;padding:0}
+.gf-note{font-size:11px;color:#9A5B13;background:#FDF0E1;border-radius:6px;padding:6px 10px;margin:12px 0 0}
+[data-theme="dark"] .gf-note{background:#3a2c12;color:#f0b969}
+.gf-kpis{margin-top:12px;grid-template-columns:repeat(5,1fr)}
+.gf-kpis .kpi{padding:11px 13px}
+.gf-kpis .kpi .k-val{font-size:20px}
+@media(max-width:900px){.gf-kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.gf-kpis{grid-template-columns:repeat(2,1fr)}}
 .drawer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:16px 18px;
   border-bottom:1px solid var(--line);flex:0 0 auto}
 .drawer-head h3{font-size:17px}
@@ -386,13 +406,39 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
     </div>
   </section>
 
-  <!-- ============ GEOGRAPHIC PRIORITIES ============ -->
+  <!-- ============ GEOGRAPHIC ANALYSIS ============ -->
   <section class="view" id="view-map">
     <div class="sec-head">
-      <h2><span data-i18n="h.map">Geographic Priorities</span> <span class="period-chip" id="mapPeriodChip"></span></h2>
+      <h2><span data-i18n="h.map">Geographic Analysis</span> <span class="period-chip" id="mapPeriodChip"></span></h2>
       <p id="mapIntro">District severity from published results. Grey districts were not individually reported.</p>
     </div>
     <div class="period-note" id="mapPeriodNote" hidden></div>
+
+    <!-- Persistent global cross-filter — powers the map, the live KPI strip and the
+         filtered site table together. Operational (site-level) data only: published
+         aggregates cannot be re-sliced by partner/catchment/severity. -->
+    <div class="card p gfbar block">
+      <button class="collapse-btn" id="gfToggle" aria-expanded="true" aria-controls="gfBody" style="border-color:var(--teal);background:var(--teal-l);color:var(--teal-d)">
+        <span><span class="cr" style="transform:rotate(90deg)">▸</span> <span data-i18n="gf.title">Filters</span> <span id="gfActiveCount" style="font-weight:600"></span></span>
+        <span class="op-badge">OPERATIONAL</span>
+      </button>
+      <div id="gfBody" style="margin-top:12px">
+        <div class="gf-grid">
+          <label><span data-i18n="gf.state">State</span><select id="gfState" class="map-sel" autocomplete="off"></select></label>
+          <label><span data-i18n="gf.region">Region</span><select id="gfRegion" class="map-sel" autocomplete="off"></select></label>
+          <label><span data-i18n="gf.district">District</span><select id="gfDistrict" class="map-sel" autocomplete="off"></select></label>
+          <label><span data-i18n="gf.catchment">Catchment</span><select id="gfCatchment" class="map-sel" autocomplete="off"></select></label>
+          <label><span data-i18n="gf.partner">Partner</span><select id="gfPartner" class="map-sel" autocomplete="off"></select></label>
+          <label><span data-i18n="gf.sector">Sector</span><select id="gfSector" class="map-sel" autocomplete="off"></select></label>
+          <label><span data-i18n="gf.severity">Severity</span><select id="gfSeverity" class="map-sel" autocomplete="off"></select></label>
+          <label><span data-i18n="gf.search">Site search</span><input id="gfSite" type="text" autocomplete="off" class="gf-input" placeholder="Site name…"></label>
+          <button class="btn sm" id="gfReset" style="align-self:end" data-i18n="gf.reset">Reset all</button>
+        </div>
+        <div id="gfChips" class="gf-chips"></div>
+        <p class="gf-note" data-i18n="gf.note">Operational, unreconciled — filters apply to live site-level field data, not the published summary figures above.</p>
+        <div class="grid kpis gf-kpis" id="gfKpis"></div>
+      </div>
+    </div>
     <div class="card p">
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
         <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase" data-i18n="label.view">View</span>
@@ -411,22 +457,36 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
         <button class="btn sm" id="mapReset" data-i18n="btn.reset">Reset view</button>
         <span id="mapFilterMsg" style="font-size:11.5px;color:var(--muted)"></span>
       </div>
-      <div id="siteFilterRow" style="display:none;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
-        <span style="font-size:11px;font-weight:700;color:#9A5B13;text-transform:uppercase;letter-spacing:.03em" data-i18n="label.sitefilter">Site filter</span>
-        <select id="sfRegion" class="map-sel" autocomplete="off"></select>
-        <select id="sfDistrict" class="map-sel" autocomplete="off"></select>
-        <input id="sfSite" type="text" placeholder="Search a site name…" autocomplete="off"
-          style="flex:1;min-width:170px;max-width:260px;appearance:none;border:1px solid var(--line);background:var(--surface);
-          color:var(--ink);border-radius:8px;padding:7px 12px;font-size:12.5px;font-family:inherit">
-        <button class="btn sm" id="sfClear" data-i18n="btn.clear">Clear</button>
-        <span id="sfCount" style="font-size:11.5px;color:var(--muted)"></span>
-      </div>
       <div id="caBanner" class="period-note" hidden style="margin-bottom:10px"></div>
       <div class="mapwrap">
         <div id="pubMap"></div>
         <div class="map-loading" id="mapLoading" hidden><span class="spin"></span> <span data-i18n="map.loading">Loading map…</span></div>
       </div>
       <div class="legend" id="mapLegend" style="margin-top:10px"></div>
+    </div>
+
+    <!-- Filtered site list — reflects the global filter above; downloadable. -->
+    <div class="card p block" id="gfTableCard" style="margin-top:16px" hidden>
+      <div style="display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap;margin-bottom:6px">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <h3><span data-i18n="gf.matchsites">Matching sites</span></h3>
+          <span class="op-badge">OPERATIONAL — UNRECONCILED</span>
+          <span class="period-chip" id="gfTablePeriod"></span>
+        </div>
+        <button class="btn sm" id="gfDownload" data-i18n="gf.download">⬇ Download filtered sites (CSV)</button>
+      </div>
+      <p id="gfTableNote" style="font-size:12px;color:var(--muted);margin:0 0 10px"></p>
+      <div class="tbl-scroll">
+        <table class="plain">
+          <thead><tr>
+            <th data-i18n="gf.site">Site</th><th data-i18n="gf.district">District</th>
+            <th data-i18n="gf.region">Region</th><th data-i18n="gf.catchment">Catchment</th>
+            <th data-i18n="gf.partner">Partner</th><th class="ctr" data-i18n="tip.severity">Severity</th>
+          </tr></thead>
+          <tbody id="gfTable"></tbody>
+        </table>
+      </div>
+      <p id="gfTableMore" style="font-size:11.5px;color:var(--muted);margin:8px 0 0"></p>
     </div>
 
     <div class="card p block" id="caPanel" style="margin-top:16px" hidden>

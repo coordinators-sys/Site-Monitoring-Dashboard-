@@ -49,6 +49,15 @@ const I18N={
   'band.Severe':'Severe','band.High':'High','band.Moderate':'Moderate','band.Low':'Low',
   'legend.notreported':'Not reported','legend.notassessed':'Not assessed this period','map.loading':'Loading map…',
   'sites.of':'{a} of {b} sites plotted (sites without GPS are listed in data but cannot be mapped)',
+  'gf.title':'Filters','gf.state':'State','gf.region':'Region','gf.district':'District','gf.catchment':'Catchment',
+  'gf.partner':'Partner','gf.sector':'Sector','gf.severity':'Severity','gf.search':'Site search','gf.reset':'Reset all',
+  'gf.note':'Operational, unreconciled — filters apply to live site-level field data, not the published summary figures above.',
+  'gf.matchsites':'Matching sites','gf.download':'⬇ Download filtered sites (CSV)',
+  'gf.allstates':'All states','gf.allregions':'All regions','gf.alldistricts':'All districts',
+  'gf.allcatchments':'All catchments','gf.allpartners':'All partners','gf.allsectors':'All sectors','gf.allseverity':'All severity',
+  'gf.matchnote':'{n} sites match the current filters.','gf.nomatch':'No sites match the current filters.',
+  'gf.capped':'Showing the first {cap} of {n} matching sites — narrow the filters or download the full set.',
+  'gf.site':'Site',
  },
  so:{
   'nav.overview':'Guudmar','nav.map':'Falanqaynta Juqraafi','nav.sectors':'Falanqaynta Qaybaha',
@@ -82,6 +91,15 @@ const I18N={
   'band.Severe':'Daran','band.High':'Sare','band.Moderate':'Dhexdhexaad','band.Low':'Hooseeya',
   'legend.notreported':'Lama soo sheegin','legend.notassessed':'Muddadan lama qiimayn','map.loading':'Khariidada waa la soo rarayaa…',
   'sites.of':'{a} ka mid ah {b} goobood ayaa la muujiyay (kuwa aan GPS lahayn lama muujin karo)',
+  'gf.title':'Shaandhaynta','gf.state':'Gobol-dowladeed','gf.region':'Gobol','gf.district':'Degmo','gf.catchment':'Aag (CA)',
+  'gf.partner':'Wada-hawlgale','gf.sector':'Qayb','gf.severity':'Darnaan','gf.search':'Raadi goob','gf.reset':'Dib u deji dhammaan',
+  'gf.note':'Hawleed, aan la xaqiijin — shaandhayntu waxay khusaysaa xog goobeed toos ah, ma aha tirooyinka la daabacay ee kor ku xusan.',
+  'gf.matchsites':'Goobaha u dhigma','gf.download':'⬇ Soo dejiso goobaha la shaandhay (CSV)',
+  'gf.allstates':'Dhammaan gobol-dowladeedyada','gf.allregions':'Dhammaan gobollada','gf.alldistricts':'Dhammaan degmooyinka',
+  'gf.allcatchments':'Dhammaan aagagga','gf.allpartners':'Dhammaan wada-hawlgalayaasha','gf.allsectors':'Dhammaan qaybaha','gf.allseverity':'Dhammaan darnaanta',
+  'gf.matchnote':'{n} goobood ayaa u dhigma shaandhaynta hadda.','gf.nomatch':'Ma jiraan goobo u dhigma shaandhaynta hadda.',
+  'gf.capped':'Waxaa la muujinayaa {cap} ka mid ah {n} goobood — cufi shaandhaynta ama soo deji dhammaan.',
+  'gf.site':'Goob',
  }
 };
 const t=k=>(I18N[LANG]&&I18N[LANG][k])||I18N.en[k]||k;
@@ -240,9 +258,24 @@ function renderSectorDiverge(){
    CATCHMENTS from the live operational feed — unreconciled, so it carries its own
    amber banner and is never mixed into the published district layers. */
 let MAP_FILL='sev', MAP_HOME=null, MAP_D_LAYER=null, MAP_CA_LAYER=null, MAP_INDEX=[], MAP_FOCUS=[];
-let SHOW_SITES=false, SITE_LAYER=null, SITE_RENDERER=null, SF={region:'',district:'',q:''};
+let SHOW_SITES=false, SITE_LAYER=null, SITE_RENDERER=null;
 const swapRing=r=>r.map(([x,y])=>[y,x]);
 const caKey=(pc,ca)=>String(pc||'').toUpperCase()+String(ca||'').toUpperCase();
+
+/* ---- global cross-filter (operational site-level data only) ---- */
+// Somali region -> Federal Member State, so a 'State' filter is available even though
+// the source data carries region, not state.
+const STATE_OF={
+  'Banadir':'Banadir',
+  'Bay':'South West','Bakool':'South West','Lower Shabelle':'South West','Shabelle Hoose':'South West',
+  'Gedo':'Jubaland','Lower Juba':'Jubaland','Middle Juba':'Jubaland','Juba Hoose':'Jubaland','Juba Dhexe':'Jubaland',
+  'Hiraan':'Hirshabelle','Middle Shabelle':'Hirshabelle','Shabelle Dhexe':'Hirshabelle',
+  'Galgaduud':'Galmudug','Mudug':'Galmudug',
+  'Nugaal':'Puntland','Bari':'Puntland','Sool':'Puntland','Sanaag':'Puntland','Karkaar':'Puntland',
+  'Awdal':'Somaliland','Woqooyi Galbeed':'Somaliland','Togdheer':'Somaliland'};
+const stateOf=r=>STATE_OF[r]||'Other';
+let GF={state:'',region:'',district:'',catchment:'',partner:'',sector:'',severity:'',q:''};
+const gfActive=()=>['state','region','district','catchment','partner','sector','severity','q'].filter(k=>GF[k]);
 
 function opCatchments(){
   /* Operational catchment rows for the selected period, or the nearest available one. */
@@ -273,22 +306,46 @@ function buildMapShell(){
   if(st) st.onclick=async()=>{
     SHOW_SITES=!SHOW_SITES;
     if(SHOW_SITES) await ensureOperational();
-    renderSitePoints();
+    applyGlobalFilter();
   };
-  [['#sfRegion','region'],['#sfDistrict','district']].forEach(([sel,key])=>{
-    const el=$(sel);
-    if(el) el.onchange=()=>{ SF[key]=el.value; if(key==='region') SF.district=''; renderSitePoints(); };
-  });
-  const ss=$('#sfSite');
-  if(ss) ss.oninput=()=>{ SF.q=ss.value; renderSitePoints(); };
-  const sc=$('#sfClear');
-  if(sc) sc.onclick=()=>{ SF={region:'',district:'',q:''}; const el=$('#sfSite'); if(el) el.value='';
-                          renderSitePoints(); if(MAP_HOME) map.fitBounds(MAP_HOME); };
   const fi=$('#mapFilter');
   if(fi) fi.oninput=()=>applyMapFilter(fi.value);
   const rb=$('#mapReset');
   if(rb) rb.onclick=()=>{ if(fi) fi.value=''; $('#mapFilterMsg').textContent='';
                           if(MAP_HOME) map.fitBounds(MAP_HOME); };
+}
+
+/* ---------------- global cross-filter wiring ---------------- */
+function wireGlobalFilter(){
+  const map={state:'#gfState',region:'#gfRegion',district:'#gfDistrict',catchment:'#gfCatchment',
+             partner:'#gfPartner',sector:'#gfSector',severity:'#gfSeverity'};
+  Object.entries(map).forEach(([key,sel])=>{
+    const el=$(sel);
+    if(el) el.onchange=async()=>{
+      GF[key]=el.value;
+      // cascading: a broader change clears narrower geographic selections
+      if(key==='state'){ GF.region=''; GF.district=''; GF.catchment=''; }
+      if(key==='region'){ GF.district=''; GF.catchment=''; }
+      if(key==='district'){ GF.catchment=''; }
+      await ensureOperational();
+      if(gfActive().length) SHOW_SITES=true;
+      buildGlobalFilterOptions(); applyGlobalFilter(true);
+    };
+  });
+  const ss=$('#gfSite');
+  if(ss) ss.oninput=()=>{ GF.q=ss.value; if(GF.q) SHOW_SITES=true; applyGlobalFilter(false); };
+  const rs=$('#gfReset');
+  if(rs) rs.onclick=()=>{ GF={state:'',region:'',district:'',catchment:'',partner:'',sector:'',severity:'',q:''};
+    if(ss) ss.value=''; buildGlobalFilterOptions(); applyGlobalFilter(true);
+    if(MAP_HOME&&window.__pubMap) window.__pubMap.fitBounds(MAP_HOME); };
+  const tg=$('#gfToggle');
+  if(tg && !tg._wired){ tg._wired=true; tg.addEventListener('click',()=>{
+    const body=$('#gfBody'), open=!body.hidden;
+    body.hidden=open; tg.setAttribute('aria-expanded', open?'false':'true');
+    tg.querySelector('.cr').style.transform=open?'':'rotate(90deg)';
+  }); }
+  const dl=$('#gfDownload');
+  if(dl) dl.onclick=downloadFilteredSites;
 }
 
 /* ---------------- IDP site points (live operational feed) ---------------- */
@@ -311,44 +368,98 @@ function siteTip(s,order){
     ${esc(t('tip.hh'))}: ${fmt(s.hh)} · ${esc(t('tip.ind'))}: ${fmt(s.ind)}
     <div class="secs">${secs}</div></div>`;
 }
-function populateSiteFilters(rows){
-  const regs=[...new Set(rows.map(s=>s.r).filter(Boolean))].sort();
-  if(SF.region&&!regs.includes(SF.region)) SF.region='';
-  const dists=[...new Set(rows.filter(s=>!SF.region||s.r===SF.region).map(s=>s.d).filter(Boolean))].sort();
-  if(SF.district&&!dists.includes(SF.district)) SF.district='';
-  $('#sfRegion').innerHTML=`<option value="">${esc(t('opt.allregions'))}</option>`
-    +regs.map(r=>`<option value="${esc(r)}"${r===SF.region?' selected':''}>${esc(r)}</option>`).join('');
-  $('#sfDistrict').innerHTML=`<option value="">${esc(t('opt.alldistricts'))}</option>`
-    +dists.map(d=>`<option value="${esc(d)}"${d===SF.district?' selected':''}>${esc(d)}</option>`).join('');
+function gfMatch(s,order){
+  if(GF.state && stateOf(s.r)!==GF.state) return false;
+  if(GF.region && s.r!==GF.region) return false;
+  if(GF.district && s.d!==GF.district) return false;
+  if(GF.catchment && s.c!==GF.catchment) return false;
+  if(GF.partner && s.p!==GF.partner) return false;
+  if(GF.severity && s.b!==GF.severity) return false;
+  if(GF.sector){ const i=(order||[]).indexOf(GF.sector); const d=(s.sc||[])[i]; if(d!=='R'&&d!=='K') return false; }
+  if(GF.q && !String(s.n).toLowerCase().includes(GF.q.trim().toLowerCase())) return false;
+  return true;
 }
-function renderSitePoints(){
-  const row=$('#siteFilterRow');
-  if(row) row.style.display=SHOW_SITES?'flex':'none';
+function gfFiltered(){ const {rows,order}=opSites(); return {list:rows.filter(s=>gfMatch(s,order)), order, all:rows}; }
+
+// Cascading option lists — each select shows only values still reachable given the
+// broader selections above it.
+function buildGlobalFilterOptions(){
+  const {rows}=opSites();
+  const opt=(sel,vals,cur,allLabel)=>{
+    const el=$(sel); if(!el) return;
+    if(cur && !vals.includes(cur)) cur='';
+    el.innerHTML=`<option value="">${esc(allLabel)}</option>`
+      +vals.map(v=>`<option value="${esc(v)}"${v===cur?' selected':''}>${esc(v)}</option>`).join('');
+    el.value=cur;
+  };
+  const inGeo=s=>(!GF.state||stateOf(s.r)===GF.state)&&(!GF.region||s.r===GF.region)&&(!GF.district||s.d===GF.district);
+  const uniq=(arr)=>[...new Set(arr.filter(Boolean))].sort();
+  opt('#gfState', uniq(rows.map(s=>stateOf(s.r))), GF.state=GF.state, t('gf.allstates'));
+  opt('#gfRegion', uniq(rows.filter(s=>!GF.state||stateOf(s.r)===GF.state).map(s=>s.r)), GF.region, t('gf.allregions'));
+  opt('#gfDistrict', uniq(rows.filter(s=>(!GF.state||stateOf(s.r)===GF.state)&&(!GF.region||s.r===GF.region)).map(s=>s.d)), GF.district, t('gf.alldistricts'));
+  opt('#gfCatchment', uniq(rows.filter(inGeo).map(s=>s.c)), GF.catchment, t('gf.allcatchments'));
+  opt('#gfPartner', uniq(rows.filter(inGeo).map(s=>s.p)), GF.partner, t('gf.allpartners'));
+  // sector + severity are fixed lists
+  const se=$('#gfSector');
+  if(se) se.innerHTML=`<option value="">${esc(t('gf.allsectors'))}</option>`
+    +(DATA.sectors||[]).map(x=>`<option value="${esc(x.code)}"${x.code===GF.sector?' selected':''}>${esc(x.name)}</option>`).join('');
+  const sv=$('#gfSeverity');
+  if(sv) sv.innerHTML=`<option value="">${esc(t('gf.allseverity'))}</option>`
+    +['Severe','High','Moderate','Low'].map(b=>`<option value="${b}"${b===GF.severity?' selected':''}>${esc(t('band.'+b))}</option>`).join('');
+}
+
+const GF_LABELS={state:'gf.state',region:'gf.region',district:'gf.district',catchment:'gf.catchment',
+  partner:'gf.partner',sector:'gf.sector',severity:'gf.severity',q:'gf.search'};
+function gfChipText(k){
+  if(k==='sector'){ const x=(DATA.sectors||[]).find(s=>s.code===GF.sector); return x?x.name:GF.sector; }
+  if(k==='severity') return t('band.'+GF.severity);
+  return GF[k];
+}
+function renderGfChips(){
+  const keys=gfActive();
+  $('#gfActiveCount').textContent=keys.length?`(${keys.length})`:'';
+  $('#gfChips').innerHTML=keys.map(k=>
+    `<span class="gf-chip">${esc(gfChipText(k))}<button data-k="${k}" aria-label="Remove">×</button></span>`).join('');
+  $$('#gfChips .gf-chip button').forEach(b=>b.onclick=()=>{
+    GF[b.dataset.k]=''; if(b.dataset.k==='q'){ const el=$('#gfSite'); if(el) el.value=''; }
+    buildGlobalFilterOptions(); applyGlobalFilter(true);
+  });
+}
+
+let GF_LAST=[];
+function applyGlobalFilter(refit){
+  const st=$('#sitesToggle'); if(st) st.classList.toggle('active',SHOW_SITES);
+  renderGfChips();
+  const {list,order,all}=gfFiltered();
+  GF_LAST=list;
+  // live KPI strip
+  const cats=new Set(), parts=new Set(); let hh=0, ind=0, sev=0;
+  list.forEach(s=>{ if(s.c) cats.add(s.c); if(s.p) parts.add(s.p); hh+=s.hh||0; ind+=s.ind||0; sev+=s.v; });
+  const avg=list.length?Math.round(sev/list.length*10)/10:0;
+  const kpi=(v,l)=>`<div class="kpi"><div class="k-val">${v}</div><div class="k-lab">${esc(l)}</div></div>`;
+  $('#gfKpis').innerHTML=kpi(fmt(list.length),t('dk.sites'))+kpi(fmt(cats.size),t('dk.cas'))
+    +kpi(fmt(parts.size),t('kpi.partners'))+kpi(fmt(hh),t('dk.hh'))
+    +kpi(list.length?`<span class="badge ${sevBand(avg)}">${avg}%</span>`:'—',t('dk.sev'));
+  // map points (only when the layer is on)
+  drawSitePoints(list,order,refit);
+  // filtered site table
+  renderGfTable(list);
+}
+function drawSitePoints(list,order,refit){
   const st=$('#sitesToggle'); if(st) st.classList.toggle('active',SHOW_SITES);
   if(!SITE_LAYER) return;
   SITE_LAYER.clearLayers();
-  if(!SHOW_SITES){ const c=$('#sfCount'); if(c) c.textContent=''; return; }
-  const {rows,order}=opSites();
-  populateSiteFilters(rows);
-  const q=SF.q.trim().toLowerCase();
-  const filtered=rows.filter(s=>(!SF.region||s.r===SF.region)
-    &&(!SF.district||s.d===SF.district)
-    &&(!q||String(s.n).toLowerCase().includes(q)));
+  if(!SHOW_SITES) return;
   if(!SITE_RENDERER) SITE_RENDERER=L.canvas({padding:.3});
-  let plotted=0; const pts=[];
-  filtered.forEach(s=>{
+  const pts=[];
+  list.forEach(s=>{
     if(s.la==null||s.lo==null) return;
     const m=L.circleMarker([s.la,s.lo],{renderer:SITE_RENDERER,radius:5,weight:1,
       color:'#fff',fillColor:bandColor(s.b),fillOpacity:.85});
     m.bindTooltip(siteTip(s,order),{sticky:true,opacity:1});
-    m.addTo(SITE_LAYER); plotted++; pts.push([s.la,s.lo]);
+    m.addTo(SITE_LAYER); pts.push([s.la,s.lo]);
   });
-  const c=$('#sfCount');
-  if(c) c.textContent=t('sites.of').replace('{a}',fmt(plotted)).replace('{b}',fmt(rows.length));
-  if((SF.region||SF.district||q)&&pts.length){
-    // Fit the view to the 5th–95th percentile of points: a single mistagged GPS
-    // (in-country but hundreds of km off) must not zoom the map out to all Somalia.
-    // Every point is still plotted — only the automatic framing ignores outliers.
+  if(refit && gfActive().length && pts.length){
     let frame=pts;
     if(pts.length>20){
       const lats=pts.map(p=>p[0]).sort((a,b)=>a-b), lons=pts.map(p=>p[1]).sort((a,b)=>a-b);
@@ -357,8 +468,36 @@ function renderSitePoints(){
       if(!frame.length) frame=pts;
     }
     const b=L.latLngBounds(frame);
-    if(b.isValid()) window.__pubMap.fitBounds(b.pad(0.2),{maxZoom:13});
+    if(b.isValid()&&window.__pubMap) window.__pubMap.fitBounds(b.pad(0.2),{maxZoom:13});
   }
+}
+// back-compat shim: callers that used to call renderSitePoints now route through the filter
+function renderSitePoints(){ applyGlobalFilter(false); }
+
+function renderGfTable(list){
+  const card=$('#gfTableCard'); if(!card) return;
+  card.hidden = !(SHOW_SITES || gfActive().length);
+  const {label}=opCatchments();
+  const per=$('#gfTablePeriod'); if(per) per.textContent=label||'';
+  const cap=300;
+  $('#gfTableNote').textContent=t('gf.matchnote').replace('{n}',fmt(list.length));
+  const rows=[...list].sort((a,b)=>b.v-a.v).slice(0,cap);
+  $('#gfTable').innerHTML=rows.length?rows.map(s=>`<tr>
+    <td style="font-weight:600">${esc(s.n)}</td><td>${esc(s.d)}</td><td>${esc(s.r)}</td>
+    <td>${esc(s.c||'—')}</td><td>${esc(s.p||'—')}</td>
+    <td class="ctr"><span class="badge ${esc(s.b)}">${s.v}%</span></td></tr>`).join('')
+    : `<tr><td colspan="6"><p class="empty-note">${esc(t('gf.nomatch'))}</p></td></tr>`;
+  $('#gfTableMore').textContent = list.length>cap ? t('gf.capped').replace('{cap}',fmt(cap)).replace('{n}',fmt(list.length)) : '';
+}
+function downloadFilteredSites(){
+  const {label}=opCatchments();
+  const head=[['CCCM Cluster Somalia — Site Monitoring: filtered operational sites'],
+    ['Status','OPERATIONAL — UNRECONCILED (live field data, not IM-reviewed)'],
+    ['Reporting period', label||''],['Generated', DATA.generated],
+    ['Filters', gfActive().map(k=>k+'='+gfChipText(k)).join('; ')||'(none)'],[],
+    ['Site','District','Region','Catchment','Partner','Severity %','Severity band','Households','Individuals']];
+  const body=GF_LAST.map(s=>[s.n,s.d,s.r,s.c||'',s.p||'',s.v,s.b,s.hh||'',s.ind||'']);
+  csvDownload('cccm_operational_filtered_sites.csv', head.concat(body));
 }
 
 function applyMapFilter(q){
@@ -476,8 +615,9 @@ async function renderMap(){
   }
   const fi=$('#mapFilter');
   if(fi){ fi.value=''; $('#mapFilterMsg').textContent=''; }
-  if(SHOW_SITES){ await ensureOperational(); }
-  renderSitePoints();
+  await ensureOperational();
+  buildGlobalFilterOptions();
+  applyGlobalFilter(false);
   renderMapLegend();
   setTimeout(()=>map.invalidateSize(),60);
 }
@@ -722,8 +862,9 @@ function wireDrawerGeo(name){
   const gb=$('#drawerGeo');
   if(gb) gb.onclick=()=>{ closeDrawer();
     activateView('map');
-    SHOW_SITES=true; SF={region:'',district:name,q:''};
-    renderMap().then(()=>{ const el=$('#sfSite'); if(el) el.value=''; renderSitePoints(); });
+    SHOW_SITES=true;
+    GF={state:'',region:'',district:name,catchment:'',partner:'',sector:'',severity:'',q:''};
+    renderMap().then(()=>{ buildGlobalFilterOptions(); applyGlobalFilter(true); });
   };
 }
 let DRAWER_TRIGGER=null;
@@ -917,6 +1058,6 @@ function renderAll(){
 }
 
 [['brand',renderBrand],['period selector',renderPeriodSelector],['help modal',wireHelp],
- ['language',wireLang],['drawer',wireDrawer]
+ ['language',wireLang],['drawer',wireDrawer],['global filter',wireGlobalFilter]
 ].forEach(([label,fn])=>{ try{ fn(); } catch(e){ console.error('[public dashboard] "'+label+'" failed:', e); } });
 renderAll();
