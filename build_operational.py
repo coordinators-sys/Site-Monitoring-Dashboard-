@@ -113,6 +113,12 @@ def zite_district_to_pcode(name):
 zmap = json.load(open("zite_map.json", encoding="utf-8"))
 short2path = {k.split("/")[-1]: k for k in bd.INDICATORS}
 
+# A genuine catchment code, e.g. SO2401CA10, CA13, SO1801CA03_GS. Free-text values in
+# the catchment field (site or neighbourhood names typed in by mistake) do NOT match
+# and are counted as "(catchment not recorded)" so they can't inflate the catchment
+# count — the published Q2 report has 36 catchments, and matching this pattern yields
+# exactly 36 from the live data.
+_CA_CODE = re.compile(r"^(?:SO\d+)?CA\d{1,2}(?:_G[NS])?$", re.I)
 _CA_NUM = re.compile(r"(?:catchment\s*area|^ca)\s*[-#]?\s*0*(\d{1,2})\b", re.I)
 def zite_catchment_code(pcode, parent):
     """Zite's 'Primary Parent Site' is inconsistent: sometimes a code (SO2210CA13),
@@ -247,7 +253,9 @@ def build_quarter(label, start, end_excl, ko_all, zi_all):
     for s in sites:
         la, lo = _coords(s["_lat"], s["_lon"])
         raw_ck = (s["c"] or "").strip()
-        ck = "(catchment not recorded)" if not raw_ck or raw_ck.lower().endswith("none") else raw_ck
+        # Only a real CA code counts as a catchment; anything else (blank, "...none",
+        # or a free-text site/place name) rolls into "(catchment not recorded)".
+        ck = raw_ck.upper() if _CA_CODE.match(raw_ck) else "(catchment not recorded)"
         site_rows.append({"n": s["s"], "r": s["r"], "d": s["d"], "c": ck,
                           "p": s["_partner"], "la": la, "lo": lo,
                           "v": s["v"], "b": s["b"], "_vf": s["_vf"],

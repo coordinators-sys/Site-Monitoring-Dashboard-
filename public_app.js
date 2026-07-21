@@ -411,7 +411,7 @@ function buildGlobalFilterOptions(){
   opt('#gfState', uniq(rows.map(s=>stateOf(s.r))), GF.state=GF.state, t('gf.allstates'));
   opt('#gfRegion', uniq(rows.filter(s=>!GF.state||stateOf(s.r)===GF.state).map(s=>s.r)), GF.region, t('gf.allregions'));
   opt('#gfDistrict', uniq(rows.filter(s=>(!GF.state||stateOf(s.r)===GF.state)&&(!GF.region||s.r===GF.region)).map(s=>s.d)), GF.district, t('gf.alldistricts'));
-  opt('#gfCatchment', uniq(rows.filter(inGeo).map(s=>s.c)), GF.catchment, t('gf.allcatchments'));
+  opt('#gfCatchment', uniq(rows.filter(inGeo).map(s=>s.c)).filter(c=>c!=='(catchment not recorded)'), GF.catchment, t('gf.allcatchments'));
   opt('#gfPartner', uniq(rows.filter(inGeo).map(s=>s.p)), GF.partner, t('gf.allpartners'));
   // sector + severity are fixed lists
   const se=$('#gfSector');
@@ -448,7 +448,8 @@ function applyGlobalFilter(refit){
   GF_LAST=list;
   // live KPI strip
   const cats=new Set(), parts=new Set(); let hh=0, ind=0, sev=0;
-  list.forEach(s=>{ if(s.c) cats.add(s.c); if(s.p) parts.add(s.p); hh+=s.hh||0; ind+=s.ind||0; sev+=s.v; });
+  list.forEach(s=>{ if(s.c && s.c!=='(catchment not recorded)') cats.add(s.c);
+    if(s.p) parts.add(s.p); hh+=s.hh||0; ind+=s.ind||0; sev+=s.v; });
   const avg=list.length?Math.round(sev/list.length*10)/10:0;
   const kpi=(v,l)=>`<div class="kpi"><div class="k-val">${v}</div><div class="k-lab">${esc(l)}</div></div>`;
   $('#gfKpis').innerHTML=kpi(fmt(list.length),t('dk.sites'))+kpi(fmt(cats.size),t('dk.cas'))
