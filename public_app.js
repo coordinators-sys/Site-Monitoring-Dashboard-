@@ -458,7 +458,11 @@ function applyGlobalFilter(refit){
     if(s.p) parts.add(s.p); hh+=s.hh||0; ind+=s.ind||0; sev+=s.v; });
   const avg=list.length?Math.round(sev/list.length*10)/10:0;
   const kpi=(v,l)=>`<div class="kpi"><div class="k-val">${v}</div><div class="k-lab">${esc(l)}</div></div>`;
-  $('#gfKpis').innerHTML=kpi(fmt(list.length),t('dk.sites'))+kpi(fmt(cats.size),t('dk.cas'))
+  // The catchment count is deliberately NOT shown here: on a historical period the live
+  // field data covers fewer catchments than the published total, and an operational
+  // count beside the published figure invites a false comparison. The catchment total
+  // lives in the catchment-analysis table and the map banner, clearly labelled operational.
+  $('#gfKpis').innerHTML=kpi(fmt(list.length),t('dk.sites'))
     +kpi(fmt(parts.size),t('kpi.partners'))+kpi(fmt(hh),t('dk.hh'))
     +kpi(list.length?`<span class="badge ${sevBand(avg)}">${avg}%</span>`:'—',t('dk.sev'));
   // map points (only when the layer is on)
