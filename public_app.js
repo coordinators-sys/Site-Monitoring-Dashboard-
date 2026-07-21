@@ -8,6 +8,11 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
 function bandColor(b){return b==='Severe'?'#D9534F':b==='High'?'#EC6B4D':b==='Moderate'?'#E9A23B':b==='Low'?'#3A8D68':'#9AA5B1';}
 function sevBand(pct){return pct>=55?'Severe':pct>=40?'High':pct>=25?'Moderate':'Low';}
+// Catchment codes are stored full (e.g. SO2401CA10) for the map join, but displayed
+// short (CA10) — the district prefix is redundant next to the district column. Sites
+// whose catchment field held no valid code show a dash.
+function catShow(c){ c=String(c||''); if(!c||c==='(catchment not recorded)') return '—';
+  return c.replace(/^SO\d+/i,''); }
 
 /* ================= LANGUAGE (English / Soomaali) ================= */
 /* Partial, accessibility-focused translation: navigation, headings, controls, KPI
@@ -376,7 +381,7 @@ function siteTip(s,order){
   const secs=(s.sc||[]).map((d,i)=>
     `<span class="sd"><i style="background:${dotColor[d]||'#d4d7d9'}"></i>${esc(order[i]||'')}</span>`).join('');
   return `<div class="site-tip"><b>${esc(s.n)}</b>
-    <div class="meta">${esc(s.d)}, ${esc(s.r)}${s.c?' · '+esc(t('tip.ca'))+' '+esc(s.c):''}</div>
+    <div class="meta">${esc(s.d)}, ${esc(s.r)}${s.c&&s.c!=='(catchment not recorded)'?' · '+esc(t('tip.ca'))+' '+esc(catShow(s.c)):''}</div>
     ${esc(t('tip.severity'))}: <span class="badge ${esc(s.b)}">${s.v}%</span> <b>${esc(t('band.'+s.b))}</b><br>
     ${esc(t('tip.partner'))}: ${esc(s.p||'—')}<br>
     ${esc(t('tip.hh'))}: ${fmt(s.hh)} · ${esc(t('tip.ind'))}: ${fmt(s.ind)}
@@ -399,11 +404,11 @@ function gfFiltered(){ const {rows,order}=opSites(); return {list:rows.filter(s=
 // broader selections above it.
 function buildGlobalFilterOptions(){
   const {rows}=opSites();
-  const opt=(sel,vals,cur,allLabel)=>{
+  const opt=(sel,vals,cur,allLabel,disp)=>{
     const el=$(sel); if(!el) return;
     if(cur && !vals.includes(cur)) cur='';
     el.innerHTML=`<option value="">${esc(allLabel)}</option>`
-      +vals.map(v=>`<option value="${esc(v)}"${v===cur?' selected':''}>${esc(v)}</option>`).join('');
+      +vals.map(v=>`<option value="${esc(v)}"${v===cur?' selected':''}>${esc(disp?disp(v):v)}</option>`).join('');
     el.value=cur;
   };
   const inGeo=s=>(!GF.state||stateOf(s.r)===GF.state)&&(!GF.region||s.r===GF.region)&&(!GF.district||s.d===GF.district);
@@ -411,7 +416,7 @@ function buildGlobalFilterOptions(){
   opt('#gfState', uniq(rows.map(s=>stateOf(s.r))), GF.state=GF.state, t('gf.allstates'));
   opt('#gfRegion', uniq(rows.filter(s=>!GF.state||stateOf(s.r)===GF.state).map(s=>s.r)), GF.region, t('gf.allregions'));
   opt('#gfDistrict', uniq(rows.filter(s=>(!GF.state||stateOf(s.r)===GF.state)&&(!GF.region||s.r===GF.region)).map(s=>s.d)), GF.district, t('gf.alldistricts'));
-  opt('#gfCatchment', uniq(rows.filter(inGeo).map(s=>s.c)).filter(c=>c!=='(catchment not recorded)'), GF.catchment, t('gf.allcatchments'));
+  opt('#gfCatchment', uniq(rows.filter(inGeo).map(s=>s.c)).filter(c=>c!=='(catchment not recorded)'), GF.catchment, t('gf.allcatchments'), catShow);
   opt('#gfPartner', uniq(rows.filter(inGeo).map(s=>s.p)), GF.partner, t('gf.allpartners'));
   // sector + severity are fixed lists
   const se=$('#gfSector');
@@ -427,6 +432,7 @@ const GF_LABELS={state:'gf.state',region:'gf.region',district:'gf.district',catc
 function gfChipText(k){
   if(k==='sector'){ const x=(DATA.sectors||[]).find(s=>s.code===GF.sector); return x?x.name:GF.sector; }
   if(k==='severity') return t('band.'+GF.severity);
+  if(k==='catchment') return catShow(GF.catchment);
   return GF[k];
 }
 function renderGfChips(){
@@ -499,7 +505,7 @@ function renderGfTable(list){
   const rows=[...list].sort((a,b)=>b.v-a.v).slice(0,cap);
   $('#gfTable').innerHTML=rows.length?rows.map(s=>`<tr>
     <td style="font-weight:600">${esc(s.n)}</td><td>${esc(s.d)}</td><td>${esc(s.r)}</td>
-    <td>${esc(s.c||'—')}</td><td>${esc(s.p||'—')}</td>
+    <td>${esc(catShow(s.c))}</td><td>${esc(s.p||'—')}</td>
     <td class="ctr"><span class="badge ${esc(s.b)}">${s.v}%</span></td></tr>`).join('')
     : `<tr><td colspan="6"><p class="empty-note">${esc(t('gf.nomatch'))}</p></td></tr>`;
   $('#gfTableMore').textContent = list.length>cap ? t('gf.capped').replace('{cap}',fmt(cap)).replace('{n}',fmt(list.length)) : '';
@@ -557,7 +563,7 @@ async function renderMap(){
     const {rows,label}=opCatchments();
     const byKey={}; rows.forEach(r=>{ byKey[String(r.catchment).toUpperCase()]=r; });
     const chip=$('#caPeriodChip'); if(chip) chip.textContent=label||'—';
-    const caTip=rec=>`<b>${esc(rec.catchment)} — ${esc(rec.district)}</b><br>${fmt(rec.n)} sites · Avg. severity ${rec.avgSeverity}%`
+    const caTip=rec=>`<b>${esc(catShow(rec.catchment))} — ${esc(rec.district)}</b><br>${fmt(rec.n)} sites · Avg. severity ${rec.avgSeverity}%`
       +`<br>Severe ${rec.Severe} · High ${rec.High} · Moderate ${rec.Moderate} · Low ${rec.Low}`
       +'<br><i>Operational — live field data</i>';
     // 1) shade every catchment that has a published boundary polygon
@@ -646,7 +652,7 @@ function renderCatchmentPanel(rows,geo,label){
     +'ranked by average severity. Severity is the share of applicable indicators scoring Red '
     +'across the sites in that catchment.';
   $('#caTable').innerHTML=sorted.length?sorted.map(c=>`<tr>
-      <td style="font-weight:600">${esc(c.catchment)}</td><td>${esc(c.district)}</td><td>${esc(c.region)}</td>
+      <td style="font-weight:600">${esc(catShow(c.catchment))}</td><td>${esc(c.district)}</td><td>${esc(c.region)}</td>
       <td class="ctr">${fmt(c.n)}</td>
       <td class="ctr"><span class="badge ${sevBand(c.avgSeverity)}">${c.avgSeverity}%</span></td>
       <td class="ctr">${fmt(c.Severe)}</td><td class="ctr">${fmt(c.High)}</td>
@@ -924,7 +930,7 @@ function wireDrawer(){
 let OP_Q=null, OP_DATA=null, OP_LIVE=false;
 function paintOpRows(rows){
   $('#opTable').innerHTML=rows.length?rows.map(c=>`<tr>
-      <td style="font-weight:600">${esc(c.catchment)}</td><td>${esc(c.district)}</td><td>${esc(c.region)}</td>
+      <td style="font-weight:600">${esc(catShow(c.catchment))}</td><td>${esc(c.district)}</td><td>${esc(c.region)}</td>
       <td class="ctr">${fmt(c.n)}</td>
       <td class="ctr"><span class="badge ${sevBand(c.avgSeverity)}">${c.avgSeverity}%</span></td>
       <td class="ctr">${fmt(c.Severe)}</td><td class="ctr">${fmt(c.High)}</td>
