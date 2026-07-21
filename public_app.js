@@ -130,6 +130,19 @@ const PERIODS = (DATA.periods && DATA.periods.length) ? DATA.periods
   : [{id:'Q2 2026', label:DATA.period, full:true, kpi:DATA.kpi, note:''}];
 let CUR_PERIOD = PERIODS[0].id;
 const period = () => PERIODS.find(p=>p.id===CUR_PERIOD) || PERIODS[0];
+// Published analytical payload for the active period. Each period carries its own
+// sectors / indicators / district ranking / findings; fall back to the top-level
+// (Q2) copy for any field a period does not define.
+function PD(){
+  const p=period();
+  return {
+    sectors: p.sectors||DATA.sectors, topRed: p.topRed||DATA.topRed,
+    topGreen: p.topGreen||DATA.topGreen, districts: p.districts||DATA.districts,
+    districtFootnote: p.districtFootnote||DATA.districtFootnote,
+    keyFindings: p.keyFindings||DATA.keyFindings,
+    lcNote: p.lcNote!=null?p.lcNote:DATA.lcNote,
+  };
+}
 function setPeriodChips(){
   const p=period();
   [['#ovPeriodChip',p.id],['#mapPeriodChip',p.id],['#secPeriodChip',p.id],['#distPeriodChip',p.id]]
@@ -219,7 +232,7 @@ function renderOverview(){
   const fc=$('#findingsChip'); if(fc) fc.textContent=p.id;
   const sc=$('#sectorPerfChip'); if(sc) sc.textContent=p.id;
   if(p.full){
-    $('#findingsList').innerHTML=DATA.keyFindings.map(f=>`<div class="finding">
+    $('#findingsList').innerHTML=PD().keyFindings.map(f=>`<div class="finding">
       <div class="flab">${esc(f[0])}</div>
       <div class="fval">${esc(f[1])}</div>
       <div class="fsub">${esc(f[2])}</div></div>`).join('');
@@ -240,8 +253,9 @@ function renderOverview(){
   if(p.full) renderSectorDiverge();
 }
 function renderSectorDiverge(){
-  const max=Math.max(...DATA.sectors.map(s=>Math.max(s.gap,s.cov)));
-  $('#sectorDiverge').innerHTML=DATA.sectors.map(s=>{
+  const S=PD().sectors;
+  const max=Math.max(...S.map(s=>Math.max(s.gap,s.cov)));
+  $('#sectorDiverge').innerHTML=S.map(s=>{
     const gw=s.gap/max*100, cw=s.cov/max*100;
     const icon=DATA.assets.icons[s.code]?`<img class="sec-ic" src="${DATA.assets.icons[s.code]}" alt="">`:'';
     return `<div class="dv-row">
@@ -581,10 +595,10 @@ async function renderMap(){
       +(noShape?`; ${noShape} without GPS appear in the table only.`:'.');
     renderCatchmentPanel(rows,geo,label);
   }else if(!blocked){
-    const byPc={}; DATA.districts.forEach(d=>{ if(d.pc) byPc[d.pc]=d; });
+    const byPc={}; PD().districts.forEach(d=>{ if(d.pc) byPc[d.pc]=d; });
     const fillFor=pc=>{
       const d=byPc[(alias[pc]||pc||'').toUpperCase()];
-      if(!d) return '#E2E5E0';
+      if(!d || (MAP_FILL==='cov'?d.cov:d.gap)==null) return '#E2E5E0';
       return MAP_FILL==='cov' ? (d.cov>=60?'#104E5D':d.cov>=45?'#17677A':d.cov>=25?'#6FAEBD':'#C9E0E6')
                               : bandColor(sevBand(d.gap));
     };
@@ -592,8 +606,9 @@ async function renderMap(){
       const d=byPc[(alias[gd.pc]||gd.pc||'').toUpperCase()];
       const poly=L.polygon(gd.rings.map(swapRing),
         {color:'#fff',weight:.8,fillColor:fillFor(gd.pc),fillOpacity:.6});
+      const gv=d&&d.gap!=null?`Gap ${d.gap}%`:'', cvv=d&&d.cov!=null?`Coverage ${d.cov}%`:'';
       poly.bindTooltip(d
-        ? `<b>${esc(gd.n)}</b><br>${fmt(d.n)} sites assessed · Gap ${d.gap}% / Coverage ${d.cov}%<br><i>Click for full profile</i>`
+        ? `<b>${esc(gd.n)}</b><br>${[gv,cvv].filter(Boolean).join(' / ')||'Ranked this period'}<br><i>Click for full profile</i>`
         : `<b>${esc(gd.n)}</b><br>Not individually reported this period<br><i>Click for operational detail</i>`,{sticky:true});
       // Clicking a district opens its profile drawer; strong border marks the selection.
       poly.on('mouseover',()=>poly.setStyle({weight:2.4,color:'#104E5D'}));
@@ -662,8 +677,9 @@ function renderSectorTabs(){
     $('#topGapsList').innerHTML='<p class="empty-note">Indicator-level gaps are not published for this reporting period.</p>';
     return;
   }
-  SD_CUR=SD_CUR||DATA.sectors[0].code;
-  $('#sdTabs').innerHTML=DATA.sectors.map(s=>{
+  const S=PD().sectors;
+  SD_CUR=(SD_CUR&&S.some(x=>x.code===SD_CUR))?SD_CUR:S[0].code;
+  $('#sdTabs').innerHTML=S.map(s=>{
     const icon=DATA.assets.icons[s.code]?`<img src="${DATA.assets.icons[s.code]}" alt="">`:'';
     return `<button class="sd-tab ${s.code===SD_CUR?'active':''}" data-c="${s.code}">${icon}${esc(s.name)}</button>`;
   }).join('');
@@ -671,9 +687,10 @@ function renderSectorTabs(){
   renderSectorBody();
 }
 function renderSectorBody(){
-  const s=DATA.sectors.find(x=>x.code===SD_CUR);
+  const s=PD().sectors.find(x=>x.code===SD_CUR);
   $('#sdTitle').innerHTML=`${esc(s.name)} <span class="hint">Gap ${s.gap}% · Coverage ${s.cov}%</span>`;
-  const rows=DATA.topRed.concat(DATA.topGreen).filter(r=>r.sector===SD_CUR);
+  const rows=PD().topRed.map(r=>({...r,kind:'red'})).concat(PD().topGreen.map(r=>({...r,kind:'green'})))
+    .filter(r=>r.sector===SD_CUR);
   if(!rows.length){
     $('#sdBody').innerHTML='<p class="empty-note">No indicator-level detail published for this sector this quarter. '
       +'Sector-wide gap and coverage percentages are shown above.</p>';
@@ -683,11 +700,11 @@ function renderSectorBody(){
     <div class="l" title="${esc(r.indicator)}">${esc(r.indicator)}${r.lc?' <span style="color:var(--muted);font-size:10px">(LC)</span>':''}</div>
     <div class="tri-bar"><div class="tri-seg ${r.kind==='red'?'r':'g'}" style="width:${r.pct}%"></div></div>
     <div class="ctr" style="font-weight:700">${r.pct}%</div></div>`).join('')
-    +(rows.some(r=>r.lc)?`<p style="margin:10px 0 0;font-size:11px;color:var(--muted)">${esc(DATA.lcNote)}</p>`:'');
+    +(rows.some(r=>r.lc)&&PD().lcNote?`<p style="margin:10px 0 0;font-size:11px;color:var(--muted)">${esc(PD().lcNote)}</p>`:'');
 }
 function renderTopGaps(){
   if(!period().full) return;   // renderSectorTabs already wrote the unavailable note
-  const rows=[...DATA.topRed].sort((a,b)=>b.pct-a.pct);
+  const rows=[...PD().topRed].sort((a,b)=>b.pct-a.pct);
   $('#topGapsList').innerHTML=rows.map(r=>`<div class="hbar-row">
     <div class="l" title="${esc(r.indicator)}">${esc(r.indicator)}</div>
     <div class="hbar-track"><div class="hbar-fill" style="width:${r.pct}%;background:var(--gap)"></div></div>
@@ -700,7 +717,13 @@ function sortDistricts(rows){
   const num=k=>(k==='n'||k==='gap'||k==='cov');
   return [...rows].sort((a,b)=>{
     let av=a[DSORT.k], bv=b[DSORT.k];
-    if(num(DSORT.k)) return (av-bv)*DSORT.dir;
+    if(num(DSORT.k)){
+      // nulls (values the report didn't publish for this district) always sort last.
+      if(av==null && bv==null) return 0;
+      if(av==null) return 1;
+      if(bv==null) return -1;
+      return (av-bv)*DSORT.dir;
+    }
     return String(av).localeCompare(String(bv))*DSORT.dir;
   });
 }
@@ -710,29 +733,34 @@ function paintSortArrows(){
     a.textContent = th.dataset.k===DSORT.k ? (DSORT.dir<0?'▼':'▲') : '';
   });
 }
-const DIST_ROWS=()=>[...DATA.districts];
+const DIST_ROWS=()=>[...PD().districts];
 function paintDistrictRows(rows){
+  const dash='<span class="dash">—</span>';
   $('#distTable').innerHTML=rows.length?rows.map(d=>{
-    const band=sevBand(d.gap);
+    const gapCell = d.gap==null ? dash : `<span class="badge ${sevBand(d.gap)}">${d.gap}%</span>`;
+    const covCell = d.cov==null ? dash : `${d.cov}%`;
     return `<tr class="rowlink" data-dist="${esc(d.district)}">
       <td style="font-weight:600">${esc(d.district)}</td><td>${esc(d.region)}</td>
       <td class="ctr">${fmt(d.n)}</td>
-      <td class="ctr"><span class="badge ${band}">${d.gap}%</span></td>
-      <td class="ctr">${d.cov}%</td>
+      <td class="ctr">${gapCell}</td>
+      <td class="ctr">${covCell}</td>
       <td class="ctr chev">›</td>
     </tr>`;
   }).join('') : `<tr><td colspan="6"><p class="empty-note">No districts match this filter.</p></td></tr>`;
   $$('#distTable tr.rowlink').forEach(tr=>{
     tr.tabIndex=0;
-    const go=async()=>{ const name=tr.dataset.dist, pub=DATA.districts.find(x=>x.district===name);
+    const go=async()=>{ const name=tr.dataset.dist, pub=PD().districts.find(x=>x.district===name);
       await ensureOperational(); openDistrictDrawer(name, pub, tr); };
     tr.addEventListener('click',go);
     tr.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
   });
 }
 function renderDistricts(){
-  $('#partnerChips').innerHTML=DATA.partners.map(p=>
-    `<span class="pub-chip-sm" style="padding:5px 11px;font-size:12px">${esc(p)}</span>`).join('');
+  // Partner names are published for Q2; the Q1 report gives only a count (9), not names.
+  const pk=period().kpi.partners;
+  $('#partnerChips').innerHTML = period().id==='Q2 2026'
+    ? DATA.partners.map(p=>`<span class="pub-chip-sm" style="padding:5px 11px;font-size:12px">${esc(p)}</span>`).join('')
+    : `<span style="font-size:12.5px;color:var(--ink-2)">${fmt(pk)} reporting partners assessed sites this period; individual partner names were not published in the ${esc(period().id)} report.</span>`;
   renderOperational().catch(e=>console.error('[public dashboard] "operational" failed:', e));
   if(periodBlocked('#distPeriodNote')){
     $('#distTable').innerHTML='<tr><td colspan="6"><p class="empty-note">District rankings are not '
@@ -761,7 +789,7 @@ function renderDistricts(){
     };
   });
   draw();
-  $('#distFootnote').innerHTML=DATA.districtFootnote;
+  $('#distFootnote').innerHTML=PD().districtFootnote;
 }
 
 /* ================= DISTRICT PROFILE DRAWER ================= */
@@ -980,7 +1008,7 @@ function metaHeader(title){
   const p=period();
   return [['CCCM Cluster Somalia — Site Monitoring Dashboard'],[title],
     ['Status','PUBLISHED'],['Reporting period', p.label],
-    ['Data source', DATA.source],['Generated', DATA.generated],
+    ['Data source', p.source||DATA.source],['Generated', DATA.generated],
     ['Contact', DATA.contact.im],['Methodology','See the About the Data page'],[]];
 }
 function renderDownloads(){
@@ -999,10 +1027,10 @@ function renderDownloads(){
     items.push(
       ['District summary',()=>csvDownload(slug+'_district_summary.csv',[...metaHeader('District summary'),
         ['District','Region','Sites','Gap %','Coverage %','Severe','High','Moderate','Low'],
-        ...DATA.districts.map(d=>[d.district,d.region,d.n,d.gap,d.cov,
+        ...PD().districts.map(d=>[d.district,d.region,d.n==null?'':d.n,d.gap==null?'':d.gap,d.cov==null?'':d.cov,
           d.bands?d.bands.Severe:'',d.bands?d.bands.High:'',d.bands?d.bands.Moderate:'',d.bands?d.bands.Low:''])])],
       ['Sector-gap table',()=>csvDownload(slug+'_sector_gaps.csv',[...metaHeader('Sector gaps'),
-        ['Sector','Gap %','Coverage %'],...DATA.sectors.map(s=>[s.name,s.gap,s.cov])])]);
+        ['Sector','Gap %','Coverage %'],...PD().sectors.map(s=>[s.name,s.gap,s.cov])])]);
   }
   items.push(['Methodology note',()=>csvDownload(slug+'_methodology_note.csv',[...metaHeader('Methodology note'),
     ['Section','Content'],['Purpose',DATA.about.purpose],['Severity definition',DATA.about.severity],
@@ -1020,9 +1048,9 @@ function renderAbout(){
   const a=DATA.about;
   $('#mPurpose').innerHTML=`<p>${esc(a.purpose)}</p>`;
   $('#mSources').innerHTML=`<p><b>Reporting period shown:</b> ${esc(period().label)}</p>
-    <p><b>Source:</b> ${esc(DATA.source)}</p>
+    <p><b>Source:</b> ${esc(period().source||DATA.source)}</p>
     <p><b>Data sources:</b> CCCM partner site-monitoring submissions, reported quarterly.</p>
-    <p><b>Periods available:</b> ${PERIODS.map(p=>esc(p.id)+(p.full?'':' (headline totals only)')).join(' · ')}. `
+    <p><b>Periods available:</b> ${PERIODS.map(p=>esc(p.id)).join(' · ')} — each shown from its own published national report. `
     +`Use the reporting-period selector in the header to switch.</p>`;
   $('#mSeverity').innerHTML=`<p>${esc(a.severity)}</p>`;
   $('#mLimits').innerHTML=`<ul>${a.limits.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>`;

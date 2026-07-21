@@ -22,6 +22,7 @@ Writes: public/index.html
 import base64, json, os, re, sys
 import pandas as pd
 import published_data as P
+import published_q1 as Q1P
 
 ICON_FILES = {"CCCM": "CCCM icon.png", "Prot": "Protection.png", "CP": "CP.png",
               "GBV": "GBV.png", "HLP": "HLP.png", "NFI": "Shelter SNFI.png",
@@ -53,6 +54,37 @@ PCODE_BY_NAME = {"Afmadow": "SO2801", "Xudur": "SO2501", "Baardheere": "SO2802",
 for d in districts:
     d["pc"] = PCODE_BY_NAME.get(d["district"])
 
+# Q1 2026 published district ranking (from published_q1.py). n/bands are None because
+# the Q1 report did not publish per-district site counts or severity bands on its
+# summary page; gap/cov are shown where the district was ranked, a dash otherwise.
+q1_districts = [{"district": d["district"], "region": d["region"], "n": d["n"],
+                 "gap": d["gap"], "cov": d["cov"], "bands": d["bands"],
+                 "pc": PCODE_BY_NAME.get(d["district"])} for d in Q1P.DISTRICTS_RANKED]
+
+q2_full = {
+    "sectors": P.SECTORS, "topRed": P.TOP_RED, "topGreen": P.TOP_GREEN,
+    "lcNote": P.LC_SAMPLE_NOTE, "districts": districts, "keyFindings": P.KEY_FINDINGS,
+    "districtFootnote": (
+        f"{len(districts)} districts had at least 10 assessed sites this quarter and are "
+        f"eligible for national comparison. {P.DISTRICTS_BELOW_THRESHOLD_N} further "
+        f"districts ({P.DISTRICTS_BELOW_THRESHOLD_SITES} sites combined) fell below that "
+        f"threshold and are not individually ranked. Severity band counts (Severe/High/"
+        f"Moderate/Low) are shown only where published at district level; a dash means "
+        f"the published report did not disclose that breakdown for this district. "
+        f"Kahda and Daynile are reported jointly as \"Mogadishu\" for severity bands in "
+        f"the published map (341 sites: 153 Severe · 150 High · 22 Moderate · 16 Low)."),
+}
+q1_full = {
+    "sectors": Q1P.SECTORS, "topRed": Q1P.TOP_RED, "topGreen": Q1P.TOP_GREEN,
+    "lcNote": "", "districts": q1_districts, "keyFindings": Q1P.KEY_FINDINGS,
+    "districtFootnote": (
+        "Q1 2026 district ranking from the published national report summary page. "
+        "The union of the report's top-10 highest-gap and top-10 highest-coverage "
+        "districts is the 17 districts assessed. Gap % and Coverage % are shown where "
+        "the district was ranked in that dimension; a dash means it was not. Per-district "
+        "site counts were not published at that granularity."),
+}
+
 data = {
     "kpi": P.KPI,
     "period": P.PERIOD,
@@ -69,22 +101,20 @@ data = {
               "displacement sites."),
     "keyFindings": P.KEY_FINDINGS,
     "q1": P.Q1,
-    # Reporting periods the user can select. Q2 2026 is the only period the Cluster has
-    # published at analytical granularity; Q1 2026 appears in the same report only as
-    # headline coverage totals (p.3 / p.5 tables), so it is marked full=False and the
-    # sector / district / indicator surfaces say so rather than silently showing Q2 data
-    # under a Q1 label.
+    # Both Q1 and Q2 2026 are now full published periods, each carrying its own sector
+    # gaps, top-10 indicators, district ranking and key findings from its published
+    # national report. The renderers read the active period's payload, so switching the
+    # selector re-renders every analytical surface with that quarter's published data.
     "periods": [
-        {"id": "Q2 2026", "label": P.PERIOD, "full": True, "kpi": P.KPI, "note": ""},
-        {"id": "Q1 2026", "label": "Q1 2026 (January–March)", "full": False,
-         "kpi": {"sites": P.Q1["sites"], "catchments": P.Q1["catchments"],
-                 "districts": P.Q1["districts"], "partners": P.Q1["partners"],
-                 "hhs": P.Q1["hhs"], "individuals": P.Q1["individuals"]},
-         "note": ("For Q1 2026 the published report discloses headline coverage totals only. "
-                  "Sector gap percentages, district rankings and indicator-level results were "
-                  "not published at that granularity for Q1, so those sections are not "
-                  "available for this period. The live Operational Snapshot does cover Q1 "
-                  "2026, but it is live field data and must not be quoted as a published figure.")},
+        {"id": "Q2 2026", "label": P.PERIOD, "full": True, "kpi": P.KPI, "note": "",
+         "source": P.SOURCE, **q2_full},
+        {"id": "Q1 2026", "label": Q1P.PERIOD, "full": True, "note": "",
+         "source": Q1P.SOURCE,
+         "kpi": {"sites": Q1P.KPI["sites"], "catchments": Q1P.KPI["catchments"],
+                 "districts": Q1P.KPI["districts"], "partners": Q1P.KPI["partners"],
+                 "hhs": Q1P.KPI["hhs"], "individuals": Q1P.KPI["individuals"],
+                 "severity": Q1P.KPI["severity"]},
+         **q1_full},
     ],
     "coverageNote": ("Direct trend comparison is not recommended because the sites assessed "
                      "in Q1 and Q2 2026 were not the same locations — fewer sites and "
@@ -94,15 +124,7 @@ data = {
     "topGreen": P.TOP_GREEN,
     "lcNote": P.LC_SAMPLE_NOTE,
     "districts": districts,
-    "districtFootnote": (
-        f"{len(districts)} districts had at least 10 assessed sites this quarter and are "
-        f"eligible for national comparison. {P.DISTRICTS_BELOW_THRESHOLD_N} further "
-        f"districts ({P.DISTRICTS_BELOW_THRESHOLD_SITES} sites combined) fell below that "
-        f"threshold and are not individually ranked. Severity band counts (Severe/High/"
-        f"Moderate/Low) are shown only where published at district level; a dash means "
-        f"the published report did not disclose that breakdown for this district. "
-        f"Kahda and Daynile are reported jointly as \"Mogadishu\" for severity bands in "
-        f"the published map (341 sites: 153 Severe · 150 High · 22 Moderate · 16 Low)."),
+    "districtFootnote": q2_full["districtFootnote"],
     "partners": P.PARTNERS,
     "about": {
         "purpose": ("This dashboard summarises the CCCM Cluster's quarterly site "
@@ -160,14 +182,21 @@ check(data["kpi"]["catchments"] == 36, "KPI catchments != 36")
 check(data["kpi"]["districts"] == 16, "KPI districts != 16")
 check(len(data["partners"]) == 7, "partner list length != 7")
 check(data["q1"]["sites"] == 1902, "Q1 sites != 1902")
-# exactly one period may claim analytical (full) granularity, and its KPIs must be the
-# published Q2 set — this is what stops a future edit quietly promoting Q1 to "full".
-_full = [p for p in data["periods"] if p["full"]]
-check(len(_full) == 1, "expected exactly one full-granularity period")
-check(_full and _full[0]["kpi"]["sites"] == 1275, "full period KPI sites != 1275")
+# Every period must carry a complete published payload that reconciles to its own KPI.
+_byid = {p["id"]: p for p in data["periods"]}
+check(_byid.get("Q2 2026", {}).get("kpi", {}).get("sites") == 1275, "Q2 period sites != 1275")
+check(_byid.get("Q1 2026", {}).get("kpi", {}).get("sites") == 1902, "Q1 period sites != 1902")
+check(_byid.get("Q1 2026", {}).get("kpi", {}).get("districts") == 17, "Q1 districts != 17")
 for _p in data["periods"]:
     check(_p["kpi"]["sites"] > 0, f"period {_p['id']} has no site count")
-    check(_p["full"] or _p["note"], f"period {_p['id']} is partial but carries no explanation")
+    check(len(_p.get("sectors", [])) == 12, f"period {_p['id']} does not have 12 sectors")
+    check(len(_p.get("districts", [])) >= 1, f"period {_p['id']} has no districts")
+    for _s in _p["sectors"]:
+        check(0 <= _s["gap"] <= 100 and 0 <= _s["cov"] <= 100, f"{_p['id']} sector {_s['name']} pct out of range")
+    # Q1's district union must equal its 17-district KPI.
+    if _p["id"] == "Q1 2026":
+        check(len(_p["districts"]) == _p["kpi"]["districts"],
+              "Q1 district-ranking count does not equal the 17-district KPI")
 for d in districts:
     if d["bands"]:
         check(sum(d["bands"].values()) == d["n"],
