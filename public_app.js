@@ -885,7 +885,6 @@ function openDistrictDrawer(name, pub, trigger){
       <button class="collapse-btn" id="opDetailToggle" aria-expanded="false" aria-controls="opDetailBody">
         <span><span class="cr">▸</span> ${esc(t('d.viewop'))}</span><span class="op-badge">OPERATIONAL</span></button>
       <div id="opDetailBody" hidden style="margin-top:12px">
-        <p class="warn">${esc(t('d.opwarn'))}</p>
         <div id="opDetailInner"></div>
       </div></div>`;
   $('#drawerBody').innerHTML=html;
