@@ -113,6 +113,21 @@ def zite_district_to_pcode(name):
 zmap = json.load(open("zite_map.json", encoding="utf-8"))
 short2path = {k.split("/")[-1]: k for k in bd.INDICATORS}
 
+_CA_NUM = re.compile(r"(?:catchment\s*area|^ca)\s*[-#]?\s*0*(\d{1,2})\b", re.I)
+def zite_catchment_code(pcode, parent):
+    """Zite's 'Primary Parent Site' is inconsistent: sometimes a code (SO2210CA13),
+    sometimes 'Catchment Area 13', sometimes a free-text place name. Normalise the
+    'Catchment Area N' form to the pcode-prefixed CA code so it joins to the boundary
+    file; leave genuine free-text names untouched (they get a centroid marker instead
+    of a polygon on the map). Never invents a code where none is implied."""
+    p = str(parent or "").strip()
+    if not p or p.lower() in ("nan", "none"):
+        return ""
+    m = _CA_NUM.search(p)
+    if m and pcode:
+        return f"{pcode}CA{int(m.group(1)):02d}"
+    return p
+
 KD = "group_incident_basic/date_entry"
 KSITE, KSITE2 = "group_general_info/final_site_name", "group_general_info/site_name"
 KNEW, KOTH = "group_general_info/site_name_new", "group_general_info/site_name_other"
@@ -173,7 +188,8 @@ def build_quarter(label, start, end_excl, ko_all, zi_all):
     if not zi.empty:
         zn[DCOL] = zi["Region Information/Region Name"].map(zite_district_to_pcode)
         zn[RCOL] = zn[DCOL].map(lambda d: dist_region.get(d, ""))
-        zn[CCOL] = zi["Site Information/Primary Parent Site"]
+        zn[CCOL] = [zite_catchment_code(pc, par) for pc, par in
+                    zip(zn[DCOL].tolist(), zi["Site Information/Primary Parent Site"].tolist())]
         zn["group_demographic_info/hhs"] = zi.get(
             "DEMOGRAPHIC INFO/How many families are currently residing at the site? [Most Recent Value]")
         zn["group_demographic_info/inds"] = zi.get(
@@ -210,43 +226,10 @@ def build_quarter(label, start, end_excl, ko_all, zi_all):
     if not sites:
         return _EMPTY
 
-    cagg = defaultdict(lambda: {"n": 0, "sev_sum": 0.0, "Severe": 0, "High": 0,
-                                 "Moderate": 0, "Low": 0, "district": "", "region": ""})
-    dagg = defaultdict(lambda: {"n": 0, "sev_sum": 0.0, "Severe": 0, "High": 0,
-                                 "Moderate": 0, "Low": 0, "region": ""})
-    for s in sites:
-        raw_ck = (s["c"] or "").strip()
-        ck = "(catchment not recorded)" if not raw_ck or raw_ck.lower().endswith("none") else raw_ck
-        a = cagg[ck]
-        a["n"] += 1; a["sev_sum"] += s["_vf"]; a[s["b"]] += 1
-        a["district"] = s["d"]; a["region"] = s["r"]
-        b = dagg[s["d"] or "(district not recorded)"]
-        b["n"] += 1; b["sev_sum"] += s["_vf"]; b[s["b"]] += 1; b["region"] = s["r"]
-
-    catchments = [{"catchment": c, "district": a["district"], "region": a["region"],
-                   "n": a["n"], "avgSeverity": round(a["sev_sum"] / a["n"], 1),
-                   "Severe": a["Severe"], "High": a["High"], "Moderate": a["Moderate"], "Low": a["Low"]}
-                  for c, a in cagg.items()]
-    catchments.sort(key=lambda x: -x["avgSeverity"])
-    districts = [{"district": d, "region": a["region"], "n": a["n"],
-                  "avgSeverity": round(a["sev_sum"] / a["n"], 1),
-                  "Severe": a["Severe"], "High": a["High"], "Moderate": a["Moderate"], "Low": a["Low"]}
-                 for d, a in dagg.items()]
-    districts.sort(key=lambda x: -x["avgSeverity"])
-
-    hhs = int(sum(s["_hh"] or 0 for s in sites))
-    inds = int(sum(s["_ind"] or 0 for s in sites))
-    partners = len(set(s["_partner"] for s in sites if s["_partner"] and s["_partner"] != "nan"))
-    kpi = {"sites": len(sites), "catchments": len(cagg), "districts": len(dagg),
-           "partners": partners, "hhs": hhs, "individuals": inds}
-
-    # Site-level records, added at the Coordinator's explicit written instruction and
-    # matching the precedent set by the published Q1 2026 report, whose annex lists
-    # every assessed site with name, catchment and severity. Coordinates are rounded
-    # to 4 dp (~11 m) — enough to place a point, not to pinpoint a shelter — and
-    # sanity-checked against Somalia's bounding box: enumerator GPS errors (swapped
-    # fields, degenerate values like lon=2°) otherwise stretch the map across half a
-    # continent. Out-of-bounds pairs are nulled, never "corrected" by guessing.
+    # Coordinates rounded to 4 dp (~11 m) — enough to place a point, not to pinpoint a
+    # shelter — and sanity-checked against Somalia's bounding box: enumerator GPS errors
+    # (swapped fields, degenerate values like lon=2°) otherwise stretch the map across
+    # half a continent. Out-of-bounds pairs are nulled, never "corrected" by guessing.
     def _coords(la, lo):
         try:
             la, lo = float(la), float(lo)
@@ -257,15 +240,56 @@ def build_quarter(label, start, end_excl, ko_all, zi_all):
         if not (-2.0 <= la <= 12.5 and 40.5 <= lo <= 51.5):
             return None, None
         return round(la, 4), round(lo, 4)
+
+    # Site-level records first; catchment/district rollups are derived FROM them so the
+    # catchment key on a point and on its aggregate always agree.
     site_rows = []
     for s in sites:
         la, lo = _coords(s["_lat"], s["_lon"])
-        site_rows.append({"n": s["s"], "r": s["r"], "d": s["d"], "c": s["c"] or "",
+        raw_ck = (s["c"] or "").strip()
+        ck = "(catchment not recorded)" if not raw_ck or raw_ck.lower().endswith("none") else raw_ck
+        site_rows.append({"n": s["s"], "r": s["r"], "d": s["d"], "c": ck,
                           "p": s["_partner"], "la": la, "lo": lo,
-                          "v": s["v"], "b": s["b"],
+                          "v": s["v"], "b": s["b"], "_vf": s["_vf"],
                           "hh": int(s["_hh"]) if s["_hh"] else None,
                           "ind": int(s["_ind"]) if s["_ind"] else None, "sc": s["sc"]})
-    with_gps = sum(1 for x in site_rows if x["la"] is not None and x["lo"] is not None)
+
+    cagg = defaultdict(lambda: {"n": 0, "sev_sum": 0.0, "Severe": 0, "High": 0, "Moderate": 0,
+                                 "Low": 0, "district": "", "region": "", "la": 0.0, "lo": 0.0, "g": 0})
+    dagg = defaultdict(lambda: {"n": 0, "sev_sum": 0.0, "Severe": 0, "High": 0, "Moderate": 0,
+                                 "Low": 0, "region": ""})
+    for x in site_rows:
+        a = cagg[x["c"]]
+        a["n"] += 1; a["sev_sum"] += x["_vf"]; a[x["b"]] += 1
+        a["district"] = x["d"]; a["region"] = x["r"]
+        if x["la"] is not None and x["lo"] is not None:
+            a["la"] += x["la"]; a["lo"] += x["lo"]; a["g"] += 1
+        b = dagg[x["d"] or "(district not recorded)"]
+        b["n"] += 1; b["sev_sum"] += x["_vf"]; b[x["b"]] += 1; b["region"] = x["r"]
+
+    catchments = [{"catchment": c, "district": a["district"], "region": a["region"], "n": a["n"],
+                   "avgSeverity": round(a["sev_sum"] / a["n"], 1),
+                   "Severe": a["Severe"], "High": a["High"], "Moderate": a["Moderate"], "Low": a["Low"],
+                   # centroid of the catchment's GPS'd sites — lets the map draw a point
+                   # for catchments that have no boundary polygon in the geometry file.
+                   "la": round(a["la"] / a["g"], 4) if a["g"] else None,
+                   "lo": round(a["lo"] / a["g"], 4) if a["g"] else None}
+                  for c, a in cagg.items() if c != "(catchment not recorded)"]
+    catchments.sort(key=lambda x: -x["avgSeverity"])
+    districts = [{"district": d, "region": a["region"], "n": a["n"],
+                  "avgSeverity": round(a["sev_sum"] / a["n"], 1),
+                  "Severe": a["Severe"], "High": a["High"], "Moderate": a["Moderate"], "Low": a["Low"]}
+                 for d, a in dagg.items()]
+    districts.sort(key=lambda x: -x["avgSeverity"])
+
+    for x in site_rows:
+        del x["_vf"]   # internal only, not part of the payload
+    hhs = int(sum(s["_hh"] or 0 for s in sites))
+    inds = int(sum(s["_ind"] or 0 for s in sites))
+    partners = len(set(s["_partner"] for s in sites if s["_partner"] and s["_partner"] != "nan"))
+    kpi = {"sites": len(sites), "catchments": len(catchments), "districts": len(dagg),
+           "partners": partners, "hhs": hhs, "individuals": inds}
+    with_gps = sum(1 for x in site_rows if x["la"] is not None)
     print(f"  [{label}] {kpi['sites']} sites -> {kpi['catchments']} catchments, "
           f"{kpi['districts']} districts, {kpi['partners']} partners "
           f"({with_gps} sites carry GPS)")

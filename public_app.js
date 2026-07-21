@@ -30,6 +30,10 @@ const I18N={
   'd.published':'Published summary','d.operational':'Operational detail (unreconciled)',
   'd.nolive':'No live operational detail for this district in the selected period.',
   'd.opengeo':'Show on map','close':'Close',
+  'd.pubnote':'Officially published, Information-Management reviewed figures for this district.',
+  'd.notpublished':'This district was not individually published for the selected period. Open the provisional operational detail below for live field figures.',
+  'd.viewop':'View provisional operational detail',
+  'd.opwarn':'UNRECONCILED — live field data, not Information-Management reviewed and not comparable with the published figures above. Do not cite for donor reporting.',
   'h.sectorperf':'Sector Performance','h.findings':'Key Findings','h.opsnapshot':'Operational Snapshot',
   'h.caanalysis':'Catchment analysis','h.partners':'Reporting partners',
   'label.period':'Reporting period','badge.published':'PUBLISHED RESULTS','label.view':'View',
@@ -43,7 +47,7 @@ const I18N={
   'opt.allregions':'All regions','opt.alldistricts':'All districts',
   'tip.severity':'Severity','tip.partner':'Partner','tip.hh':'Households','tip.ind':'Individuals','tip.ca':'Catchment',
   'band.Severe':'Severe','band.High':'High','band.Moderate':'Moderate','band.Low':'Low',
-  'legend.notreported':'Not reported','legend.notassessed':'Not assessed this period',
+  'legend.notreported':'Not reported','legend.notassessed':'Not assessed this period','map.loading':'Loading map…',
   'sites.of':'{a} of {b} sites plotted (sites without GPS are listed in data but cannot be mapped)',
  },
  so:{
@@ -59,6 +63,10 @@ const I18N={
   'd.published':'Kooban la daabacay','d.operational':'Faahfaahin hawleed (aan la xaqiijin)',
   'd.nolive':'Ma jiro faahfaahin hawleed oo toos ah degmadan muddada la doortay.',
   'd.opengeo':'Ku muuji khariidada','close':'Xir',
+  'd.pubnote':'Tirooyin rasmi ah oo la daabacay, oo Maaraynta Xogta dib u eegtay degmadan.',
+  'd.notpublished':'Degmadan si gaar ah looma daabicin muddada la doortay. Fur faahfaahinta hawleed ee ku-meel-gaadhka ah ee hoose.',
+  'd.viewop':'Fiiri faahfaahinta hawleed ee ku-meel-gaadhka ah',
+  'd.opwarn':'AAN LA XAQIIJIN — xog goobeed toos ah, aan Maaraynta Xogta dib u eegin, lamana barbardhigi karo tirooyinka la daabacay ee kor ku xusan. Ha u soo xigan warbixinta deeq-bixiyaha.',
   'h.sectorperf':'Waxqabadka Qaybaha','h.findings':'Natiijooyinka Muhiimka ah','h.opsnapshot':'Muuqaal Hawleed',
   'h.caanalysis':'Falanqaynta Aagagga (CA)','h.partners':'Wada-hawlgalayaasha Warbixinaya',
   'label.period':'Muddada Warbixinta','badge.published':'NATIIJOOYIN LA DAABACAY','label.view':'Muuqaal',
@@ -72,7 +80,7 @@ const I18N={
   'opt.allregions':'Dhammaan gobollada','opt.alldistricts':'Dhammaan degmooyinka',
   'tip.severity':'Darnaanta','tip.partner':'Wada-hawlgale','tip.hh':'Qoysas','tip.ind':'Shakhsiyaad','tip.ca':'Aagga (CA)',
   'band.Severe':'Daran','band.High':'Sare','band.Moderate':'Dhexdhexaad','band.Low':'Hooseeya',
-  'legend.notreported':'Lama soo sheegin','legend.notassessed':'Muddadan lama qiimayn',
+  'legend.notreported':'Lama soo sheegin','legend.notassessed':'Muddadan lama qiimayn','map.loading':'Khariidada waa la soo rarayaa…',
   'sites.of':'{a} ka mid ah {b} goobood ayaa la muujiyay (kuwa aan GPS lahayn lama muujin karo)',
  }
 };
@@ -127,11 +135,22 @@ function renderPeriodSelector(){
 }
 
 /* ================= TAB NAV ================= */
-$$('.tab').forEach(b=>b.addEventListener('click',()=>{
-  $$('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+/* Single source of truth for which view is active — used by tab clicks and by the
+   drawer's "Show on map". Updates the active class, aria-current and the visible view
+   together so the underline can never lag on a previous tab. */
+function activateView(view){
+  $$('.tab').forEach(x=>{
+    const on = x.dataset.view===view;
+    x.classList.toggle('active', on);
+    if(on) x.setAttribute('aria-current','page'); else x.removeAttribute('aria-current');
+    if(x.blur) x.blur();
+  });
   $$('.view').forEach(v=>v.classList.remove('active'));
-  $('#view-'+b.dataset.view).classList.add('active');
-  if(b.dataset.view==='map') renderMap().catch(e=>console.error('[public dashboard] "map" failed:', e));
+  const el=$('#view-'+view); if(el) el.classList.add('active');
+  if(view==='map') renderMap().catch(e=>console.error('[public dashboard] "map" failed:', e));
+}
+$$('.tab').forEach(b=>b.addEventListener('click',()=>{
+  activateView(b.dataset.view);
   window.scrollTo({top:0,behavior:'smooth'});
 }));
 
@@ -150,16 +169,27 @@ function renderOverview(){
     return `${fmt(Math.abs(d))} ${d<0?'fewer':'more'} than ${other.id}`;
   };
   const cards=[
-    {v:fmt(K.sites),l:t('kpi.sites'),s:cmp('sites')},
-    {v:fmt(K.catchments),l:t('kpi.cas'),s:cmp('catchments')},
-    {v:fmt(K.districts),l:t('kpi.districts'),s:cmp('districts')},
-    {v:fmt(K.partners),l:t('kpi.partners'),s:cmp('partners')},
-    {v:fmt(K.hhs),l:t('kpi.hhs'),s:cmp('hhs')},
-    {v:fmt(K.individuals),l:t('kpi.ind'),s:cmp('individuals')},
+    {v:fmt(K.sites),l:t('kpi.sites'),s:cmp('sites'),view:'map',act:'sites'},
+    {v:fmt(K.catchments),l:t('kpi.cas'),s:cmp('catchments'),view:'map',act:'ca'},
+    {v:fmt(K.districts),l:t('kpi.districts'),s:cmp('districts'),view:'districts'},
+    {v:fmt(K.partners),l:t('kpi.partners'),s:cmp('partners'),view:'districts',act:'partners'},
+    {v:fmt(K.hhs),l:t('kpi.hhs'),s:cmp('hhs'),view:'districts'},
+    {v:fmt(K.individuals),l:t('kpi.ind'),s:cmp('individuals'),view:'districts'},
   ];
-  $('#kpiRow').innerHTML=cards.map(c=>`<div class="kpi">
+  $('#kpiRow').innerHTML=cards.map((c,i)=>`<div class="kpi clickable" role="button" tabindex="0"
+    data-view="${c.view}"${c.act?` data-act="${c.act}"`:''} aria-label="${esc(c.l)}: ${esc(String(c.v))}">
     <div class="k-val">${c.v}</div><div class="k-lab">${esc(c.l)}</div>
     ${c.s?`<div class="k-sub">${esc(c.s)}</div>`:''}</div>`).join('');
+  $$('#kpiRow .kpi').forEach(k=>{
+    const go=()=>{ activateView(k.dataset.view);
+      if(k.dataset.act==='sites'){ SHOW_SITES=true; renderMap().then(renderSitePoints); }
+      else if(k.dataset.act==='ca'){ MAP_FILL='ca'; renderMap(); }
+      else if(k.dataset.act==='partners'){ const el=$('#partnerChips'); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); }
+      window.scrollTo({top:0,behavior:'smooth'});
+    };
+    k.addEventListener('click',go);
+    k.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
+  });
   const cn=$('#kpiCaveat');
   if(cn) cn.textContent = other ? 'Differences versus '+other.id+' reflect which locations were assessed each period — not a change in conditions on the ground.' : '';
 
@@ -226,9 +256,13 @@ function opCatchments(){
 function buildMapShell(){
   const map=L.map('pubMap',{zoomSnap:.5});
   window.__pubMap=map;
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  const ld=$('#mapLoading'); if(ld) ld.hidden=false;   // shown until first tiles arrive
+  const tiles=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
     maxZoom:17,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
   }).addTo(map);
+  tiles.on('load',()=>{ const l=$('#mapLoading'); if(l) l.hidden=true; });
+  // Safety: never leave the overlay stuck if the 'load' event is missed.
+  setTimeout(()=>{ const l=$('#mapLoading'); if(l) l.hidden=true; },6000);
   MAP_D_LAYER=L.layerGroup().addTo(map);
   MAP_CA_LAYER=L.layerGroup().addTo(map);
   SITE_LAYER=L.layerGroup().addTo(map);
@@ -361,7 +395,7 @@ async function renderMap(){
   $('#caBanner').hidden=!caMode;
   $('#caPanel').hidden=!caMode;
   $('#mapIntro').textContent=caMode
-    ? 'Catchment severity from the live operational feed. Catchments without published boundaries are listed in the table below but cannot be shaded.'
+    ? 'Catchment severity from the live operational feed. Catchments with a published boundary are shaded as areas; the rest are shown as points at the centre of their assessed sites.'
     : 'District severity from published results. Grey districts were not individually reported.';
 
   if(caMode){
@@ -369,27 +403,43 @@ async function renderMap(){
     const {rows,label}=opCatchments();
     const byKey={}; rows.forEach(r=>{ byKey[String(r.catchment).toUpperCase()]=r; });
     const chip=$('#caPeriodChip'); if(chip) chip.textContent=label||'—';
-    let drawn=0;
+    const caTip=rec=>`<b>${esc(rec.catchment)} — ${esc(rec.district)}</b><br>${fmt(rec.n)} sites · Avg. severity ${rec.avgSeverity}%`
+      +`<br>Severe ${rec.Severe} · High ${rec.High} · Moderate ${rec.Moderate} · Low ${rec.Low}`
+      +'<br><i>Operational — unreconciled</i>';
+    // 1) shade every catchment that has a published boundary polygon
+    const shaded=new Set();
+    let asPoly=0;
     (geo.catchments||[]).forEach(gc=>{
       const rec=byKey[caKey(gc.pc,gc.ca)];
       const poly=L.polygon(gc.rings.map(swapRing),{
         color:'#fff',weight:.8,
         fillColor:rec?bandColor(sevBand(rec.avgSeverity)):'#E2E5E0',
-        fillOpacity:rec?.65:.25});
-      poly.bindTooltip(rec
-        ? `<b>${esc(gc.ca)} — ${esc(gc.d)}</b><br>${fmt(rec.n)} sites · Avg. severity ${rec.avgSeverity}%`
-          +`<br>Severe ${rec.Severe} · High ${rec.High} · Moderate ${rec.Moderate} · Low ${rec.Low}`
-          +'<br><i>Operational — unreconciled</i>'
-        : `<b>${esc(gc.ca)} — ${esc(gc.d)}</b><br>Not assessed in this period`,{sticky:true});
+        fillOpacity:rec?.65:.22});
+      poly.bindTooltip(rec?caTip(rec)
+        :`<b>${esc(gc.ca)} — ${esc(gc.d)}</b><br>Not assessed in this period`,{sticky:true});
       poly.addTo(MAP_CA_LAYER);
-      if(rec){ drawn++; MAP_FOCUS.push(poly.getBounds()); }
+      if(rec){ shaded.add(String(rec.catchment).toUpperCase()); asPoly++; MAP_FOCUS.push(poly.getBounds()); }
       MAP_INDEX.push({hay:`${gc.ca} ${gc.d}`.toLowerCase(),bounds:poly.getBounds()});
     });
-    const unmapped=rows.filter(r=>!(geo.catchments||[]).some(gc=>caKey(gc.pc,gc.ca)===String(r.catchment).toUpperCase()));
-    $('#caBanner').textContent='Operational, unreconciled — live from the field data pipeline, not '
+    // 2) every remaining assessed catchment gets a centroid circle from its site GPS
+    if(!SITE_RENDERER) SITE_RENDERER=L.canvas({padding:.3});
+    let asPoint=0, noShape=0;
+    rows.forEach(rec=>{
+      if(shaded.has(String(rec.catchment).toUpperCase())) return;
+      if(rec.la==null||rec.lo==null){ noShape++; return; }
+      const r=Math.min(16,6+Math.sqrt(rec.n)*1.4);
+      const m=L.circleMarker([rec.la,rec.lo],{renderer:SITE_RENDERER,radius:r,weight:1.5,
+        color:'#fff',fillColor:bandColor(sevBand(rec.avgSeverity)),fillOpacity:.85});
+      m.bindTooltip(caTip(rec),{sticky:true});
+      m.addTo(MAP_CA_LAYER); asPoint++;
+      MAP_FOCUS.push(L.latLngBounds([[rec.la,rec.lo],[rec.la,rec.lo]]));
+      MAP_INDEX.push({hay:`${rec.catchment} ${rec.district}`.toLowerCase(),bounds:m.getBounds?m.getBounds():L.latLngBounds([[rec.la,rec.lo],[rec.la,rec.lo]])});
+    });
+    $('#caBanner').innerHTML='<b>Operational, unreconciled</b> — live from the field data pipeline, not '
       +'Information-Management reviewed and not comparable with the published figures. '
-      +`${drawn} of ${rows.length} assessed catchments have published boundaries and are shaded`
-      +(unmapped.length?`; ${unmapped.length} more are listed in the table below without a map shape.`:'.');
+      +`All ${rows.length} assessed catchments are on the map: ${asPoly} shaded as boundary areas, `
+      +`${asPoint} shown as points (centre of their sites)`
+      +(noShape?`; ${noShape} without GPS appear in the table only.`:'.');
     renderCatchmentPanel(rows,geo,label);
   }else if(!blocked){
     const byPc={}; DATA.districts.forEach(d=>{ if(d.pc) byPc[d.pc]=d; });
@@ -409,7 +459,7 @@ async function renderMap(){
       // Clicking a district opens its profile drawer; strong border marks the selection.
       poly.on('mouseover',()=>poly.setStyle({weight:2.4,color:'#104E5D'}));
       poly.on('mouseout',()=>poly.setStyle({weight:.8,color:'#fff'}));
-      poly.on('click',async()=>{ await ensureOperational(); openDistrictDrawer(gd.n, d); });
+      poly.on('click',async()=>{ await ensureOperational(); openDistrictDrawer(gd.n, d, null); });
       poly.addTo(MAP_D_LAYER);
       if(d) MAP_FOCUS.push(poly.getBounds());
       MAP_INDEX.push({hay:`${gd.n} ${gd.r||''}`.toLowerCase(),bounds:poly.getBounds()});
@@ -434,6 +484,7 @@ async function renderMap(){
 
 function renderCatchmentPanel(rows,geo,label){
   const hasGeo=k=>(geo.catchments||[]).some(gc=>caKey(gc.pc,gc.ca)===String(k).toUpperCase());
+  const onMap=c=>hasGeo(c.catchment)?'Area':(c.la!=null?'Point':'<span class="dash">—</span>');
   const sorted=[...rows].sort((a,b)=>b.avgSeverity-a.avgSeverity);
   $('#caPanelNote').textContent=`${sorted.length} catchments assessed in ${label||'this period'}, `
     +'ranked by average severity. Severity is the share of applicable indicators scoring Red '
@@ -444,7 +495,7 @@ function renderCatchmentPanel(rows,geo,label){
       <td class="ctr"><span class="badge ${sevBand(c.avgSeverity)}">${c.avgSeverity}%</span></td>
       <td class="ctr">${fmt(c.Severe)}</td><td class="ctr">${fmt(c.High)}</td>
       <td class="ctr">${fmt(c.Moderate)}</td><td class="ctr">${fmt(c.Low)}</td>
-      <td class="ctr">${hasGeo(c.catchment)?'✓':'<span class="dash">—</span>'}</td>
+      <td class="ctr" style="font-size:11px">${onMap(c)}</td>
     </tr>`).join('') : '<tr><td colspan="10"><p class="empty-note">No catchment data for this period.</p></td></tr>';
 }
 
@@ -504,7 +555,22 @@ function renderTopGaps(){
 }
 
 /* ================= DISTRICT ANALYSIS ================= */
-const DIST_ROWS=()=>[...DATA.districts].sort((a,b)=>b.gap-a.gap);
+let DSORT={k:'gap',dir:-1};   // default: highest gap first
+function sortDistricts(rows){
+  const num=k=>(k==='n'||k==='gap'||k==='cov');
+  return [...rows].sort((a,b)=>{
+    let av=a[DSORT.k], bv=b[DSORT.k];
+    if(num(DSORT.k)) return (av-bv)*DSORT.dir;
+    return String(av).localeCompare(String(bv))*DSORT.dir;
+  });
+}
+function paintSortArrows(){
+  $$('#distHead th.sortable').forEach(th=>{
+    const a=th.querySelector('.sarrow');
+    a.textContent = th.dataset.k===DSORT.k ? (DSORT.dir<0?'▼':'▲') : '';
+  });
+}
+const DIST_ROWS=()=>[...DATA.districts];
 function paintDistrictRows(rows){
   $('#distTable').innerHTML=rows.length?rows.map(d=>{
     const band=sevBand(d.gap);
@@ -516,10 +582,13 @@ function paintDistrictRows(rows){
       <td class="ctr chev">›</td>
     </tr>`;
   }).join('') : `<tr><td colspan="6"><p class="empty-note">No districts match this filter.</p></td></tr>`;
-  $$('#distTable tr.rowlink').forEach(tr=>tr.addEventListener('click',async()=>{
-    const name=tr.dataset.dist, pub=DATA.districts.find(x=>x.district===name);
-    await ensureOperational(); openDistrictDrawer(name, pub);
-  }));
+  $$('#distTable tr.rowlink').forEach(tr=>{
+    tr.tabIndex=0;
+    const go=async()=>{ const name=tr.dataset.dist, pub=DATA.districts.find(x=>x.district===name);
+      await ensureOperational(); openDistrictDrawer(name, pub, tr); };
+    tr.addEventListener('click',go);
+    tr.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
+  });
 }
 function renderDistricts(){
   $('#partnerChips').innerHTML=DATA.partners.map(p=>
@@ -535,17 +604,23 @@ function renderDistricts(){
   }
   const fi=$('#distFilter'); if(fi) fi.disabled=false;
   const all=DIST_ROWS();
-  paintDistrictRows(all);
   const total=all.length;
   const input=$('#distFilter');
-  const apply=()=>{
+  const draw=()=>{
     const q=input.value.trim().toLowerCase();
-    const rows=q?all.filter(d=>d.district.toLowerCase().includes(q)||d.region.toLowerCase().includes(q)):all;
+    const rows=sortDistricts(q?all.filter(d=>d.district.toLowerCase().includes(q)||d.region.toLowerCase().includes(q)):all);
     paintDistrictRows(rows);
     $('#distFilterCount').textContent=q?`${rows.length} of ${total} districts`:'';
+    paintSortArrows();
   };
-  input.value='';
-  input.oninput=apply;
+  input.value=''; input.oninput=draw;
+  $$('#distHead th.sortable').forEach(th=>{
+    th.onclick=()=>{ const k=th.dataset.k;
+      if(DSORT.k===k) DSORT.dir*=-1; else DSORT={k, dir:(k==='n'||k==='gap'||k==='cov')?-1:1};
+      draw();
+    };
+  });
+  draw();
   $('#distFootnote').innerHTML=DATA.districtFootnote;
 }
 
@@ -578,69 +653,98 @@ function q1q2ForDistrict(name){
   });
   return out;
 }
-function openDistrictDrawer(name, pub){
-  const pr=districtProfile(name);
-  $('#drawerTitle').textContent=name;
-  $('#drawerSub').textContent=(pr.sites[0]?pr.sites[0].r+' · ':'')+t('d.operational');
+// Builds the operational (unreconciled) detail block — revealed only on demand so it
+// never sits mixed with the published figures by default.
+function operationalDetailHTML(pr, name){
   const total=pr.sites.length;
-  let html='';
-  if(pub){
-    html+=`<div style="margin-bottom:10px"><span class="op-badge" style="background:var(--teal-l);color:var(--teal-d);border-color:var(--teal)">${esc(t('d.published'))}</span></div>`
-      +`<div class="dk-grid"><div class="dk"><div class="v">${pub.gap}%</div><div class="l">${esc(t('dk.gap'))}</div></div>`
-      +`<div class="dk"><div class="v">${pub.cov}%</div><div class="l">${esc(t('dk.cov'))}</div></div></div>`;
-  }
-  if(!total){
-    html+=`<p class="empty-note" style="text-align:left">${esc(t('d.nolive'))}</p>`;
-    $('#drawerBody').innerHTML=html; openDrawer(); return;
-  }
-  html+=`<div style="margin-bottom:8px"><span class="op-badge">${esc(t('d.operational'))} · ${esc(pr.period||'')}</span></div>`;
-  html+=`<div class="dk-grid">
+  if(!total) return `<p class="empty-note" style="text-align:left;margin:0">${esc(t('d.nolive'))}</p>`;
+  let html=`<div class="dk-grid" style="margin-bottom:12px">
     <div class="dk"><div class="v">${fmt(total)}</div><div class="l">${esc(t('dk.sites'))}</div></div>
     <div class="dk"><div class="v">${fmt(pr.cas)}</div><div class="l">${esc(t('dk.cas'))}</div></div>
     <div class="dk"><div class="v">${fmt(pr.hh)}</div><div class="l">${esc(t('dk.hh'))}</div></div>
     <div class="dk"><div class="v">${fmt(pr.ind)}</div><div class="l">${esc(t('dk.ind'))}</div></div>
     <div class="dk dk-full"><div class="v"><span class="badge ${sevBand(pr.avg)}">${pr.avg}%</span></div><div class="l">${esc(t('dk.sev'))}</div></div>
   </div>`;
-  // severity distribution bar
   const segs=['Severe','High','Moderate','Low'].map(b=>{
     const n=pr.bands[b]||0; if(!n) return '';
     return `<span style="background:${bandColor(b)};flex:${n}" title="${esc(t('band.'+b))}: ${n}">${n}</span>`;
   }).join('');
   html+=`<h4>${esc(t('dh.sevdist'))}</h4><div class="sevbar">${segs}</div>`;
-  // top gaps
   html+=`<h4>${esc(t('dh.topgaps'))}</h4>`;
   pr.gaps.slice(0,5).forEach(g=>{
     html+=`<div class="gaprow"><div>${esc(g.name)}<div class="gt"><div class="gf" style="width:${g.pct}%"></div></div></div>
       <div class="gv">${g.pct}%</div></div>`;
   });
-  // Q1 vs Q2 assessment coverage for this district
   const qq=q1q2ForDistrict(name), qk=Object.keys(qq);
   if(qk.length>1){
     html+=`<h4>${esc(t('dh.q1q2'))}</h4><div class="q1q2mini">`
       +qk.map(k=>`<div>${esc(k)}</div><div class="h"></div><div style="font-weight:700;text-align:right">${fmt(qq[k])}</div>`).join('')
       +`</div><p style="font-size:11px;color:var(--muted);margin:6px 0 0">Assessment coverage, not a change in conditions.</p>`;
   }
-  // partners
   html+=`<h4>${esc(t('dh.partners'))}</h4><div class="chips">`
     +pr.partners.map(p=>`<span class="pub-chip-sm" style="padding:4px 9px">${esc(p)}</span>`).join('')+`</div>`;
-  // jump to map
-  html+=`<button class="btn sm" id="drawerGeo" style="margin-top:16px">${esc(t('d.opengeo'))}</button>`;
+  html+=`<button class="btn sm" id="drawerGeo" style="margin-top:14px">${esc(t('d.opengeo'))}</button>`;
+  return html;
+}
+function openDistrictDrawer(name, pub, trigger){
+  DRAWER_TRIGGER=trigger||document.activeElement;
+  const pr=districtProfile(name);
+  $('#drawerTitle').textContent=name;
+  $('#drawerSub').textContent=(pr.sites[0]?pr.sites[0].r:'')+(pub?' · '+t('d.published'):'');
+  // ---- Published-only by default ----
+  let html='';
+  if(pub){
+    html+=`<div style="margin-bottom:8px"><span class="op-badge" style="background:var(--teal-l);color:var(--teal-d);border-color:var(--teal)">${esc(t('d.published'))} · ${esc(period().id)}</span></div>`
+      +`<div class="dk-grid"><div class="dk"><div class="v">${pub.gap}%</div><div class="l">${esc(t('dk.gap'))}</div></div>`
+      +`<div class="dk"><div class="v">${pub.cov}%</div><div class="l">${esc(t('dk.cov'))}</div></div></div>`
+      +`<p style="font-size:11.5px;color:var(--muted);margin:0">${esc(t('d.pubnote'))}</p>`;
+  }else{
+    html+=`<p class="empty-note" style="text-align:left">${esc(t('d.notpublished'))}</p>`;
+  }
+  // ---- Operational detail, behind an explicit opt-in button ----
+  html+=`<div class="op-reveal" style="margin-top:16px">
+      <button class="collapse-btn" id="opDetailToggle" aria-expanded="false" aria-controls="opDetailBody">
+        <span><span class="cr">▸</span> ${esc(t('d.viewop'))}</span><span class="op-badge">OPERATIONAL</span></button>
+      <div id="opDetailBody" hidden style="margin-top:12px">
+        <p class="warn">${esc(t('d.opwarn'))}</p>
+        <div id="opDetailInner"></div>
+      </div></div>`;
   $('#drawerBody').innerHTML=html;
-  const gb=$('#drawerGeo');
-  if(gb) gb.onclick=()=>{ closeDrawer();
-    $$('.tab').forEach(x=>x.classList.remove('active'));
-    document.querySelector('.tab[data-view="map"]').classList.add('active');
-    $$('.view').forEach(v=>v.classList.remove('active')); $('#view-map').classList.add('active');
-    SHOW_SITES=true; SF={region:'',district:name,q:''};
-    renderMap().then(()=>{ const el=$('#sfSite'); if(el) el.value=''; renderSitePoints(); });
+  const tg=$('#opDetailToggle');
+  if(tg) tg.onclick=()=>{
+    const body=$('#opDetailBody'), open=body.hidden;
+    if(open && !body.dataset.built){ $('#opDetailInner').innerHTML=operationalDetailHTML(pr,name); body.dataset.built='1'; wireDrawerGeo(name); }
+    body.hidden=!open; tg.setAttribute('aria-expanded', open?'true':'false');
   };
   openDrawer();
 }
-function openDrawer(){ $('#drawerBack').classList.add('open'); $('#drawer').classList.add('open');
-  const x=$('#drawerX'); if(x) x.focus(); }
-function closeDrawer(){ $('#drawerBack').classList.remove('open'); $('#drawer').classList.remove('open'); }
+function wireDrawerGeo(name){
+  const gb=$('#drawerGeo');
+  if(gb) gb.onclick=()=>{ closeDrawer();
+    activateView('map');
+    SHOW_SITES=true; SF={region:'',district:name,q:''};
+    renderMap().then(()=>{ const el=$('#sfSite'); if(el) el.value=''; renderSitePoints(); });
+  };
+}
+let DRAWER_TRIGGER=null;
+function openDrawer(){
+  const bk=$('#drawerBack'), d=$('#drawer');
+  bk.classList.add('open'); bk.setAttribute('aria-hidden','false');
+  d.classList.add('open'); d.setAttribute('aria-hidden','false'); d.removeAttribute('inert');
+  const x=$('#drawerX'); if(x) x.focus();
+}
+function closeDrawer(){
+  const bk=$('#drawerBack'), d=$('#drawer');
+  if(!d.classList.contains('open')) return;
+  bk.classList.remove('open'); bk.setAttribute('aria-hidden','true');
+  d.classList.remove('open'); d.setAttribute('aria-hidden','true'); d.setAttribute('inert','');
+  // restore focus to the row/element that opened the drawer
+  if(DRAWER_TRIGGER && DRAWER_TRIGGER.focus){ try{ DRAWER_TRIGGER.focus(); }catch(e){} }
+  DRAWER_TRIGGER=null;
+}
 function wireDrawer(){
-  const x=$('#drawerX'), bk=$('#drawerBack');
+  const x=$('#drawerX'), bk=$('#drawerBack'), d=$('#drawer');
+  if(d) d.setAttribute('inert','');   // start inert (closed)
   if(x) x.onclick=closeDrawer;
   if(bk) bk.onclick=closeDrawer;
   document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDrawer(); });

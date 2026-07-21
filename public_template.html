@@ -100,6 +100,9 @@ header.top{background:var(--surface);color:var(--ink);padding:14px 0 12px;border
 tr.rowlink{cursor:pointer}
 tr.rowlink:hover td{background:var(--teal-l)}
 .rowlink .chev{color:var(--teal);font-weight:700}
+th.sortable{cursor:pointer;user-select:none;white-space:nowrap}
+th.sortable:hover{color:var(--teal-d)}
+th.sortable .sarrow{display:inline-block;width:12px;color:var(--teal);font-weight:700}
 
 /* collapsible operational block */
 .collapse-btn{appearance:none;border:1px solid #E9A23B;background:#FDF0E1;color:#9A5B13;font-family:inherit;
@@ -113,9 +116,13 @@ tr.rowlink:hover td{background:var(--teal-l)}
 .drawer-back{position:fixed;inset:0;background:rgba(18,33,31,.4);z-index:250;opacity:0;pointer-events:none;transition:.2s}
 .drawer-back.open{opacity:1;pointer-events:auto}
 .drawer{position:fixed;top:0;right:0;height:100%;width:min(460px,94vw);background:var(--surface);z-index:251;
-  box-shadow:-8px 0 30px rgba(0,0,0,.2);transform:translateX(100%);transition:transform .22s ease;
+  box-shadow:-8px 0 30px rgba(0,0,0,.2);transform:translateX(100%);visibility:hidden;
+  transition:transform .22s ease, visibility 0s linear .22s;
   display:flex;flex-direction:column}
-.drawer.open{transform:none}
+.drawer.open{transform:none;visibility:visible;transition:transform .22s ease, visibility 0s linear 0s}
+.op-reveal{border:1px dashed #E9A23B;background:#FFFBF3;border-radius:10px;padding:12px;margin-top:12px}
+[data-theme="dark"] .op-reveal{background:#241d10}
+.op-reveal .warn{font-size:11px;color:#9A5B13;font-weight:700;margin:0 0 8px}
 .drawer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:16px 18px;
   border-bottom:1px solid var(--line);flex:0 0 auto}
 .drawer-head h3{font-size:17px}
@@ -171,6 +178,10 @@ main{padding:24px 0 56px}
 .kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:15px;box-shadow:var(--shadow);
   transition:box-shadow .15s,transform .15s}
 .kpi:hover{box-shadow:0 4px 14px rgba(0,0,0,.08);transform:translateY(-1px)}
+.kpi.clickable{cursor:pointer;position:relative}
+.kpi.clickable::after{content:"›";position:absolute;top:10px;right:12px;color:var(--teal);font-weight:700;opacity:.5;font-size:15px}
+.kpi.clickable:hover{border-color:var(--teal)}
+.kpi.clickable:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
 .kpi .k-val{font-size:25px;font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
 .kpi .k-lab{font-size:11px;color:var(--muted);margin-top:5px;font-weight:600;text-transform:uppercase;letter-spacing:.03em}
 .kpi .k-sub{font-size:10.5px;color:var(--muted);margin-top:2px}
@@ -247,7 +258,14 @@ table.plain .ctr{text-align:center}
 .method-b li{margin:4px 0}
 
 /* map */
+.mapwrap{position:relative}
 #pubMap{width:100%;height:600px}
+.map-loading{position:absolute;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;gap:9px;
+  background:rgba(245,245,241,.86);color:var(--teal-d);font-size:14px;font-weight:600;backdrop-filter:blur(1px)}
+.map-loading[hidden]{display:none}
+.map-loading .spin{width:18px;height:18px;border:3px solid var(--line);border-top-color:var(--teal);
+  border-radius:50%;display:inline-block;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 .map-layer.active{background:var(--teal);color:#fff;border-color:var(--teal-d)}
 .btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;
   padding:8px 14px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
@@ -404,7 +422,10 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
         <span id="sfCount" style="font-size:11.5px;color:var(--muted)"></span>
       </div>
       <div id="caBanner" class="period-note" hidden style="margin-bottom:10px"></div>
-      <div id="pubMap"></div>
+      <div class="mapwrap">
+        <div id="pubMap"></div>
+        <div class="map-loading" id="mapLoading" hidden><span class="spin"></span> <span data-i18n="map.loading">Loading map…</span></div>
+      </div>
       <div class="legend" id="mapLegend" style="margin-top:10px"></div>
     </div>
 
@@ -465,9 +486,12 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
       </div>
       <div class="tbl-scroll">
         <table class="plain">
-          <thead><tr>
-            <th>District</th><th>Region</th><th class="ctr">Sites</th>
-            <th class="ctr">Gap %</th><th class="ctr">Coverage %</th><th></th>
+          <thead><tr id="distHead">
+            <th class="sortable" data-k="district">District<span class="sarrow"></span></th>
+            <th class="sortable" data-k="region">Region<span class="sarrow"></span></th>
+            <th class="ctr sortable" data-k="n">Sites<span class="sarrow"></span></th>
+            <th class="ctr sortable" data-k="gap">Gap %<span class="sarrow"></span></th>
+            <th class="ctr sortable" data-k="cov">Coverage %<span class="sarrow"></span></th><th></th>
           </tr></thead>
           <tbody id="distTable"></tbody>
         </table>
@@ -545,8 +569,8 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
 </main>
 
 <!-- District profile drawer -->
-<div class="drawer-back" id="drawerBack"></div>
-<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+<div class="drawer-back" id="drawerBack" aria-hidden="true"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
   <div class="drawer-head">
     <div>
       <h3 id="drawerTitle"></h3>
