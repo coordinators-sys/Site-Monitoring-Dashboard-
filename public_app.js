@@ -22,18 +22,18 @@ const I18N={
   'nav.districts':'District Profiles','nav.downloads':'Data & Downloads','nav.about':'About the Data',
   'h.overview':'National Overview','h.map':'Geographic Analysis','h.sectors':'Sector Analysis',
   'h.districts':'District Profiles','h.downloads':'Data & Downloads','h.downloads2':'Published downloads','h.about':'About the data',
-  'btn.viewop':'View provisional operational data (live, unreconciled)',
+  'btn.viewop':'View provisional operational data (live field data)',
   'dk.sites':'Sites assessed','dk.cas':'Catchments','dk.hh':'Households','dk.ind':'Individuals',
   'dk.sev':'Avg. severity','dk.gap':'Gap %','dk.cov':'Coverage %','dk.rank':'National rank',
   'dh.sevdist':'Severity distribution','dh.topgaps':'Top service gaps','dh.partners':'Reporting partners',
   'dh.q1q2':'Assessment coverage, Q1 vs Q2','dh.cas':'Catchments assessed',
-  'd.published':'Published summary','d.operational':'Operational detail (unreconciled)',
+  'd.published':'Published summary','d.operational':'Operational detail (live field data)',
   'd.nolive':'No live operational detail for this district in the selected period.',
   'd.opengeo':'Show on map','close':'Close',
   'd.pubnote':'Officially published, Information-Management reviewed figures for this district.',
   'd.notpublished':'This district was not individually published for the selected period. Open the provisional operational detail below for live field figures.',
   'd.viewop':'View provisional operational detail',
-  'd.opwarn':'UNRECONCILED — live field data, not Information-Management reviewed and not comparable with the published figures above. Do not cite for donor reporting.',
+  'd.opwarn':'LIVE FIELD DATA — not Information-Management reviewed and not comparable with the published figures above. Do not cite for donor reporting.',
   'h.sectorperf':'Sector Performance','h.findings':'Key Findings','h.opsnapshot':'Operational Snapshot',
   'h.caanalysis':'Catchment analysis','h.partners':'Reporting partners',
   'label.period':'Reporting period','badge.published':'PUBLISHED RESULTS','label.view':'View',
@@ -51,7 +51,7 @@ const I18N={
   'sites.of':'{a} of {b} sites plotted (sites without GPS are listed in data but cannot be mapped)',
   'gf.title':'Filters','gf.state':'State','gf.region':'Region','gf.district':'District','gf.catchment':'Catchment',
   'gf.partner':'Partner','gf.sector':'Sector','gf.severity':'Severity','gf.search':'Site search','gf.reset':'Reset all',
-  'gf.note':'Operational, unreconciled — filters apply to live site-level field data, not the published summary figures above.',
+  'gf.note':'Operational — filters apply to live site-level field data, not the published summary figures above.',
   'gf.matchsites':'Matching sites','gf.download':'⬇ Download filtered sites (CSV)',
   'gf.allstates':'All states','gf.allregions':'All regions','gf.alldistricts':'All districts',
   'gf.allcatchments':'All catchments','gf.allpartners':'All partners','gf.allsectors':'All sectors','gf.allseverity':'All severity',
@@ -69,13 +69,13 @@ const I18N={
   'dk.sev':'Celceliska darnaanta','dk.gap':'Daldalool %','dk.cov':'Daboolid %','dk.rank':'Darajada Qaranka',
   'dh.sevdist':'Qaybinta darnaanta','dh.topgaps':'Daldaloolada ugu waaweyn','dh.partners':'Wada-hawlgalayaasha',
   'dh.q1q2':'Daboolka qiimaynta, Q1 iyo Q2','dh.cas':'Aagagga la qiimeeyay',
-  'd.published':'Kooban la daabacay','d.operational':'Faahfaahin hawleed (aan la xaqiijin)',
+  'd.published':'Kooban la daabacay','d.operational':'Faahfaahin hawleed (xog goobeed toos ah)',
   'd.nolive':'Ma jiro faahfaahin hawleed oo toos ah degmadan muddada la doortay.',
   'd.opengeo':'Ku muuji khariidada','close':'Xir',
   'd.pubnote':'Tirooyin rasmi ah oo la daabacay, oo Maaraynta Xogta dib u eegtay degmadan.',
   'd.notpublished':'Degmadan si gaar ah looma daabicin muddada la doortay. Fur faahfaahinta hawleed ee ku-meel-gaadhka ah ee hoose.',
   'd.viewop':'Fiiri faahfaahinta hawleed ee ku-meel-gaadhka ah',
-  'd.opwarn':'AAN LA XAQIIJIN — xog goobeed toos ah, aan Maaraynta Xogta dib u eegin, lamana barbardhigi karo tirooyinka la daabacay ee kor ku xusan. Ha u soo xigan warbixinta deeq-bixiyaha.',
+  'd.opwarn':'XOG GOOBEED TOOS AH — aan Maaraynta Xogta dib u eegin, lamana barbardhigi karo tirooyinka la daabacay ee kor ku xusan. Ha u soo xigan warbixinta deeq-bixiyaha.',
   'h.sectorperf':'Waxqabadka Qaybaha','h.findings':'Natiijooyinka Muhiimka ah','h.opsnapshot':'Muuqaal Hawleed',
   'h.caanalysis':'Falanqaynta Aagagga (CA)','h.partners':'Wada-hawlgalayaasha Warbixinaya',
   'label.period':'Muddada Warbixinta','badge.published':'NATIIJOOYIN LA DAABACAY','label.view':'Muuqaal',
@@ -93,7 +93,7 @@ const I18N={
   'sites.of':'{a} ka mid ah {b} goobood ayaa la muujiyay (kuwa aan GPS lahayn lama muujin karo)',
   'gf.title':'Shaandhaynta','gf.state':'Gobol-dowladeed','gf.region':'Gobol','gf.district':'Degmo','gf.catchment':'Aag (CA)',
   'gf.partner':'Wada-hawlgale','gf.sector':'Qayb','gf.severity':'Darnaan','gf.search':'Raadi goob','gf.reset':'Dib u deji dhammaan',
-  'gf.note':'Hawleed, aan la xaqiijin — shaandhayntu waxay khusaysaa xog goobeed toos ah, ma aha tirooyinka la daabacay ee kor ku xusan.',
+  'gf.note':'Hawleed — shaandhayntu waxay khusaysaa xog goobeed toos ah, ma aha tirooyinka la daabacay ee kor ku xusan.',
   'gf.matchsites':'Goobaha u dhigma','gf.download':'⬇ Soo dejiso goobaha la shaandhay (CSV)',
   'gf.allstates':'Dhammaan gobol-dowladeedyada','gf.allregions':'Dhammaan gobollada','gf.alldistricts':'Dhammaan degmooyinka',
   'gf.allcatchments':'Dhammaan aagagga','gf.allpartners':'Dhammaan wada-hawlgalayaasha','gf.allsectors':'Dhammaan qaybaha','gf.allseverity':'Dhammaan darnaanta',
@@ -255,7 +255,7 @@ function renderSectorDiverge(){
 /* ================= GEOGRAPHIC PRIORITIES (Leaflet + OSM) ================= */
 /* Three layers. 'sev' and 'cov' shade DISTRICTS from published results and are only
    available for a period the Cluster published at that granularity. 'ca' shades
-   CATCHMENTS from the live operational feed — unreconciled, so it carries its own
+   CATCHMENTS from the live operational feed — live field data, so it carries its own
    amber banner and is never mixed into the published district layers. */
 let MAP_FILL='sev', MAP_HOME=null, MAP_D_LAYER=null, MAP_CA_LAYER=null, MAP_INDEX=[], MAP_FOCUS=[];
 let SHOW_SITES=false, SITE_LAYER=null, SITE_RENDERER=null;
@@ -492,7 +492,7 @@ function renderGfTable(list){
 function downloadFilteredSites(){
   const {label}=opCatchments();
   const head=[['CCCM Cluster Somalia — Site Monitoring: filtered operational sites'],
-    ['Status','OPERATIONAL — UNRECONCILED (live field data, not IM-reviewed)'],
+    ['Status','OPERATIONAL — LIVE FIELD DATA (not IM-reviewed, not comparable with published figures)'],
     ['Reporting period', label||''],['Generated', DATA.generated],
     ['Filters', gfActive().map(k=>k+'='+gfChipText(k)).join('; ')||'(none)'],[],
     ['Site','District','Region','Catchment','Partner','Severity %','Severity band','Households','Individuals']];
@@ -544,7 +544,7 @@ async function renderMap(){
     const chip=$('#caPeriodChip'); if(chip) chip.textContent=label||'—';
     const caTip=rec=>`<b>${esc(rec.catchment)} — ${esc(rec.district)}</b><br>${fmt(rec.n)} sites · Avg. severity ${rec.avgSeverity}%`
       +`<br>Severe ${rec.Severe} · High ${rec.High} · Moderate ${rec.Moderate} · Low ${rec.Low}`
-      +'<br><i>Operational — unreconciled</i>';
+      +'<br><i>Operational — live field data</i>';
     // 1) shade every catchment that has a published boundary polygon
     const shaded=new Set();
     let asPoly=0;
@@ -574,7 +574,7 @@ async function renderMap(){
       MAP_FOCUS.push(L.latLngBounds([[rec.la,rec.lo],[rec.la,rec.lo]]));
       MAP_INDEX.push({hay:`${rec.catchment} ${rec.district}`.toLowerCase(),bounds:m.getBounds?m.getBounds():L.latLngBounds([[rec.la,rec.lo],[rec.la,rec.lo]])});
     });
-    $('#caBanner').innerHTML='<b>Operational, unreconciled</b> — live from the field data pipeline, not '
+    $('#caBanner').innerHTML='<b>Operational — live field data</b> — from the field data pipeline, not '
       +'Information-Management reviewed and not comparable with the published figures. '
       +`All ${rows.length} assessed catchments are on the map: ${asPoly} shaded as boundary areas, `
       +`${asPoint} shown as points (centre of their sites)`
@@ -793,7 +793,7 @@ function q1q2ForDistrict(name){
   });
   return out;
 }
-// Builds the operational (unreconciled) detail block — revealed only on demand so it
+// Builds the operational (live field data) detail block — revealed only on demand so it
 // never sits mixed with the published figures by default.
 function operationalDetailHTML(pr, name){
   const total=pr.sites.length;
@@ -891,7 +891,7 @@ function wireDrawer(){
   document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDrawer(); });
 }
 
-/* ================= OPERATIONAL SNAPSHOT (unreconciled) ================= */
+/* ================= OPERATIONAL SNAPSHOT (live field data) ================= */
 let OP_Q=null, OP_DATA=null, OP_LIVE=false;
 function paintOpRows(rows){
   $('#opTable').innerHTML=rows.length?rows.map(c=>`<tr>

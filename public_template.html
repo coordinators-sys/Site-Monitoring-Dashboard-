@@ -435,7 +435,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
           <button class="btn sm" id="gfReset" style="align-self:end" data-i18n="gf.reset">Reset all</button>
         </div>
         <div id="gfChips" class="gf-chips"></div>
-        <p class="gf-note" data-i18n="gf.note">Operational, unreconciled — filters apply to live site-level field data, not the published summary figures above.</p>
+        <p class="gf-note" data-i18n="gf.note">Operational — filters apply to live site-level field data, not the published summary figures above.</p>
         <div class="grid kpis gf-kpis" id="gfKpis"></div>
       </div>
     </div>
@@ -470,7 +470,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
       <div style="display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap;margin-bottom:6px">
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
           <h3><span data-i18n="gf.matchsites">Matching sites</span></h3>
-          <span class="op-badge">OPERATIONAL — UNRECONCILED</span>
+          <span class="op-badge">OPERATIONAL — LIVE FIELD DATA</span>
           <span class="period-chip" id="gfTablePeriod"></span>
         </div>
         <button class="btn sm" id="gfDownload" data-i18n="gf.download">⬇ Download filtered sites (CSV)</button>
@@ -492,7 +492,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
     <div class="card p block" id="caPanel" style="margin-top:16px" hidden>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
         <h3 data-i18n="h.caanalysis">Catchment analysis</h3>
-        <span class="op-badge">OPERATIONAL — UNRECONCILED</span>
+        <span class="op-badge">OPERATIONAL — LIVE FIELD DATA</span>
         <span class="period-chip" id="caPeriodChip"></span>
       </div>
       <p style="font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 12px" id="caPanelNote"></p>
@@ -566,18 +566,18 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
       <div id="partnerChips" style="display:flex;flex-wrap:wrap;gap:8px"></div>
     </div>
 
-    <!-- Provisional operational data is collapsed by default so unreconciled figures
+    <!-- Provisional operational data is collapsed by default so live field figures
          never sit directly under the published results. Opt-in via the button. -->
     <div class="block" id="opCollapse" style="margin-top:16px" hidden>
       <button class="collapse-btn" id="opToggle" aria-expanded="false" aria-controls="opSection">
-        <span><span class="cr">▸</span> <span data-i18n="btn.viewop">View provisional operational data (live, unreconciled)</span></span>
+        <span><span class="cr">▸</span> <span data-i18n="btn.viewop">View provisional operational data (live field data)</span></span>
         <span class="op-badge">OPERATIONAL</span>
       </button>
     </div>
     <div class="card p op-card block" id="opSection" style="margin-top:12px" hidden>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
         <h3 data-i18n="h.opsnapshot">Operational Snapshot</h3>
-        <span class="op-badge">OPERATIONAL — UNRECONCILED</span>
+        <span class="op-badge">OPERATIONAL — LIVE FIELD DATA</span>
       </div>
       <p id="opSourceNote" style="font-size:11px;color:#9A5B13;font-weight:600;margin:0 0 10px">Connecting to Kobo/Zite…</p>
       <p style="font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 14px">This section reflects the live

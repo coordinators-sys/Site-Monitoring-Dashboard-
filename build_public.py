@@ -9,7 +9,7 @@ released Q2 2026 PDF report) — this script has no code path from those figures
 the live draft rebuild (_cache_kobo.json, _cache_zite.json, sites.json).
 
 One deliberate, narrow exception, added at the Cluster Coordinator's explicit written
-request: a catchment/district-level "Operational Snapshot (unreconciled)" block —
+request: a catchment/district-level "Operational Snapshot (live field data)" block —
 aggregate counts only, never a site name or site code, never blended into the
 reconciled KPIs/downloads above, rendered under its own distinct badge and caveat so
 it can never be mistaken for PUBLISHED RESULTS. Its primary source at runtime is the
@@ -84,7 +84,7 @@ data = {
                   "Sector gap percentages, district rankings and indicator-level results were "
                   "not published at that granularity for Q1, so those sections are not "
                   "available for this period. The live Operational Snapshot does cover Q1 "
-                  "2026, but it is unreconciled and must not be quoted as a published figure.")},
+                  "2026, but it is live field data and must not be quoted as a published figure.")},
     ],
     "coverageNote": ("Direct trend comparison is not recommended because the sites assessed "
                      "in Q1 and Q2 2026 were not the same locations — fewer sites and "
