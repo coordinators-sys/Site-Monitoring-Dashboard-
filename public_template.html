@@ -94,6 +94,51 @@ header.top{background:var(--surface);color:var(--ink);padding:14px 0 12px;border
 .site-tip .sd{display:inline-flex;align-items:center;gap:3px;font-size:10px;background:#f4f4f0;
   border-radius:4px;padding:1px 5px}
 .site-tip .sd i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.dd-head{font-size:15px;color:var(--teal-d);margin:0 0 4px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+
+/* clickable rows */
+tr.rowlink{cursor:pointer}
+tr.rowlink:hover td{background:var(--teal-l)}
+.rowlink .chev{color:var(--teal);font-weight:700}
+
+/* collapsible operational block */
+.collapse-btn{appearance:none;border:1px solid #E9A23B;background:#FDF0E1;color:#9A5B13;font-family:inherit;
+  font-size:13px;font-weight:700;border-radius:10px;padding:11px 16px;cursor:pointer;display:flex;
+  align-items:center;gap:8px;width:100%;justify-content:space-between}
+.collapse-btn:hover{background:#fbe6cd}
+.collapse-btn .cr{transition:transform .2s}
+.collapse-btn[aria-expanded="true"] .cr{transform:rotate(90deg)}
+
+/* district / detail drawer */
+.drawer-back{position:fixed;inset:0;background:rgba(18,33,31,.4);z-index:250;opacity:0;pointer-events:none;transition:.2s}
+.drawer-back.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(460px,94vw);background:var(--surface);z-index:251;
+  box-shadow:-8px 0 30px rgba(0,0,0,.2);transform:translateX(100%);transition:transform .22s ease;
+  display:flex;flex-direction:column}
+.drawer.open{transform:none}
+.drawer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:16px 18px;
+  border-bottom:1px solid var(--line);flex:0 0 auto}
+.drawer-head h3{font-size:17px}
+.drawer-head .sub{font-size:12px;color:var(--muted);margin-top:2px}
+.drawer-body{padding:16px 18px;overflow:auto;flex:1 1 auto}
+.drawer-x{appearance:none;border:none;background:none;font-size:22px;line-height:1;cursor:pointer;color:var(--muted)}
+.dk-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.dk{background:var(--plane);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.dk .v{font-size:19px;font-weight:800;color:var(--ink);line-height:1.1}
+.dk .l{font-size:10.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.02em;margin-top:3px}
+.dk-full{grid-column:1 / -1}
+.drawer h4{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin:16px 0 8px}
+.sevbar{display:flex;height:22px;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.sevbar span{display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700;min-width:0}
+.gaprow{display:grid;grid-template-columns:1fr 44px;gap:8px;align-items:center;padding:4px 0;font-size:12.5px;border-bottom:1px solid var(--line-2)}
+.gaprow:last-child{border:none}
+.gaprow .gt{background:var(--plane-2);border-radius:5px;height:8px;overflow:hidden;margin-top:3px}
+.gaprow .gf{height:100%;background:var(--gap);border-radius:5px}
+.gaprow .gv{text-align:right;font-weight:700;color:var(--gap)}
+.drawer .chips{display:flex;flex-wrap:wrap;gap:6px}
+.q1q2mini{display:grid;grid-template-columns:1fr auto auto;gap:4px 12px;font-size:12.5px;align-items:center}
+.q1q2mini .h{font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:700}
+@media(max-width:520px){.dk-grid{grid-template-columns:1fr 1fr}}
 
 nav.tabs{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:0 1px 0 rgba(18,33,31,.03)}
 nav.tabs .wrap{display:flex;gap:2px;overflow-x:auto}
@@ -279,11 +324,10 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
 <nav class="tabs">
   <div class="wrap">
     <button class="tab active" data-view="overview" data-i18n="nav.overview">Overview</button>
-    <button class="tab" data-view="map" data-i18n="nav.map">Geographic Priorities</button>
-    <button class="tab" data-view="sectors" data-i18n="nav.sectors">Sector Gaps</button>
-    <button class="tab" data-view="districts" data-i18n="nav.districts">District Analysis</button>
-    <button class="tab" data-view="downloads" data-i18n="nav.downloads">Downloads</button>
-    <button class="tab" data-view="about" data-i18n="nav.about">About the Data</button>
+    <button class="tab" data-view="map" data-i18n="nav.map">Geographic Analysis</button>
+    <button class="tab" data-view="sectors" data-i18n="nav.sectors">Sector Analysis</button>
+    <button class="tab" data-view="districts" data-i18n="nav.districts">District Profiles</button>
+    <button class="tab" data-view="downloads" data-i18n="nav.downloads">Data &amp; Downloads</button>
   </div>
 </nav>
 
@@ -296,7 +340,8 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
       <p id="ovIntro"></p>
     </div>
     <div class="period-note" id="ovPeriodNote" hidden></div>
-    <div class="grid kpis block" id="kpiRow"></div>
+    <div class="grid kpis" id="kpiRow"></div>
+    <p id="kpiCaveat" style="font-size:11.5px;color:var(--muted);margin:8px 0 26px;line-height:1.5"></p>
     <div class="grid cols2 block">
       <!-- Key Findings come from the full-granularity report only; hidden for a
            headline-totals-only period so its figures never appear under that label. -->
@@ -422,13 +467,13 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
         <table class="plain">
           <thead><tr>
             <th>District</th><th>Region</th><th class="ctr">Sites</th>
-            <th class="ctr">Avg. severity</th><th class="ctr">Severe</th><th class="ctr">High</th>
-            <th class="ctr">Moderate</th><th class="ctr">Low</th><th>Main service gap</th>
+            <th class="ctr">Gap %</th><th class="ctr">Coverage %</th><th></th>
           </tr></thead>
           <tbody id="distTable"></tbody>
         </table>
       </div>
-      <p id="distFootnote" style="margin:12px 0 0;font-size:11.5px;color:var(--muted)"></p>
+      <p style="margin:10px 0 0;font-size:11.5px;color:var(--teal-d)">Select any district row to open its full profile — assessment coverage, severity distribution, top service gaps and reporting partners.</p>
+      <p id="distFootnote" style="margin:6px 0 0;font-size:11.5px;color:var(--muted)"></p>
     </div>
     <div class="card p">
       <h3 style="margin-bottom:8px" data-i18n="h.partners">Reporting partners</h3>
@@ -437,7 +482,15 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
       <div id="partnerChips" style="display:flex;flex-wrap:wrap;gap:8px"></div>
     </div>
 
-    <div class="card p op-card block" id="opSection" style="margin-top:16px" hidden>
+    <!-- Provisional operational data is collapsed by default so unreconciled figures
+         never sit directly under the published results. Opt-in via the button. -->
+    <div class="block" id="opCollapse" style="margin-top:16px" hidden>
+      <button class="collapse-btn" id="opToggle" aria-expanded="false" aria-controls="opSection">
+        <span><span class="cr">▸</span> <span data-i18n="btn.viewop">View provisional operational data (live, unreconciled)</span></span>
+        <span class="op-badge">OPERATIONAL</span>
+      </button>
+    </div>
+    <div class="card p op-card block" id="opSection" style="margin-top:12px" hidden>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
         <h3 data-i18n="h.opsnapshot">Operational Snapshot</h3>
         <span class="op-badge">OPERATIONAL — UNRECONCILED</span>
@@ -469,19 +522,18 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
     </div>
   </section>
 
-  <!-- ============ DOWNLOADS ============ -->
+  <!-- ============ DATA & DOWNLOADS (Downloads + methodology/about merged) ============ -->
   <section class="view" id="view-downloads">
     <div class="sec-head">
-      <h2 data-i18n="h.downloads">Downloads</h2>
-      <p>All downloads are published results and carry the reporting period, data source and generation date.</p>
+      <h2 data-i18n="h.downloads">Data &amp; Downloads</h2>
+      <p>Published exports plus the methodology, sources, limitations and definitions behind every figure.</p>
     </div>
-    <div style="display:flex;flex-direction:column;gap:10px" id="dlList"></div>
-  </section>
+    <h3 class="dd-head" data-i18n="h.downloads2">Published downloads</h3>
+    <p style="font-size:12px;color:var(--muted);margin:0 0 12px">All downloads are published results and carry the reporting period, data source and generation date.</p>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:26px" id="dlList"></div>
 
-  <!-- ============ ABOUT THE DATA ============ -->
-  <section class="view" id="view-about">
-    <div class="sec-head"><h2 data-i18n="h.about">About the Data</h2></div>
-    <div class="grid cols2">
+    <h3 class="dd-head" data-i18n="h.about">About the data</h3>
+    <div class="grid cols2" style="margin-top:10px">
       <div class="card p"><h3>Purpose</h3><div class="method-b" id="mPurpose"></div></div>
       <div class="card p"><h3>Reporting period &amp; sources</h3><div class="method-b" id="mSources"></div></div>
       <div class="card p"><h3>Severity definition</h3><div class="method-b" id="mSeverity"></div></div>
@@ -491,6 +543,19 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
   </section>
 
 </main>
+
+<!-- District profile drawer -->
+<div class="drawer-back" id="drawerBack"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+  <div class="drawer-head">
+    <div>
+      <h3 id="drawerTitle"></h3>
+      <div class="sub" id="drawerSub"></div>
+    </div>
+    <button class="drawer-x" id="drawerX" aria-label="Close">×</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+</aside>
 
 <footer>
   <div class="wrap">

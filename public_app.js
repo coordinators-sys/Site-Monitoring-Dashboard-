@@ -18,10 +18,18 @@ function sevBand(pct){return pct>=55?'Severe':pct>=40?'High':pct>=25?'Moderate':
 let LANG=(function(){try{return localStorage.getItem('smd_lang')||'en';}catch(e){return 'en';}})();
 const I18N={
  en:{
-  'nav.overview':'Overview','nav.map':'Geographic Priorities','nav.sectors':'Sector Gaps',
-  'nav.districts':'District Analysis','nav.downloads':'Downloads','nav.about':'About the Data',
-  'h.overview':'National Overview','h.map':'Geographic Priorities','h.sectors':'Sector Gaps',
-  'h.districts':'District Analysis','h.downloads':'Downloads','h.about':'About the Data',
+  'nav.overview':'Overview','nav.map':'Geographic Analysis','nav.sectors':'Sector Analysis',
+  'nav.districts':'District Profiles','nav.downloads':'Data & Downloads','nav.about':'About the Data',
+  'h.overview':'National Overview','h.map':'Geographic Analysis','h.sectors':'Sector Analysis',
+  'h.districts':'District Profiles','h.downloads':'Data & Downloads','h.downloads2':'Published downloads','h.about':'About the data',
+  'btn.viewop':'View provisional operational data (live, unreconciled)',
+  'dk.sites':'Sites assessed','dk.cas':'Catchments','dk.hh':'Households','dk.ind':'Individuals',
+  'dk.sev':'Avg. severity','dk.gap':'Gap %','dk.cov':'Coverage %','dk.rank':'National rank',
+  'dh.sevdist':'Severity distribution','dh.topgaps':'Top service gaps','dh.partners':'Reporting partners',
+  'dh.q1q2':'Assessment coverage, Q1 vs Q2','dh.cas':'Catchments assessed',
+  'd.published':'Published summary','d.operational':'Operational detail (unreconciled)',
+  'd.nolive':'No live operational detail for this district in the selected period.',
+  'd.opengeo':'Show on map','close':'Close',
   'h.sectorperf':'Sector Performance','h.findings':'Key Findings','h.opsnapshot':'Operational Snapshot',
   'h.caanalysis':'Catchment analysis','h.partners':'Reporting partners',
   'label.period':'Reporting period','badge.published':'PUBLISHED RESULTS','label.view':'View',
@@ -39,10 +47,18 @@ const I18N={
   'sites.of':'{a} of {b} sites plotted (sites without GPS are listed in data but cannot be mapped)',
  },
  so:{
-  'nav.overview':'Guudmar','nav.map':'Mudnaanta Juqraafi','nav.sectors':'Daldaloolada Qaybaha',
-  'nav.districts':'Falanqaynta Degmooyinka','nav.downloads':'Soo dejin','nav.about':'Ku saabsan Xogta',
-  'h.overview':'Guudmarka Qaranka','h.map':'Mudnaanta Juqraafiga','h.sectors':'Daldaloolada Qaybaha',
-  'h.districts':'Falanqaynta Degmooyinka','h.downloads':'Soo dejinta','h.about':'Ku saabsan Xogta',
+  'nav.overview':'Guudmar','nav.map':'Falanqaynta Juqraafi','nav.sectors':'Falanqaynta Qaybaha',
+  'nav.districts':'Astaamaha Degmooyinka','nav.downloads':'Xog & Soo dejin','nav.about':'Ku saabsan Xogta',
+  'h.overview':'Guudmarka Qaranka','h.map':'Falanqaynta Juqraafiga','h.sectors':'Falanqaynta Qaybaha',
+  'h.districts':'Astaamaha Degmooyinka','h.downloads':'Xog & Soo dejin','h.downloads2':'Soo dejinta la daabacay','h.about':'Ku saabsan xogta',
+  'btn.viewop':'Fiiri xogta hawleed ee ku-meel-gaadhka ah (toos, aan la xaqiijin)',
+  'dk.sites':'Goobaha la qiimeeyay','dk.cas':'Aagag (CA)','dk.hh':'Qoysas','dk.ind':'Shakhsiyaad',
+  'dk.sev':'Celceliska darnaanta','dk.gap':'Daldalool %','dk.cov':'Daboolid %','dk.rank':'Darajada Qaranka',
+  'dh.sevdist':'Qaybinta darnaanta','dh.topgaps':'Daldaloolada ugu waaweyn','dh.partners':'Wada-hawlgalayaasha',
+  'dh.q1q2':'Daboolka qiimaynta, Q1 iyo Q2','dh.cas':'Aagagga la qiimeeyay',
+  'd.published':'Kooban la daabacay','d.operational':'Faahfaahin hawleed (aan la xaqiijin)',
+  'd.nolive':'Ma jiro faahfaahin hawleed oo toos ah degmadan muddada la doortay.',
+  'd.opengeo':'Ku muuji khariidada','close':'Xir',
   'h.sectorperf':'Waxqabadka Qaybaha','h.findings':'Natiijooyinka Muhiimka ah','h.opsnapshot':'Muuqaal Hawleed',
   'h.caanalysis':'Falanqaynta Aagagga (CA)','h.partners':'Wada-hawlgalayaasha Warbixinaya',
   'label.period':'Muddada Warbixinta','badge.published':'NATIIJOOYIN LA DAABACAY','label.view':'Muuqaal',
@@ -124,16 +140,28 @@ function renderOverview(){
   const p=period(), K=p.kpi;
   periodBlocked('#ovPeriodNote');   // headline KPIs exist for every period; the note explains what doesn't
   $('#ovIntro').textContent=DATA.intro;
+  // Comparison against the other reporting period, labelled explicitly as an
+  // assessment-coverage change — never implying humanitarian conditions changed.
+  const other=PERIODS.find(x=>x.id!==p.id);
+  const cmp=(key)=>{
+    if(!other) return '';
+    const d=(K[key]||0)-(other.kpi[key]||0);
+    if(d===0) return `same as ${other.id}`;
+    return `${fmt(Math.abs(d))} ${d<0?'fewer':'more'} than ${other.id}`;
+  };
   const cards=[
-    {v:fmt(K.sites),l:t('kpi.sites')},
-    {v:fmt(K.catchments),l:t('kpi.cas')},
-    {v:fmt(K.districts),l:t('kpi.districts')},
-    {v:fmt(K.partners),l:t('kpi.partners')},
-    {v:fmt(K.hhs),l:t('kpi.hhs')},
-    {v:fmt(K.individuals),l:t('kpi.ind')},
+    {v:fmt(K.sites),l:t('kpi.sites'),s:cmp('sites')},
+    {v:fmt(K.catchments),l:t('kpi.cas'),s:cmp('catchments')},
+    {v:fmt(K.districts),l:t('kpi.districts'),s:cmp('districts')},
+    {v:fmt(K.partners),l:t('kpi.partners'),s:cmp('partners')},
+    {v:fmt(K.hhs),l:t('kpi.hhs'),s:cmp('hhs')},
+    {v:fmt(K.individuals),l:t('kpi.ind'),s:cmp('individuals')},
   ];
   $('#kpiRow').innerHTML=cards.map(c=>`<div class="kpi">
-    <div class="k-val">${c.v}</div><div class="k-lab">${esc(c.l)}</div></div>`).join('');
+    <div class="k-val">${c.v}</div><div class="k-lab">${esc(c.l)}</div>
+    ${c.s?`<div class="k-sub">${esc(c.s)}</div>`:''}</div>`).join('');
+  const cn=$('#kpiCaveat');
+  if(cn) cn.textContent = other ? 'Differences versus '+other.id+' reflect which locations were assessed each period — not a change in conditions on the ground.' : '';
 
   // Key Findings and the Sector Performance chart are analytical results from the
   // full-granularity report — for a headline-totals-only period they are hidden
@@ -376,8 +404,12 @@ async function renderMap(){
       const poly=L.polygon(gd.rings.map(swapRing),
         {color:'#fff',weight:.8,fillColor:fillFor(gd.pc),fillOpacity:.6});
       poly.bindTooltip(d
-        ? `<b>${esc(gd.n)}</b><br>${fmt(d.n)} sites assessed · Gap ${d.gap}% / Coverage ${d.cov}%`
-        : `<b>${esc(gd.n)}</b><br>Not individually reported this period`,{sticky:true});
+        ? `<b>${esc(gd.n)}</b><br>${fmt(d.n)} sites assessed · Gap ${d.gap}% / Coverage ${d.cov}%<br><i>Click for full profile</i>`
+        : `<b>${esc(gd.n)}</b><br>Not individually reported this period<br><i>Click for operational detail</i>`,{sticky:true});
+      // Clicking a district opens its profile drawer; strong border marks the selection.
+      poly.on('mouseover',()=>poly.setStyle({weight:2.4,color:'#104E5D'}));
+      poly.on('mouseout',()=>poly.setStyle({weight:.8,color:'#fff'}));
+      poly.on('click',async()=>{ await ensureOperational(); openDistrictDrawer(gd.n, d); });
       poly.addTo(MAP_D_LAYER);
       if(d) MAP_FOCUS.push(poly.getBounds());
       MAP_INDEX.push({hay:`${gd.n} ${gd.r||''}`.toLowerCase(),bounds:poly.getBounds()});
@@ -476,24 +508,26 @@ const DIST_ROWS=()=>[...DATA.districts].sort((a,b)=>b.gap-a.gap);
 function paintDistrictRows(rows){
   $('#distTable').innerHTML=rows.length?rows.map(d=>{
     const band=sevBand(d.gap);
-    const bandCell=k=>d.bands?fmt(d.bands[k]):'<span class="dash">—</span>';
-    return `<tr>
+    return `<tr class="rowlink" data-dist="${esc(d.district)}">
       <td style="font-weight:600">${esc(d.district)}</td><td>${esc(d.region)}</td>
       <td class="ctr">${fmt(d.n)}</td>
       <td class="ctr"><span class="badge ${band}">${d.gap}%</span></td>
-      <td class="ctr">${bandCell('Severe')}</td><td class="ctr">${bandCell('High')}</td>
-      <td class="ctr">${bandCell('Moderate')}</td><td class="ctr">${bandCell('Low')}</td>
-      <td style="font-size:12px">${esc(d.mainGap||'—')}</td>
+      <td class="ctr">${d.cov}%</td>
+      <td class="ctr chev">›</td>
     </tr>`;
-  }).join('') : `<tr><td colspan="9"><p class="empty-note">No districts match this filter.</p></td></tr>`;
+  }).join('') : `<tr><td colspan="6"><p class="empty-note">No districts match this filter.</p></td></tr>`;
+  $$('#distTable tr.rowlink').forEach(tr=>tr.addEventListener('click',async()=>{
+    const name=tr.dataset.dist, pub=DATA.districts.find(x=>x.district===name);
+    await ensureOperational(); openDistrictDrawer(name, pub);
+  }));
 }
 function renderDistricts(){
   $('#partnerChips').innerHTML=DATA.partners.map(p=>
     `<span class="pub-chip-sm" style="padding:5px 11px;font-size:12px">${esc(p)}</span>`).join('');
   renderOperational().catch(e=>console.error('[public dashboard] "operational" failed:', e));
   if(periodBlocked('#distPeriodNote')){
-    $('#distTable').innerHTML='<tr><td colspan="9"><p class="empty-note">District rankings are not '
-      +'published for this reporting period.</p></td></tr>';
+    $('#distTable').innerHTML='<tr><td colspan="6"><p class="empty-note">District rankings are not '
+      +'published for this reporting period. Open any district on the map for its live operational profile.</p></td></tr>';
     $('#distFootnote').textContent='';
     $('#distFilterCount').textContent='';
     const fi=$('#distFilter'); if(fi){ fi.value=''; fi.disabled=true; }
@@ -513,6 +547,103 @@ function renderDistricts(){
   input.value='';
   input.oninput=apply;
   $('#distFootnote').innerHTML=DATA.districtFootnote;
+}
+
+/* ================= DISTRICT PROFILE DRAWER ================= */
+const SECNAME=Object.fromEntries((DATA.sectors||[]).map(s=>[s.code,s.name]));
+function districtProfile(name){
+  // Rich profile is computed from the live operational site records — the only dataset
+  // granular enough for per-district sector/severity/partner detail. Clearly badged
+  // operational; the published summary (gap/coverage) is shown alongside when it exists.
+  const {rows,order}=opSites();
+  const sites=rows.filter(s=>s.d===name);
+  if(!sites.length) return {name,order,sites:[],period:opSites().label};
+  const bands={Severe:0,High:0,Moderate:0,Low:0};
+  let hh=0, ind=0, sevSum=0; const cas=new Set(), partners=new Set();
+  sites.forEach(s=>{ bands[s.b]=(bands[s.b]||0)+1; hh+=s.hh||0; ind+=s.ind||0; sevSum+=s.v;
+    if(s.c) cas.add(s.c); if(s.p) partners.add(s.p); });
+  // per-sector gap = Red share of applicable (non-NA) site dots
+  const gaps=order.map((code,i)=>{
+    let appl=0, red=0;
+    sites.forEach(s=>{ const d=(s.sc||[])[i]; if(!d||d==='NA') return; appl++; if(d==='R'||d==='K') red++; });
+    return {code, name:SECNAME[code]||code, pct:appl?Math.round(red/appl*100):null, appl};
+  }).filter(g=>g.pct!=null).sort((a,b)=>b.pct-a.pct);
+  return {name, order, sites, cas:cas.size, hh, ind, partners:[...partners].sort(),
+          avg:Math.round(sevSum/sites.length*10)/10, bands, gaps};
+}
+function q1q2ForDistrict(name){
+  const out={};
+  if(OP_DATA&&OP_DATA.quarters) Object.entries(OP_DATA.quarters).forEach(([k,q])=>{
+    out[k]=(q.sites||[]).filter(s=>s.d===name).length;
+  });
+  return out;
+}
+function openDistrictDrawer(name, pub){
+  const pr=districtProfile(name);
+  $('#drawerTitle').textContent=name;
+  $('#drawerSub').textContent=(pr.sites[0]?pr.sites[0].r+' · ':'')+t('d.operational');
+  const total=pr.sites.length;
+  let html='';
+  if(pub){
+    html+=`<div style="margin-bottom:10px"><span class="op-badge" style="background:var(--teal-l);color:var(--teal-d);border-color:var(--teal)">${esc(t('d.published'))}</span></div>`
+      +`<div class="dk-grid"><div class="dk"><div class="v">${pub.gap}%</div><div class="l">${esc(t('dk.gap'))}</div></div>`
+      +`<div class="dk"><div class="v">${pub.cov}%</div><div class="l">${esc(t('dk.cov'))}</div></div></div>`;
+  }
+  if(!total){
+    html+=`<p class="empty-note" style="text-align:left">${esc(t('d.nolive'))}</p>`;
+    $('#drawerBody').innerHTML=html; openDrawer(); return;
+  }
+  html+=`<div style="margin-bottom:8px"><span class="op-badge">${esc(t('d.operational'))} · ${esc(pr.period||'')}</span></div>`;
+  html+=`<div class="dk-grid">
+    <div class="dk"><div class="v">${fmt(total)}</div><div class="l">${esc(t('dk.sites'))}</div></div>
+    <div class="dk"><div class="v">${fmt(pr.cas)}</div><div class="l">${esc(t('dk.cas'))}</div></div>
+    <div class="dk"><div class="v">${fmt(pr.hh)}</div><div class="l">${esc(t('dk.hh'))}</div></div>
+    <div class="dk"><div class="v">${fmt(pr.ind)}</div><div class="l">${esc(t('dk.ind'))}</div></div>
+    <div class="dk dk-full"><div class="v"><span class="badge ${sevBand(pr.avg)}">${pr.avg}%</span></div><div class="l">${esc(t('dk.sev'))}</div></div>
+  </div>`;
+  // severity distribution bar
+  const segs=['Severe','High','Moderate','Low'].map(b=>{
+    const n=pr.bands[b]||0; if(!n) return '';
+    return `<span style="background:${bandColor(b)};flex:${n}" title="${esc(t('band.'+b))}: ${n}">${n}</span>`;
+  }).join('');
+  html+=`<h4>${esc(t('dh.sevdist'))}</h4><div class="sevbar">${segs}</div>`;
+  // top gaps
+  html+=`<h4>${esc(t('dh.topgaps'))}</h4>`;
+  pr.gaps.slice(0,5).forEach(g=>{
+    html+=`<div class="gaprow"><div>${esc(g.name)}<div class="gt"><div class="gf" style="width:${g.pct}%"></div></div></div>
+      <div class="gv">${g.pct}%</div></div>`;
+  });
+  // Q1 vs Q2 assessment coverage for this district
+  const qq=q1q2ForDistrict(name), qk=Object.keys(qq);
+  if(qk.length>1){
+    html+=`<h4>${esc(t('dh.q1q2'))}</h4><div class="q1q2mini">`
+      +qk.map(k=>`<div>${esc(k)}</div><div class="h"></div><div style="font-weight:700;text-align:right">${fmt(qq[k])}</div>`).join('')
+      +`</div><p style="font-size:11px;color:var(--muted);margin:6px 0 0">Assessment coverage, not a change in conditions.</p>`;
+  }
+  // partners
+  html+=`<h4>${esc(t('dh.partners'))}</h4><div class="chips">`
+    +pr.partners.map(p=>`<span class="pub-chip-sm" style="padding:4px 9px">${esc(p)}</span>`).join('')+`</div>`;
+  // jump to map
+  html+=`<button class="btn sm" id="drawerGeo" style="margin-top:16px">${esc(t('d.opengeo'))}</button>`;
+  $('#drawerBody').innerHTML=html;
+  const gb=$('#drawerGeo');
+  if(gb) gb.onclick=()=>{ closeDrawer();
+    $$('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelector('.tab[data-view="map"]').classList.add('active');
+    $$('.view').forEach(v=>v.classList.remove('active')); $('#view-map').classList.add('active');
+    SHOW_SITES=true; SF={region:'',district:name,q:''};
+    renderMap().then(()=>{ const el=$('#sfSite'); if(el) el.value=''; renderSitePoints(); });
+  };
+  openDrawer();
+}
+function openDrawer(){ $('#drawerBack').classList.add('open'); $('#drawer').classList.add('open');
+  const x=$('#drawerX'); if(x) x.focus(); }
+function closeDrawer(){ $('#drawerBack').classList.remove('open'); $('#drawer').classList.remove('open'); }
+function wireDrawer(){
+  const x=$('#drawerX'), bk=$('#drawerBack');
+  if(x) x.onclick=closeDrawer;
+  if(bk) bk.onclick=closeDrawer;
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDrawer(); });
 }
 
 /* ================= OPERATIONAL SNAPSHOT (unreconciled) ================= */
@@ -573,15 +704,24 @@ function paintOperational(op){
 async function renderOperational(){
   const op=await ensureOperational();
   if(!op||!op.quarters||!Object.keys(op.quarters).length){ return; }
-  $('#opSection').hidden=false;
+  // Provisional data stays collapsed under an opt-in button; it never renders directly
+  // beneath the published results by default (donor/OCHA confusion risk).
+  $('#opCollapse').hidden=false;
   const src=$('#opSourceNote');
   if(src) src.textContent=OP_LIVE
     ? 'Live — queried directly from Kobo/Zite'+(op.generatedAt?` as of ${esc(op.generatedAt)}`:'')+'.'
     : 'Live endpoint unreachable right now — showing the last snapshot generated at deploy time, not a real-time read.';
-  // The header period selector drives this section too; the chips below still let a
-  // user compare periods without changing the whole page.
   if(Object.keys(op.quarters).includes(CUR_PERIOD)) OP_Q=CUR_PERIOD;
   paintOperational(op);
+  const tg=$('#opToggle');
+  if(tg && !tg._wired){
+    tg._wired=true;
+    tg.addEventListener('click',()=>{
+      const open=$('#opSection').hidden;
+      $('#opSection').hidden=!open;
+      tg.setAttribute('aria-expanded', open?'true':'false');
+    });
+  }
 }
 
 /* ================= DOWNLOADS ================= */
@@ -673,6 +813,6 @@ function renderAll(){
 }
 
 [['brand',renderBrand],['period selector',renderPeriodSelector],['help modal',wireHelp],
- ['language',wireLang]
+ ['language',wireLang],['drawer',wireDrawer]
 ].forEach(([label,fn])=>{ try{ fn(); } catch(e){ console.error('[public dashboard] "'+label+'" failed:', e); } });
 renderAll();
