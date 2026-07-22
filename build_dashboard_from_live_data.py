@@ -8,8 +8,8 @@ self-contained interactive dashboard.
 
 USAGE
 -----
-    export KOBO_API_TOKEN="xxxxxxxxxxxxxxxxxxxx"      # kf.kobo.iom.int API token
-    export ZITE_FULL_KEY="rraXTem6O2XStIGd1DzNm6QTZBY2581...FULL_KEY"
+    export KOBO_API_TOKEN="<your-kobo-api-token>"
+    export ZITE_FULL_KEY="<your-zite-report-key>"
     pip install requests pandas openpyxl
     python build_dashboard_from_live_data.py
 

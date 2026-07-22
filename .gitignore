@@ -26,3 +26,5 @@ __pycache__/
 .vercel
 # public/index.html IS committed — Vercel's GitHub integration builds from the repo,
 # so the deployable artefact must be tracked (kept in sync by the daily workflow).
+CCCM_SiteMonitoring_WorkingFiles/
+CCCM_SiteMonitoring_WorkingFiles.zip
