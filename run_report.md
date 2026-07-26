@@ -1,5 +1,5 @@
 # CCCM Somalia — Site Monitoring Q2 2026
-Run 2026-07-25 09:21. Regenerated from live sources.
+Run 2026-07-26 10:17. Regenerated from live sources.
 
 ## Sources & scope
 | | Kobo (all partners except IOM) | Zite Manager (IOM) |
