@@ -1,17 +1,17 @@
 # CCCM Somalia — Site Monitoring Q2 2026
-Run 2026-08-12 04:48. Regenerated from live sources.
+Run 2026-08-13 04:53. Regenerated from live sources.
 
 ## Sources & scope
 | | Kobo (all partners except IOM) | Zite Manager (IOM) |
 |---|---|---|
-| In Q2 2026 window | **469** submissions | **803** site records |
-| After dedup to site grain | **467** | **799** |
+| In Q2 2026 window | **469** submissions | **798** site records |
+| After dedup to site grain | **467** | **794** |
 | Records with no parseable date | 4 | 40 |
 | Grain | one row per submission | one row per site (pre-deduplicated) |
 | Filter field | `date_entry` | `Date of Assessment` |
 | Window | \[2026-04-01, 2026-07-01) — half-open | same |
 
-**Union: 1266 sites.** 19 duplicate Kobo submissions collapsed
+**Union: 1261 sites.** 19 duplicate Kobo submissions collapsed
 (most recent `date_entry`, tie-break most complete). IOM rows in Kobo: 0 — confirms IOM
 reports only via Zite.
 
@@ -59,9 +59,9 @@ dots are not misread:
    `access_education`='no' is the *only* assessed Education indicator (the 9 LC items are
    correctly not-applicable, per the methodology). One indicator, red, = 100% -> dark-red
    critical. So "no school on site" renders as critical — arguably the right signal, but
-   it is a floor effect, not a gradient. Current split: 620 of 1266 sites are
-   critical on that single indicator; the remaining 646 are scored across
-   all 11 and distribute normally (G=324 Y=190 R=132).
+   it is a floor effect, not a gradient. Current split: 620 of 1261 sites are
+   critical on that single indicator; the remaining 641 are scored across
+   all 11 and distribute normally (G=319 Y=190 R=132).
 3. **NFI is mostly not-assessed.** Its 2 indicators are gated on an NFI distribution
    having occurred; where none has, both are blank. Those sites are carried as
    *not assessed*, never as zero or Red.
@@ -69,31 +69,31 @@ dots are not misread:
 ## Headline
 | | |
 |---|---|
-| Sites | 1266 |
+| Sites | 1261 |
 | Districts | 16 |
 | Catchments | 36 |
-| Households | 170,107 |
-| Individuals | 950,723 |
+| Households | 169,677 |
+| Individuals | 948,171 |
 | Partners | 8 |
-| National severity | **46.2%** |
+| National severity | **46.3%** |
 
 National severity is the unweighted mean of per-site scores and is dominated by the
 largest district — do not present quarter-on-quarter deltas as like-for-like.
 
 ## Validation
-- [PASS] sites.json rows (1266) == union (1266)
-- [PASS] 467 Kobo + 799 IOM == 1266
-- [PASS] every sector cell classified: 15192 == 1266 x 12
+- [PASS] sites.json rows (1261) == union (1261)
+- [PASS] 467 Kobo + 794 IOM == 1261
+- [PASS] every sector cell classified: 15132 == 1261 x 12
 - [PASS] sector states within G/Y/R/K/NA (stray: none)
 - [PASS] severity within 0-100 (min 4, max 97)
 - [PASS] no site with 0 assessed sectors (0 found)
 - [PASS] severity band matches score
-- [PASS] national severity recomputes (46.2 vs KPI 46.2)
+- [PASS] national severity recomputes (46.3 vs KPI 46.3)
 - [PASS] every sector scores its declared indicator count at some site
 - [PASS] kpi.catchments (36) == catchAgg rows (36)
 - [PASS] Zite label->code translation complete (0 unmapped across 0 labels)
-- [PASS] source counts agree across provenance/recon/sites.json (467+799 vs recon 467 vs 1266)
-- [PASS] age/sex summed over 387 distinct verification rows (388 site rows matched)
+- [PASS] source counts agree across provenance/recon/sites.json (467+794 vs recon 467 vs 1261)
+- [PASS] age/sex summed over 382 distinct verification rows (383 site rows matched)
 - [PASS] district+name collisions remaining: 3 (kept as distinct sites: [('Baydhaba', 'buur adoy'), ('Baydhaba', 'wabiyow'), ('Daynile', 'marwo')])
 - [PASS] district counts reconcile across 16 districts
 - [PASS] scrub clean across 4 artefacts (no hits)
@@ -113,16 +113,16 @@ site-detail annex per methodology).
   - sector dots: CCCM=G, Protection=K, CP=K, GBV=G, HLP=K, NFI=NA, Shelter=K, WASH=G, Health=G, FSL=G, Nutrition=G, Education=G
   - red/critical sectors: Protection, CP, HLP, Shelter
   - severity 42 -> band High (mean of per-sector red% across the 11 assessed sectors)
-**Wamo 2** — Kismaayo (IOM)
+**Arare** — Kismaayo (IOM)
   - sectors assessed: 11/12 (not assessed: NFI)
-  - sector dots: CCCM=Y, Protection=G, CP=Y, GBV=G, HLP=G, NFI=NA, Shelter=Y, WASH=Y, Health=G, FSL=Y, Nutrition=G, Education=G
-  - red/critical sectors: none
-  - severity 20 -> band Low (mean of per-sector red% across the 11 assessed sectors)
+  - sector dots: CCCM=Y, Protection=Y, CP=Y, GBV=Y, HLP=G, NFI=NA, Shelter=Y, WASH=Y, Health=Y, FSL=Y, Nutrition=R, Education=K
+  - red/critical sectors: Nutrition, Education
+  - severity 46 -> band High (mean of per-sector red% across the 11 assessed sectors)
 
 ## Not done
 - **No validated Kobo<->Zite crosswalk.** Master-List matching by code, name and GPS *is*
-  performed (803 of 1,266 sites resolved,
-  methods: {'code': 281, 'none': 463, 'name': 433, 'gps+name': 95}), and it is what collapses cross-source
+  performed (799 of 1,261 sites resolved,
+  methods: {'code': 281, 'none': 462, 'name': 429, 'gps+name': 95}), and it is what collapses cross-source
   duplicates. What does not exist is a validated crosswalk between the two site-code
   systems themselves (`CCCM-SO2801-0313` vs `CCCM-BDA-SO2401-11-0015`, raw overlap 0), so
   residual duplication across sources is possible where names and GPS both disagree.
