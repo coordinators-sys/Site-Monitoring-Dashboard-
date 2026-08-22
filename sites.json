@@ -17091,33 +17091,6 @@
   }
  },
  {
-  "region": "Lower Juba",
-  "district": "Kismaayo",
-  "ca": "Catchment Area 03",
-  "site": "Alle Bari",
-  "code": "CCCM-SO2801-0300",
-  "partner": "IOM",
-  "source": "Zite/IOM",
-  "hh": 75.0,
-  "individuals": 450.0,
-  "severity": 33,
-  "band": "Moderate",
-  "scores": {
-   "CCCM": "Y",
-   "Protection": "Y",
-   "CP": "Y",
-   "GBV": "Y",
-   "HLP": "G",
-   "NFI": "NA",
-   "Shelter": "Y",
-   "WASH": "R",
-   "Health": "G",
-   "FSL": "G",
-   "Nutrition": "G",
-   "Education": "Y"
-  }
- },
- {
   "region": "Bay",
   "district": "Baydhaba",
   "ca": "Catchment Area 01",
@@ -31511,33 +31484,6 @@
  {
   "region": "Lower Juba",
   "district": "Kismaayo",
-  "ca": "Catchment Area 03",
-  "site": "Allaha-Magan",
-  "code": "CCCM-SO2801-0359",
-  "partner": "IOM",
-  "source": "Zite/IOM",
-  "hh": 115.0,
-  "individuals": 690.0,
-  "severity": 27,
-  "band": "Moderate",
-  "scores": {
-   "CCCM": "Y",
-   "Protection": "Y",
-   "CP": "Y",
-   "GBV": "Y",
-   "HLP": "G",
-   "NFI": "G",
-   "Shelter": "Y",
-   "WASH": "Y",
-   "Health": "G",
-   "FSL": "G",
-   "Nutrition": "G",
-   "Education": "Y"
-  }
- },
- {
-  "region": "Lower Juba",
-  "district": "Kismaayo",
   "ca": "Catchment Area 01",
   "site": "Mareerey",
   "code": "CCCM-SO2801-0170",
@@ -31560,33 +31506,6 @@
    "FSL": "Y",
    "Nutrition": "G",
    "Education": "G"
-  }
- },
- {
-  "region": "Lower Juba",
-  "district": "Kismaayo",
-  "ca": "Catchment Area 03",
-  "site": "Alhamdu",
-  "code": "CCCM-SO2801-0004",
-  "partner": "IOM",
-  "source": "Zite/IOM",
-  "hh": 80.0,
-  "individuals": 480.0,
-  "severity": 29,
-  "band": "Moderate",
-  "scores": {
-   "CCCM": "Y",
-   "Protection": "G",
-   "CP": "Y",
-   "GBV": "Y",
-   "HLP": "G",
-   "NFI": "G",
-   "Shelter": "Y",
-   "WASH": "Y",
-   "Health": "G",
-   "FSL": "G",
-   "Nutrition": "G",
-   "Education": "Y"
   }
  },
  {
