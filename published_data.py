@@ -61,19 +61,20 @@ SECTORS = [
     {"name": "Nutrition",                      "code": "Nutr", "gap": 32, "cov": 59},
 ]
 
-# p.7 "Top 10 Indicators - Red (Gaps)". learningCentre marks the report's own
+# p.7 "Top 10 Indicators - Red (Gaps)". "gap" is what a Red score means in plain words
+# (report_findings.RED_PHRASE in the report pipeline), so the list reads as gaps. learningCentre marks the report's own
 # dagger-note "Learning-centre sites only (n=690)".
 TOP_RED = [
-    {"rank": 1,  "indicator": "On-site food/cash distribution",      "pct": 84, "lc": False, "sector": "FSL"},
-    {"rank": 2,  "indicator": "Ambulance service available",         "pct": 81, "lc": False, "sector": "Hlth"},
-    {"rank": 3,  "indicator": "Gender-separated WASH facilities",    "pct": 79, "lc": False, "sector": "WASH"},
-    {"rank": 4,  "indicator": "School feeding programmes",           "pct": 78, "lc": True,  "sector": "Educ"},
-    {"rank": 5,  "indicator": "Shelter repair kits available",       "pct": 75, "lc": False, "sector": "Shel"},
-    {"rank": 6,  "indicator": "Hygiene kits distributed",            "pct": 73, "lc": False, "sector": "WASH"},
-    {"rank": 7,  "indicator": "Site decongestion activities",        "pct": 70, "lc": False, "sector": "CCCM"},
-    {"rank": 8,  "indicator": "Unaccompanied/separated children",    "pct": 70, "lc": False, "sector": "CP"},
-    {"rank": 9,  "indicator": "WASH waste-management kits",          "pct": 64, "lc": False, "sector": "WASH"},
-    {"rank": 10, "indicator": "CMC received training",               "pct": 63, "lc": False, "sector": "CCCM"},
+    {"rank": 1,  "indicator": "On-site food/cash distribution",      "pct": 84, "lc": False, "sector": "FSL", "gap": "had no food or cash distribution for over six months"},
+    {"rank": 2,  "indicator": "Ambulance service available",         "pct": 81, "lc": False, "sector": "Hlth", "gap": "have no ambulance service"},
+    {"rank": 3,  "indicator": "Gender-separated WASH facilities",    "pct": 79, "lc": False, "sector": "WASH", "gap": "have latrines and bathing spaces not separated by gender"},
+    {"rank": 4,  "indicator": "School feeding programmes",           "pct": 78, "lc": True,  "sector": "Educ", "gap": "have no school feeding"},
+    {"rank": 5,  "indicator": "Shelter repair kits available",       "pct": 75, "lc": False, "sector": "Shel", "gap": "have no shelter repair kits"},
+    {"rank": 6,  "indicator": "Hygiene kits distributed",            "pct": 73, "lc": False, "sector": "WASH", "gap": "received no hygiene kits"},
+    {"rank": 7,  "indicator": "Site decongestion activities",        "pct": 70, "lc": False, "sector": "CCCM", "gap": "had no decongestion activities"},
+    {"rank": 8,  "indicator": "Unaccompanied/separated children",    "pct": 70, "lc": False, "sector": "CP", "gap": "report unaccompanied or separated children"},
+    {"rank": 9,  "indicator": "WASH waste-management kits",          "pct": 64, "lc": False, "sector": "WASH", "gap": "have no waste management tools"},
+    {"rank": 10, "indicator": "CMC received training",               "pct": 63, "lc": False, "sector": "CCCM", "gap": "report no committee training this month"},
 ]
 # p.7 "Top 10 Indicators - Green (Coverage)"
 TOP_GREEN = [

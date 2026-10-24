@@ -231,8 +231,8 @@ main{padding:24px 0 56px}
 .dv-head .c{text-align:left;padding-left:52px;color:var(--cov)}
 .sec-ic{width:16px;height:16px;object-fit:contain;flex:0 0 auto}
 
-.hbar-row{display:grid;grid-template-columns:230px 1fr 42px;align-items:center;gap:10px;padding:3px 0;font-size:12.5px}
-.hbar-row .l{color:var(--ink);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbar-row{display:grid;grid-template-columns:minmax(0,1.4fr) 1fr 42px;align-items:center;gap:10px;padding:5px 0;font-size:12.5px}
+.hbar-row .l{color:var(--ink);font-size:12px;line-height:1.35}
 .hbar-track{background:var(--plane-2);border-radius:5px;height:16px;overflow:hidden}
 .hbar-fill{height:100%;border-radius:5px}
 .hbar-row .v{font-weight:700;text-align:right;font-size:12px}
@@ -261,7 +261,7 @@ table.plain .ctr{text-align:center}
   color:var(--ink-2);padding:8px 13px;border-radius:20px;cursor:pointer;display:flex;align-items:center;gap:6px}
 .sd-tab.active{background:var(--teal);color:#fff;border-color:var(--teal-d)}
 .sd-tab img{width:15px;height:15px}
-.tri-row{display:grid;grid-template-columns:1fr 2fr 40px;align-items:center;gap:10px;padding:5px 0;font-size:12px}
+.tri-row{display:grid;grid-template-columns:1.4fr 1fr 40px;align-items:center;gap:10px;padding:5px 0;font-size:12px}
 .tri-bar{height:15px;border-radius:5px;overflow:hidden;background:var(--plane-2);display:flex}
 .tri-seg.g{background:var(--s-low)} .tri-seg.y{background:var(--s-mod)} .tri-seg.r{background:var(--s-high)}
 
@@ -310,6 +310,47 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
   padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.2s;z-index:300}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .empty-note{padding:20px;text-align:center;color:var(--muted);font-size:12.5px}
+
+/* gap finder — one traffic light + one plain sentence per indicator */
+.gp-cta{display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap;background:var(--teal-l);
+  border:1px solid var(--line);border-radius:var(--radius);padding:14px 18px;margin:0 0 26px}
+.gp-cta b{display:block;font-size:15px;color:var(--teal-d)} .gp-cta span{font-size:12.5px;color:var(--ink-2)}
+.gp-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-bottom:12px}
+.gp-controls label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.gp-controls select{font:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;
+  background:var(--surface);color:var(--ink);min-width:240px}
+.gp-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.gp-chip{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;
+  padding:6px 12px;font:inherit;font-size:12.5px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.gp-chip img{width:16px;height:16px}
+.gp-chip.active{background:var(--teal);border-color:var(--teal);color:#fff}
+.gp-sum{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px;font-size:13px}
+.gp-pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 10px;
+  background:var(--surface);cursor:pointer;font:inherit;font-size:12.5px;color:var(--ink)}
+.gp-pill.active{outline:2px solid var(--teal)}
+.gp-pill i,.gp-light{display:inline-block;border-radius:50%;flex:none}
+.gp-pill i{width:10px;height:10px}
+.gp-list{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);overflow:hidden}
+.gp-row{border-bottom:1px solid var(--line-2)} .gp-row:last-child{border-bottom:none}
+.gp-main{appearance:none;border:none;background:none;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;
+  display:grid;grid-template-columns:auto 1fr 180px;gap:14px;align-items:center;padding:12px 16px}
+.gp-main:hover{background:var(--plane)}
+.gp-light{width:22px;height:22px;box-shadow:inset 0 0 0 2px rgba(0,0,0,.08)}
+.gp-verdict{display:block;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+.gp-sent{display:block;font-size:14.5px;line-height:1.35;margin-top:1px}
+.gp-sub{display:block;font-size:11.5px;color:var(--muted);margin-top:3px}
+.gp-tag{display:inline-block;font-size:10px;font-weight:700;border-radius:4px;padding:1px 5px;margin-left:6px;
+  background:var(--plane-2);color:var(--ink-2);vertical-align:1px}
+.gp-bar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--line-2)}
+.gp-bar span{display:block;height:100%}
+.gp-barlab{font-size:10.5px;color:var(--muted);margin-top:4px;display:flex;justify-content:space-between}
+.gp-more{padding:4px 16px 14px 52px;font-size:12.5px}
+.gp-more h5{margin:6px 0 6px;font-size:11px;text-transform:uppercase;color:var(--muted)}
+.gp-cmp{display:grid;grid-template-columns:auto 1fr auto;gap:5px 10px;align-items:center;max-width:520px}
+.gp-cmp .gp-light{width:12px;height:12px}
+.gp-actions{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+@media(max-width:640px){.gp-main{grid-template-columns:auto 1fr}.gp-main .gp-barwrap{grid-column:2}
+  .gp-more{padding-left:16px}.gp-controls select{min-width:0;width:100%}.gp-controls>div{flex:1 1 100%}}
 [data-theme="dark"]{--surface:#1E2427;--card-bg:#1E2427;--plane:#14181A;--plane-2:#1B2529;--ink:#E8ECED;--ink-2:#c7cdce;--muted:#9AA5AA;--line:#2C3438;--line-2:#232B2E;--teal-l:#123640}
 
 @media print{
@@ -362,6 +403,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
 <nav class="tabs">
   <div class="wrap">
     <button class="tab active" data-view="overview" data-i18n="nav.overview">Overview</button>
+    <button class="tab" data-view="gaps" data-i18n="nav.gaps">Gap Finder</button>
     <button class="tab" data-view="map" data-i18n="nav.map">Geographic Analysis</button>
     <button class="tab" data-view="sectors" data-i18n="nav.sectors">Sector Analysis</button>
     <button class="tab" data-view="districts" data-i18n="nav.districts">District Profiles</button>
@@ -380,6 +422,11 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
     <div class="period-note" id="ovPeriodNote" hidden></div>
     <div class="grid kpis" id="kpiRow"></div>
     <p id="kpiCaveat" style="font-size:11.5px;color:var(--muted);margin:8px 0 26px;line-height:1.5"></p>
+    <div class="gp-cta" id="gpCta" hidden>
+      <div><b data-i18n="gp.cta">Where are the gaps in your area?</b>
+        <span data-i18n="gp.ctasub">Pick a state or district — every indicator shows a traffic light and says the gap in plain words, ready for coordination meetings.</span></div>
+      <button class="btn" id="gpCtaBtn" data-i18n="gp.open">Open Gap Finder →</button>
+    </div>
     <div class="grid cols2 block">
       <!-- Key Findings come from the full-granularity report only; hidden for a
            headline-totals-only period so its figures never appear under that label. -->
@@ -404,6 +451,28 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
         <div id="sectorDiverge"></div>
       </div>
     </div>
+  </section>
+
+  <!-- ============ GAP FINDER ============ -->
+  <section class="view" id="view-gaps">
+    <div class="sec-head">
+      <h2><span data-i18n="nav.gaps">Gap Finder</span> <span class="period-chip" id="gpPeriodChip"></span></h2>
+      <p data-i18n="gp.intro">Choose an area and a sector. Each indicator gets a traffic light and one plain sentence saying how many sites have the gap. Click an indicator to see where the gap is biggest.</p>
+    </div>
+    <div id="gpTool">
+      <div class="gp-controls">
+        <div><label for="gpArea" data-i18n="gp.area">Area</label><select id="gpArea"></select></div>
+        <div class="gp-actions">
+          <button class="btn sm" id="gpCopy" data-i18n="gp.copy">Copy talking points</button>
+          <button class="btn sm" id="gpCsv" data-i18n="gp.csv">⬇ Download this view (CSV)</button>
+        </div>
+      </div>
+      <div class="gp-chips" id="gpSectors" role="group" aria-label="Sector"></div>
+      <div class="gp-sum" id="gpSum"></div>
+      <div class="gp-list" id="gpList"></div>
+      <p id="gpFoot" style="font-size:11.5px;color:var(--muted);line-height:1.6;margin:10px 0 0"></p>
+    </div>
+    <div id="gpNone" hidden></div>
   </section>
 
   <!-- ============ GEOGRAPHIC ANALYSIS ============ -->

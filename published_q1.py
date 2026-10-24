@@ -74,6 +74,19 @@ TOP_GREEN = [
     {"rank": 9,  "indicator": "Community aware of & using GBV referral",            "n": 1409, "sector": "GBV"},
     {"rank": 10, "indicator": "GBV awareness campaigns conducted",                  "n": 1362, "sector": "GBV"},
 ]
+# What each Red result means in plain words, in TOP_RED order.
+_GAP = ['have insufficient or non-functional latrines',
+        'report shelter that is not adequate',
+        'have no households in income-generating activities',
+        'collected no feedback on non-food items',
+        'did not prioritise vulnerable households for non-food items',
+        'have latrines and bathing spaces not separated by gender',
+        'received no hygiene kits',
+        'have no cash assistance',
+        'had no on-site food distribution when needed',
+        'have no ambulance service']
+for _r, _g in zip(TOP_RED, _GAP):
+    _r["gap"] = _g
 for _r in TOP_RED + TOP_GREEN:
     _r["pct"] = _pct(_r["n"])
     _r["lc"] = False

@@ -104,7 +104,9 @@ for fn in sorted(os.listdir(PUB_DIR)) if os.path.isdir(PUB_DIR) else []:
     pipeline_periods.append({
         "id": f["id"], "key": f["key"], "label": f["label"], "full": True, "note": "",
         "source": f["source"], "kpi": f["kpi"], "partners": f["partners"],
-        "previous": f.get("previous"),
+        "previous": f.get("previous"), "popNote": f.get("popNote"),
+        # per-area indicator counts for the Gap Finder (aggregates only; national = report's indicator table)
+        "gapFinder": f.get("gapFinder"),
         "sectors": [{k: s[k] for k in ("name", "code", "gap", "cov")} for s in f["sectors"]],
         "topRed": f["topRed"], "topGreen": f["topGreen"], "lcNote": f["lcNote"],
         "districts": [{**d, "pc": d.get("pc") or PCODE_BY_NAME.get(d["district"])} for d in f["districts"]],

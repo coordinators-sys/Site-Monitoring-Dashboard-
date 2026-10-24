@@ -63,6 +63,12 @@ const I18N={
   'gf.matchnote':'{n} sites match the current filters.','gf.nomatch':'No sites match the current filters.',
   'gf.capped':'Showing the first {cap} of {n} matching sites — narrow the filters or download the full set.',
   'gf.site':'Site',
+  'nav.gaps':'Gap Finder','gp.area':'Area','gp.copy':'Copy talking points','gp.csv':'⬇ Download this view (CSV)',
+  'gp.cta':'Where are the gaps in your area?','gp.open':'Open Gap Finder →',
+  'gp.ctasub':'Pick a state or district — every indicator shows a traffic light and says the gap in plain words, ready for coordination meetings.',
+  'gp.intro':'Choose an area and a sector. Each indicator gets a traffic light and one plain sentence saying how many sites have the gap. Click an indicator to see where the gap is biggest.',
+  'gp.all':'All sectors','gp.national':'National','gp.states':'States','gp.districts':'Districts',
+  'gp.Severe':'Severe gap','gp.High':'High gap','gp.Moderate':'Moderate gap','gp.Low':'Low gap',
  },
  so:{
   'nav.overview':'Guudmar','nav.map':'Falanqaynta Juqraafi','nav.sectors':'Falanqaynta Qaybaha',
@@ -105,6 +111,9 @@ const I18N={
   'gf.matchnote':'{n} goobood ayaa u dhigma shaandhaynta hadda.','gf.nomatch':'Ma jiraan goobo u dhigma shaandhaynta hadda.',
   'gf.capped':'Waxaa la muujinayaa {cap} ka mid ah {n} goobood — cufi shaandhaynta ama soo deji dhammaan.',
   'gf.site':'Goob',
+  'nav.gaps':'Raadi Daldaloolada','gp.area':'Deegaanka','gp.all':'Dhammaan qaybaha','gp.national':'Qaranka',
+  'gp.states':'Gobol-dowladeedyada','gp.districts':'Degmooyinka',
+  'gp.Severe':'Daldalool daran','gp.High':'Daldalool sare','gp.Moderate':'Daldalool dhexdhexaad','gp.Low':'Daldalool hooseeya',
  }
 };
 const t=k=>(I18N[LANG]&&I18N[LANG][k])||I18N.en[k]||k;
@@ -150,7 +159,7 @@ function PD(){
 }
 function setPeriodChips(){
   const p=period();
-  [['#ovPeriodChip',p.id],['#mapPeriodChip',p.id],['#secPeriodChip',p.id],['#distPeriodChip',p.id]]
+  [['#ovPeriodChip',p.id],['#mapPeriodChip',p.id],['#secPeriodChip',p.id],['#distPeriodChip',p.id],['#gpPeriodChip',p.id]]
     .forEach(([sel,txt])=>{ const el=$(sel); if(el) el.textContent=txt; });
   const foot=$('#footLine');
   if(foot) foot.textContent='CCCM Cluster Somalia · Site Monitoring Dashboard · '+p.label;
@@ -233,7 +242,9 @@ function renderOverview(){
     k.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
   });
   const cn=$('#kpiCaveat');
-  if(cn) cn.textContent = other ? 'Differences versus '+other.id+' reflect which locations were assessed each period — not a change in conditions on the ground.' : '';
+  if(cn) cn.textContent = (other ? 'Differences versus '+other.id+' reflect which locations were assessed each period — not a change in conditions on the ground.' : '')
+    +(p.popNote?' '+p.popNote:'');
+  const cta=$('#gpCta'); if(cta) cta.hidden=!p.gapFinder;
 
   // Key Findings and the Sector Performance chart are analytical results from the
   // full-granularity report — for a headline-totals-only period they are hidden
@@ -718,7 +729,8 @@ function renderSectorBody(){
     return;
   }
   $('#sdBody').innerHTML=rows.map(r=>`<div class="tri-row">
-    <div class="l" title="${esc(r.indicator)}">${esc(r.indicator)}${r.lc?' <span style="color:var(--muted);font-size:10px">(LC)</span>':''}</div>
+    <div class="l" title="${esc(r.indicator)}">${r.kind==='red'&&r.gap?`<b style="color:var(--gap)">Gap:</b> ${esc(gapSentence(r))}`
+      :`${r.kind==='green'?'<b style="color:var(--good)">In place:</b> ':''}${esc(r.indicator)}`}${r.lc?' <span style="color:var(--muted);font-size:10px">(LC)</span>':''}</div>
     <div class="tri-bar"><div class="tri-seg ${r.kind==='red'?'r':'g'}" style="width:${r.pct}%"></div></div>
     <div class="ctr" style="font-weight:700">${r.pct}%</div></div>`).join('')
     +(rows.some(r=>r.lc)&&PD().lcNote?`<p style="margin:10px 0 0;font-size:11px;color:var(--muted)">${esc(PD().lcNote)}</p>`:'');
@@ -726,10 +738,172 @@ function renderSectorBody(){
 function renderTopGaps(){
   if(!period().full) return;   // renderSectorTabs already wrote the unavailable note
   const rows=[...PD().topRed].sort((a,b)=>b.pct-a.pct);
+  // Read as a gap, never as coverage: "76% of sites have no ambulance service".
   $('#topGapsList').innerHTML=rows.map(r=>`<div class="hbar-row">
-    <div class="l" title="${esc(r.indicator)}">${esc(r.indicator)}</div>
+    <div class="l" title="${esc(r.indicator)}">${esc(r.gap?gapSentence(r):r.indicator)}</div>
     <div class="hbar-track"><div class="hbar-fill" style="width:${r.pct}%;background:var(--gap)"></div></div>
     <div class="v" style="color:var(--gap)">${r.pct}%</div></div>`).join('');
+}
+
+/* ================= GAP FINDER ================= */
+/* Meeting tool. Pick an area (national / state / district) and a sector; every indicator
+   gets one traffic light and one plain sentence saying where the gap is ("76% of sites
+   have no ambulance service"), so a Red share can never be read as coverage. The light
+   uses the dashboard's severity scale on the share of sites scored Red: Severe ≥55% ·
+   High 40–55% · Moderate 25–40% · Low <25%. Counts come from the period's pipeline
+   export; the national counts equal the published report's indicator table. */
+const GP={area:'National', sector:'all', band:null, open:null};
+const GP_SMALL=10;                      // the report's own small-sample threshold
+function gapSentence(r, sitesWord){
+  const base=sitesWord||(r.lc?'learning-centre sites':'sites');
+  return `${r.pct}% of ${base} ${r.gap}`;
+}
+// Same rounding as the report (Python: 1 decimal, then half-to-even), so 1,000 of 1,242
+// (80.5%) reads 80% here exactly as in the PDF.
+function gpPct(a, n){
+  if(!n) return null;
+  const p1=Math.round(a/n*1000)/10, f=Math.floor(p1);
+  return Math.abs(p1-f-0.5)<1e-9 ? (f%2===0?f:f+1) : Math.round(p1);
+}
+function gpRows(G, area){
+  return G.indicators.map((m,i)=>{
+    const [g,y,r]=area.c[i], n=g+y+r, pct=gpPct(r,n);
+    return {...m, i, g, y, r, n, pct, band:pct==null?null:sevBand(pct)};
+  });
+}
+function gpVerdict(b){ return t('gp.'+b); }
+function gpAreaLabel(a){ return a.type==='national'?t('gp.national'):a.name; }
+function gpVisible(G, area){
+  return gpRows(G, area)
+    .filter(x=>GP.sector==='all'||x.sector===GP.sector)
+    .filter(x=>!GP.band||x.band===GP.band)
+    .sort((a,b)=>(b.pct==null?-1:b.pct)-(a.pct==null?-1:a.pct));
+}
+function gpLine(x, area){
+  // "1,010 of 1,333 sites" — says "where this applies" when the question only covers some sites.
+  if(!x.n) return '';
+  return `${fmt(x.r)} of ${fmt(x.n)} sites${x.n<area.sites?' where this applies':''}`
+    +(x.y?` · ${fmt(x.y)} partly met`:'')+` · ${fmt(x.g)} met`;
+}
+function renderGapFinder(){
+  const p=period(), G=p.gapFinder;
+  const tool=$('#gpTool'), none=$('#gpNone');
+  if(!G){
+    tool.hidden=true; none.hidden=false;
+    const latest=PERIODS.find(x=>x.gapFinder);
+    none.innerHTML=`<p class="empty-note">Indicator results by state and district are available from Q3 2026 onward — the
+      ${esc(p.id)} report did not publish them at that level.
+      ${latest?`<br><button class="btn sm" id="gpLatest" style="margin-top:10px">Open ${esc(latest.id)}</button>`:''}</p>`;
+    const b=$('#gpLatest'); if(b) b.onclick=()=>{ CUR_PERIOD=latest.id; $('#periodSel').value=latest.id; renderAll(); };
+    return;
+  }
+  tool.hidden=false; none.hidden=true;
+  if(!G.areas.some(a=>a.id===GP.area)) GP.area='National';
+  const area=G.areas.find(a=>a.id===GP.area);
+
+  // area picker: national, then states, then districts (site counts so small areas are obvious)
+  const opt=a=>`<option value="${esc(a.id)}"${a.id===GP.area?' selected':''}>${esc(gpAreaLabel(a))} · ${fmt(a.sites)} sites</option>`;
+  const grp=(typ,lab)=>`<optgroup label="${esc(lab)}">${G.areas.filter(a=>a.type===typ).map(opt).join('')}</optgroup>`;
+  const sel=$('#gpArea');
+  sel.innerHTML=G.areas.filter(a=>a.type==='national').map(opt).join('')+grp('state',t('gp.states'))+grp('district',t('gp.districts'));
+  sel.onchange=()=>{ GP.area=sel.value; GP.open=null; renderGapFinder(); };
+
+  // sector chips, in the published sector order
+  const secs=[...new Set(G.indicators.map(m=>m.sector))];
+  const chip=(code,label,icon)=>`<button class="gp-chip${GP.sector===code?' active':''}" data-s="${esc(code)}" aria-pressed="${GP.sector===code}">${icon||''}${esc(label)}</button>`;
+  $('#gpSectors').innerHTML=chip('all',t('gp.all'))+secs.map(c=>chip(c,SECNAME[c]||c,
+    DATA.assets.icons[c]?`<img src="${DATA.assets.icons[c]}" alt="">`:'')).join('');
+  $$('#gpSectors .gp-chip').forEach(b=>b.onclick=()=>{ GP.sector=b.dataset.s; GP.open=null; renderGapFinder(); });
+
+  // traffic-light summary: also a filter (click a light to show only that level)
+  const inSec=gpRows(G, area).filter(x=>(GP.sector==='all'||x.sector===GP.sector)&&x.n);
+  $('#gpSum').innerHTML=`<b>${esc(gpAreaLabel(area))}</b> <span style="color:var(--muted)">· ${fmt(area.sites)} sites assessed ·</span> `
+    +['Severe','High','Moderate','Low'].map(b=>{
+      const n=inSec.filter(x=>x.band===b).length;
+      return `<button class="gp-pill${GP.band===b?' active':''}" data-b="${b}" aria-pressed="${GP.band===b}"><i style="background:${bandColor(b)}"></i>${n} ${esc(gpVerdict(b).toLowerCase())}</button>`;
+    }).join('')
+    +(area.sites<GP_SMALL?` <span class="gp-tag" style="background:#FBE3DF;color:#9b2c1d">Small sample — fewer than ${GP_SMALL} sites; read with caution</span>`:'');
+  $$('#gpSum .gp-pill').forEach(b=>b.onclick=()=>{ GP.band=GP.band===b.dataset.b?null:b.dataset.b; renderGapFinder(); });
+
+  const rows=gpVisible(G, area);
+  $('#gpList').innerHTML=rows.length?rows.map(x=>{
+    const col=x.band?bandColor(x.band):'#C9CED1';
+    const w=k=>x.n?(x[k]/x.n*100).toFixed(1):0;
+    const open=GP.open===x.code;
+    return `<div class="gp-row">
+      <button class="gp-main" data-code="${esc(x.code)}" aria-expanded="${open}">
+        <span class="gp-light" style="background:${col}" aria-hidden="true"></span>
+        <span>
+          <span class="gp-verdict" style="color:${x.band?col:'var(--muted)'}">${x.n?esc(gpVerdict(x.band)):'Not assessed here'}</span>
+          <span class="gp-sent">${x.n?`<b>${x.pct}%</b> of ${x.n<area.sites?'applicable ':''}sites ${esc(x.gap)}`:esc(x.short)}</span>
+          <span class="gp-sub">${esc(SECNAME[x.sector]||x.sector)} · “${esc(x.q)}”${x.n?' · '+esc(gpLine(x,area)):''}
+            ${x.low?'<span class="gp-tag" title="Many sites did not answer this question; the report keeps it out of its Top 10 lists.">Limited data</span>':''}
+            ${x.n&&x.n<GP_SMALL?'<span class="gp-tag">Small sample</span>':''}</span>
+        </span>
+        <span class="gp-barwrap">${x.n?`<span class="gp-bar" title="Red ${x.r} · Yellow ${x.y} · Green ${x.g}">
+          <span style="width:${w('r')}%;background:#D9534F"></span><span style="width:${w('y')}%;background:#E9A23B"></span><span style="width:${w('g')}%;background:#3A8D68"></span></span>
+          <span class="gp-barlab"><span>gap ${x.pct}%</span><span>met ${gpPct(x.g,x.n)}%</span></span>`:''}</span>
+      </button>
+      ${open?`<div class="gp-more">${gpWhere(G, x, area)}</div>`:''}
+    </div>`;
+  }).join(''):'<p class="empty-note">No indicators at this traffic-light level for this selection.</p>';
+  $$('#gpList .gp-main').forEach(b=>b.onclick=()=>{ GP.open=GP.open===b.dataset.code?null:b.dataset.code; renderGapFinder(); });
+
+  $('#gpFoot').innerHTML=`Traffic light = share of assessed sites where the indicator scored <b>Red</b> (not met): `
+    +`<span style="color:${bandColor('Severe')}">●</span> severe ≥55% · <span style="color:${bandColor('High')}">●</span> high 40–55% · `
+    +`<span style="color:${bandColor('Moderate')}">●</span> moderate 25–40% · <span style="color:${bandColor('Low')}">●</span> low &lt;25%. `
+    +`Yellow = partly met. Missing and Not Applicable answers are left out of every percentage. Source: ${esc(p.source)}.`;
+  $('#gpCopy').onclick=()=>gpCopy(G, area);
+  $('#gpCsv').onclick=()=>gpCsv(G, area);
+}
+// "Where is this gap biggest?" — the selected area against the national figure, then the
+// districts in scope (the selected state's districts, or every district) ranked by gap.
+function gpWhere(G, x, area){
+  const at=a=>{ const [g,y,r]=a.c[x.i], n=g+y+r; return {n, r, pct:gpPct(r,n)}; };
+  const line=(label,v,note)=>`<span class="gp-light" style="background:${v.pct==null?'#C9CED1':bandColor(sevBand(v.pct))}"></span>
+    <span>${esc(label)}${note?` <span class="gp-tag">${esc(note)}</span>`:''}</span>
+    <span>${v.pct==null?'—':`<b>${v.pct}%</b> <span style="color:var(--muted)">(${fmt(v.r)} of ${fmt(v.n)})</span>`}</span>`;
+  const nat=G.areas[0];
+  let html='';
+  if(area.type!=='national') html+=`<h5>Compared with national</h5><div class="gp-cmp">${line(gpAreaLabel(area),at(area))}${line(t('gp.national'),at(nat))}</div>`;
+  const scope=area.type==='state'?area.name:area.type==='district'?area.state:null;
+  const ds=G.areas.filter(a=>a.type==='district'&&(!scope||a.state===scope)).map(a=>({a,v:at(a)}))
+    .filter(d=>d.v.n).sort((p,q)=>q.v.pct-p.v.pct);
+  if(ds.length) html+=`<h5>Where the gap is biggest${scope?' in '+esc(scope):''}</h5><div class="gp-cmp">`
+    +ds.map(d=>line(d.a.name,d.v,d.v.n<GP_SMALL?'small sample':'')).join('')+'</div>';
+  return html;
+}
+function gpTalkingPoints(G, area){
+  const p=period();
+  const rows=gpRows(G, area).filter(x=>x.n&&!x.low&&(GP.sector==='all'||x.sector===GP.sector))
+    .sort((a,b)=>b.pct-a.pct).slice(0,5);
+  return `Site Monitoring ${p.id} — ${gpAreaLabel(area)} (${fmt(area.sites)} sites assessed)`
+    +(GP.sector!=='all'?` — ${SECNAME[GP.sector]||GP.sector}`:'')+'\nBiggest gaps:\n'
+    +rows.map((x,k)=>`${k+1}. ${x.pct}% of ${x.n<area.sites?'applicable ':''}sites ${x.gap} (${fmt(x.r)} of ${fmt(x.n)} sites) — ${gpVerdict(x.band).toLowerCase()}`).join('\n')
+    +`\nGap = share of assessed sites scored Red. Source: ${p.source}.`;
+}
+function gpCopy(G, area){
+  const txt=gpTalkingPoints(G, area);
+  const done=()=>toast('Talking points copied — paste them into your meeting notes');
+  if(navigator.clipboard&&window.isSecureContext) navigator.clipboard.writeText(txt).then(done,()=>gpCopyFallback(txt,done));
+  else gpCopyFallback(txt,done);
+}
+function gpCopyFallback(txt, done){
+  const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); done(); }catch(e){ toast('Copy failed — select the text manually'); }
+  ta.remove();
+}
+function gpCsv(G, area){
+  const q=v=>`"${String(v??'').replace(/"/g,'""')}"`;
+  const rows=gpVisible(G, area);
+  const lines=[['Period','Area','Sector','Indicator','Traffic light','Gap statement','Sites Red (gap)','Sites Yellow (partly met)','Sites Green (met)','Sites answered','Gap %','Limited data'].map(q).join(',')]
+    .concat(rows.filter(x=>x.n).map(x=>[period().id,gpAreaLabel(area),SECNAME[x.sector]||x.sector,x.q,gpVerdict(x.band),
+      `${x.pct}% of sites ${x.gap}`,x.r,x.y,x.g,x.n,x.pct,x.low?'yes':''].map(q).join(',')));
+  const blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`gap_finder_${period().id.replace(' ','_')}_${gpAreaLabel(area).replace(/\W+/g,'_')}.csv`;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 
 /* ================= DISTRICT ANALYSIS ================= */
@@ -1097,7 +1271,7 @@ function renderBrand(){
 /* Everything that depends on the selected reporting period. Each renderer is isolated
    so one failure can't blank the page. */
 function renderAll(){
-  [['period chips',setPeriodChips],['overview',renderOverview],['sector tabs',renderSectorTabs],
+  [['period chips',setPeriodChips],['overview',renderOverview],['gap finder',renderGapFinder],['sector tabs',renderSectorTabs],
    ['top gaps',renderTopGaps],['districts',renderDistricts],['downloads',renderDownloads],
    ['about',renderAbout]
   ].forEach(([label,fn])=>{ try{ fn(); } catch(e){ console.error('[public dashboard] "'+label+'" failed:', e); } });
@@ -1105,6 +1279,7 @@ function renderAll(){
   if(window.__pubMap) renderMap().catch(e=>console.error('[public dashboard] "map" failed:', e));
 }
 
+const _gpCta=$('#gpCtaBtn'); if(_gpCta) _gpCta.addEventListener('click',()=>{ activateView('gaps'); window.scrollTo({top:0,behavior:'smooth'}); });
 [['brand',renderBrand],['period selector',renderPeriodSelector],['help modal',wireHelp],
  ['language',wireLang],['drawer',wireDrawer],['global filter',wireGlobalFilter]
 ].forEach(([label,fn])=>{ try{ fn(); } catch(e){ console.error('[public dashboard] "'+label+'" failed:', e); } });
