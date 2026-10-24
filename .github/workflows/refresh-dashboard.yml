@@ -57,7 +57,7 @@ jobs:
         # anything a later step or a stray "cp ... public/" could reach by habit.
         # It is NEVER the deployable artefact — see build_public.py below.
 
-      - name: Build the operational snapshot (Q1/Q2 catchment rollup, unreconciled)
+      - name: Build the operational snapshot (calendar-quarter catchment rollup, unreconciled)
         run: python build_operational.py
         # Deliberate, narrow exception to "public has no code path to draft data",
         # made at the Cluster Coordinator's explicit written request: catchment- and
@@ -65,10 +65,10 @@ jobs:
         # asserts this on itself before writing operational.json), clearly labelled on
         # the public site as unreconciled and kept out of every reconciled KPI total.
 
-      - name: Build the PUBLIC dashboard (published Q2 2026 data + operational layer)
+      - name: Build the PUBLIC dashboard (published quarters + operational layer)
         run: python build_public.py
         # KPI totals / sector-gap / district tables / downloads still come ONLY from
-        # published_data.py (hand-transcribed, page-verified from the released PDF
+        # published_q1.py / published_data.py and published/*.json (one per released PDF
         # report) — that reconciliation guarantee is unchanged. The one addition is
         # operational.json (aggregate-only, see above), rendered in a visually and
         # textually separate "Operational Snapshot (unreconciled)" block that never

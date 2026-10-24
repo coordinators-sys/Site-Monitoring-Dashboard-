@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Builds operational.json — an OPERATIONAL, catchment/district-level rollup from the
-live Kobo + Zite field-data pipeline, bucketed into Q1 2026 and Q2 2026 by assessment
+live Kobo + Zite field-data pipeline, bucketed into calendar quarters (Q1 2026 onward) by assessment
 date (Kobo: group_incident_basic/date_entry; Zite: Date of Assessment).
 
 This is explicitly NOT the officially published Q2 2026 report (published_data.py).
@@ -37,10 +37,21 @@ FORM = os.environ.get("XLSFORM_PATH", os.path.join("data", "xlsform.xlsx"))
 KOBO_CACHE, ZITE_CACHE = "_cache_kobo.json", "_cache_zite.json"
 OUT = "operational.json"
 
-QUARTERS = [
-    ("Q1 2026", "2026-01-01", "2026-04-01"),
-    ("Q2 2026", "2026-04-01", "2026-07-01"),
-]
+FIRST_QUARTER = (2026, 1)                     # monitoring rounds on this pipeline start in Q1 2026
+
+def quarters_through(today=None):
+    """(label, start, end_excl) for every calendar quarter from FIRST_QUARTER up to the one
+    containing `today` — a new quarter appears on its own, no code edit needed."""
+    today = pd.Timestamp(today or pd.Timestamp.now(tz="UTC").date())
+    (y, q), out = FIRST_QUARTER, []
+    while (y, q) <= (today.year, (today.month - 1) // 3 + 1):
+        start = pd.Timestamp(year=y, month=3 * q - 2, day=1)
+        out.append((f"Q{q} {y}", start.strftime("%Y-%m-%d"),
+                    (start + pd.DateOffset(months=3)).strftime("%Y-%m-%d")))
+        y, q = (y + 1, 1) if q == 4 else (y, q + 1)
+    return out
+
+QUARTERS = quarters_through()
 
 # ---------------------------------------------------------------- shared reference data
 def norm(s):
@@ -308,10 +319,12 @@ def build_all(ko_all, zi_all, generated_at=None):
     """Single source of truth for both the offline batch and the live endpoint."""
     out = {"generatedNote": "Live field-data pipeline snapshot — not officially "
            "published, not reviewed by Information Management, not reconciled "
-           "against the Master List. May not match the published Q2 2026 report.",
+           "against the Master List. May not match the published quarterly reports.",
            "generatedAt": generated_at, "quarters": {}}
-    for label, start, end_excl in QUARTERS:
-        out["quarters"][label] = build_quarter(label, start, end_excl, ko_all, zi_all)
+    for label, start, end_excl in quarters_through():
+        q = build_quarter(label, start, end_excl, ko_all, zi_all)
+        if q["kpi"]["sites"]:                    # a quarter only appears once it has field data
+            out["quarters"][label] = q
     return out
 
 def main():

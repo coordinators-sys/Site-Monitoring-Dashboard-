@@ -4,9 +4,11 @@ Builds the PUBLIC dashboard — the only artefact ever deployed to
 site-monitoring.cccmclustersomalia.org.
 
 Every reconciled figure (KPI totals, sector-gap %, district table, downloads) comes
-from published_data.py ONLY (hand-transcribed, page-verified from the officially
-released Q2 2026 PDF report) — this script has no code path from those figures to
-the live draft rebuild (_cache_kobo.json, _cache_zite.json, sites.json).
+from a published quarter: published_q1.py / published_data.py (Q1, Q2 2026, page-verified
+from the released PDFs) or published/published_<YYYY-Qn>.json (Q3 2026 onward, written by
+the report pipeline with the same computations as that quarter's National PDF). This
+script has no code path from those figures to the live draft rebuild (_cache_kobo.json,
+_cache_zite.json, sites.json).
 
 One deliberate, narrow exception, added at the Cluster Coordinator's explicit written
 request: a catchment/district-level "Operational Snapshot (live field data)" block —
@@ -42,15 +44,16 @@ for code, fn in ICON_FILES.items():
 logo_p = os.path.join("logo", "CCCMCluster_Somalia.png")
 assets = {"logo": b64(logo_p) if os.path.exists(logo_p) else "", "icons": icons}
 
+GEO = (json.load(open(os.path.join("data", "geo.json"), encoding="utf-8"))
+       if os.path.exists(os.path.join("data", "geo.json")) else None)
+
 districts = []
 for d in P.DISTRICTS_RANKED:
     districts.append({"district": d["district"], "region": d["region"], "n": d["n"],
                        "gap": d["gap"], "cov": d["cov"], "bands": d["bands"], "pc": None})
-# pcodes for map join — only needed for districts we can shade; others render grey.
-PCODE_BY_NAME = {"Afmadow": "SO2801", "Xudur": "SO2501", "Baardheere": "SO2802",
-                 "Kahda": "SO2210", "Daynile": "SO2203", "Luuq": "SO2803",
-                 "Gaalkacyo": "SO1801", "Baydhaba": "SO2401", "Kismaayo": "SO2801",
-                 "Belet Weyne": "SO2601"}
+# pcodes for the map join, read from the district boundary layer itself (OCHA COD-AB names).
+PCODE_BY_NAME = {g["n"]: g["pc"] for g in (GEO or {}).get("districts", [])}
+PCODE_BY_NAME.update({"Kahda": "SO2210", "Daynile": "SO2203"})   # Banadir split (pcodeAlias)
 for d in districts:
     d["pc"] = PCODE_BY_NAME.get(d["district"])
 
@@ -85,6 +88,40 @@ q1_full = {
         "site counts were not published at that granularity."),
 }
 
+# ---------------------------------------------------------------- pipeline quarters (Q3 2026 onward)
+# Each published/published_<YYYY-Qn>.json is written by the report pipeline
+# (kobo_partner_agencies_tracker/export_dashboard_figures.py) with the same computations as
+# that quarter's National PDF. Dropping a new file in published/ adds the quarter — no
+# hand-transcription. Q1 and Q2 2026 predate the exporter and stay as page-verified modules.
+PUB_DIR = "published"
+pipeline_periods = []
+for fn in sorted(os.listdir(PUB_DIR)) if os.path.isdir(PUB_DIR) else []:
+    if not re.fullmatch(r"published_\d{4}-Q[1-4]\.json", fn):
+        continue
+    f = json.load(open(os.path.join(PUB_DIR, fn), encoding="utf-8"))
+    bt = f["districtsBelowThreshold"]
+    mog = f.get("mogadishu") or {}
+    pipeline_periods.append({
+        "id": f["id"], "key": f["key"], "label": f["label"], "full": True, "note": "",
+        "source": f["source"], "kpi": f["kpi"], "partners": f["partners"],
+        "previous": f.get("previous"),
+        "sectors": [{k: s[k] for k in ("name", "code", "gap", "cov")} for s in f["sectors"]],
+        "topRed": f["topRed"], "topGreen": f["topGreen"], "lcNote": f["lcNote"],
+        "districts": [{**d, "pc": d.get("pc") or PCODE_BY_NAME.get(d["district"])} for d in f["districts"]],
+        "keyFindings": f["keyFindings"],
+        "districtFootnote": (
+            f"{len(f['districts'])} districts had at least 10 assessed sites this quarter and are "
+            f"eligible for national comparison. {bt['districts']} further districts ({bt['sites']} "
+            f"sites combined) fell below that threshold and are not individually ranked. Severity "
+            f"bands (Severe ≥55% · High 40–55% · Moderate 25–40% · Low &lt;25%) are counted from "
+            f"the same site scores as the published report."
+            + (f" {len(mog['unassessed'])} of Mogadishu's {mog['total']} catchment areas were not "
+               f"assessed this quarter." if mog.get("total") else "")),
+    })
+
+# Newest quarter first: the selector opens on it, and each quarter compares with the one before.
+_qkey = lambda pid: (int(pid.split()[1]), int(pid.split()[0][1]))      # "Q3 2026" -> (2026, 3)
+
 data = {
     "kpi": P.KPI,
     "period": P.PERIOD,
@@ -105,20 +142,20 @@ data = {
     # gaps, top-10 indicators, district ranking and key findings from its published
     # national report. The renderers read the active period's payload, so switching the
     # selector re-renders every analytical surface with that quarter's published data.
-    "periods": [
+    "periods": sorted([p for p in pipeline_periods if p["id"] not in ("Q1 2026", "Q2 2026")] + [
         {"id": "Q2 2026", "label": P.PERIOD, "full": True, "kpi": P.KPI, "note": "",
-         "source": P.SOURCE, **q2_full},
+         "source": P.SOURCE, "partners": P.PARTNERS, **q2_full},
         {"id": "Q1 2026", "label": Q1P.PERIOD, "full": True, "note": "",
-         "source": Q1P.SOURCE,
+         "source": Q1P.SOURCE, "partners": None,
          "kpi": {"sites": Q1P.KPI["sites"], "catchments": Q1P.KPI["catchments"],
                  "districts": Q1P.KPI["districts"], "partners": Q1P.KPI["partners"],
                  "hhs": Q1P.KPI["hhs"], "individuals": Q1P.KPI["individuals"],
                  "severity": Q1P.KPI["severity"]},
          **q1_full},
-    ],
-    "coverageNote": ("Direct trend comparison is not recommended because the sites assessed "
-                     "in Q1 and Q2 2026 were not the same locations — fewer sites and "
-                     "catchments were assessed this quarter than last."),
+    ], key=lambda p: _qkey(p["id"]), reverse=True),
+    "coverageNote": ("Direct trend comparison is not recommended: the sites, districts and "
+                     "partners assessed differ from one quarter to the next, so differences "
+                     "reflect assessment coverage, not a change in conditions."),
     "sectors": P.SECTORS,
     "topRed": P.TOP_RED,
     "topGreen": P.TOP_GREEN,
@@ -137,8 +174,7 @@ data = {
                      "scored Red."),
         "limits": P.LIMITATIONS,
     },
-    "geo": json.load(open(os.path.join("data", "geo.json"), encoding="utf-8"))
-           if os.path.exists(os.path.join("data", "geo.json")) else None,
+    "geo": GEO,
     "assets": assets,
 }
 
@@ -193,6 +229,12 @@ for _p in data["periods"]:
     check(len(_p.get("districts", [])) >= 1, f"period {_p['id']} has no districts")
     for _s in _p["sectors"]:
         check(0 <= _s["gap"] <= 100 and 0 <= _s["cov"] <= 100, f"{_p['id']} sector {_s['name']} pct out of range")
+    if _p.get("partners") is not None:
+        check(len(_p["partners"]) == _p["kpi"]["partners"], f"{_p['id']} partner list != partner count")
+    if _p.get("key"):                                  # pipeline quarter: bands and site totals must reconcile
+        for _d in _p["districts"]:
+            check(sum(_d["bands"].values()) == _d["n"], f"{_p['id']} {_d['district']} bands != site count")
+            check(bool(_d["pc"]), f"{_p['id']} {_d['district']} has no p-code for the map")
     # Q1's district union must equal its 17-district KPI.
     if _p["id"] == "Q1 2026":
         check(len(_p["districts"]) == _p["kpi"]["districts"],
@@ -208,8 +250,7 @@ for s in data["sectors"]:
 if errs:
     print("QA FAILED:"); [print("  -", e) for e in errs]
     sys.exit(1)
-print(f"  QA: {len(districts)} districts, {len(data['sectors'])} sectors, "
-      f"{len(data['topRed'])} top-red, {len(data['topGreen'])} top-green — all reconcile")
+print(f"  QA: periods {', '.join(p['id'] for p in data['periods'])} — all reconcile")
 
 # ---------------------------------------------------------------- render
 tpl = open("public_template.html", encoding="utf-8").read()

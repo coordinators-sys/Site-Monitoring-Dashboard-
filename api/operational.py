@@ -13,7 +13,7 @@ data behind it is at most ~10 minutes old, which for a quarterly-cadence indicat
 set is effectively real-time.
 
 Scope is identical to the offline batch (build_operational.py): catchment/district
-aggregates only, bucketed into Q1 2026 / Q2 2026 by assessment date. No site name or
+aggregates only, bucketed into calendar quarters by assessment date. No site name or
 site code is ever computed here — build_operational.build_all() asserts this on
 itself before returning, and this handler treats that assertion failing as a hard
 500, never a partial/best-effort response.

@@ -31,7 +31,7 @@ const I18N={
   'dk.sites':'Sites assessed','dk.cas':'Catchments','dk.hh':'Households','dk.ind':'Individuals',
   'dk.sev':'Avg. severity','dk.gap':'Gap %','dk.cov':'Coverage %','dk.rank':'National rank',
   'dh.sevdist':'Severity distribution','dh.topgaps':'Top service gaps','dh.partners':'Reporting partners',
-  'dh.q1q2':'Assessment coverage, Q1 vs Q2','dh.cas':'Catchments assessed',
+  'dh.q1q2':'Assessment coverage by quarter','dh.cas':'Catchments assessed',
   'd.published':'Published summary','d.operational':'Operational detail (live field data)',
   'd.nolive':'No live operational detail for this district in the selected period.',
   'd.opengeo':'Show on map','close':'Close',
@@ -73,7 +73,7 @@ const I18N={
   'dk.sites':'Goobaha la qiimeeyay','dk.cas':'Aagag (CA)','dk.hh':'Qoysas','dk.ind':'Shakhsiyaad',
   'dk.sev':'Celceliska darnaanta','dk.gap':'Daldalool %','dk.cov':'Daboolid %','dk.rank':'Darajada Qaranka',
   'dh.sevdist':'Qaybinta darnaanta','dh.topgaps':'Daldaloolada ugu waaweyn','dh.partners':'Wada-hawlgalayaasha',
-  'dh.q1q2':'Daboolka qiimaynta, Q1 iyo Q2','dh.cas':'Aagagga la qiimeeyay',
+  'dh.q1q2':'Daboolka qiimaynta rubuc kasta','dh.cas':'Aagagga la qiimeeyay',
   'd.published':'Kooban la daabacay','d.operational':'Faahfaahin hawleed (xog goobeed toos ah)',
   'd.nolive':'Ma jiro faahfaahin hawleed oo toos ah degmadan muddada la doortay.',
   'd.opengeo':'Ku muuji khariidada','close':'Xir',
@@ -195,12 +195,18 @@ function renderOverview(){
   const p=period(), K=p.kpi;
   periodBlocked('#ovPeriodNote');   // headline KPIs exist for every period; the note explains what doesn't
   $('#ovIntro').textContent=DATA.intro;
-  // Comparison against the other reporting period, labelled explicitly as an
-  // assessment-coverage change — never implying humanitarian conditions changed.
-  const other=PERIODS.find(x=>x.id!==p.id);
+  // Comparison against the previous reporting period (or the next one for the oldest),
+  // labelled explicitly as an assessment-coverage change — never implying humanitarian
+  // conditions changed. PERIODS is ordered newest first.
+  const pi=PERIODS.indexOf(p);
+  const other=PERIODS[pi+1]||PERIODS[pi-1]||null;
+  // A pipeline quarter carries its report's own like-for-like figures for the quarter before
+  // (recounted on the current basis); use those for the comparison so it matches the report.
+  const pv=(p.previous&&other&&p.previous.id===other.id)?p.previous.kpi:null;
+  const OK=other?{...other.kpi,...(pv||{})}:null;
   const cmp=(key)=>{
-    if(!other) return '';
-    const d=(K[key]||0)-(other.kpi[key]||0);
+    if(!other||K[key]==null||OK[key]==null) return '';
+    const d=K[key]-OK[key];
     if(d===0) return `same as ${other.id}`;
     return `${fmt(Math.abs(d))} ${d<0?'fewer':'more'} than ${other.id}`;
   };
@@ -243,18 +249,26 @@ function renderOverview(){
       <div class="fsub">${esc(f[2])}</div></div>`).join('');
   }
 
-  const q1=DATA.q1;
+  // Older quarter on the left, newer on the right, whichever of the pair is selected.
+  const [older,newer]=other?(PERIODS.indexOf(other)>pi?[other,p]:[p,other]):[p,p];
+  $('#cmpTitle').textContent=other?`${older.id} vs ${newer.id} coverage`:`${p.id} coverage`;
+  $('#cmpPrevHead').textContent=other?older.id:'';
+  $('#cmpCurHead').textContent=newer.id;
+  const A=older===other?OK:older.kpi, B=newer===other?OK:newer.kpi;
   const q1q2Rows=[
-    ['Sites assessed',q1.sites,DATA.kpi.sites],
-    ['Catchment areas',q1.catchments,DATA.kpi.catchments],
-    ['Districts',q1.districts,DATA.kpi.districts],
-    ['Reporting partners',q1.partners,DATA.kpi.partners],
-    ['Households',q1.hhs,DATA.kpi.hhs],
-    ['Individuals',q1.individuals,DATA.kpi.individuals],
+    ['Sites assessed',A.sites,B.sites],
+    ['Catchment areas',A.catchments,B.catchments],
+    ['Districts',A.districts,B.districts],
+    ['Reporting partners',A.partners,B.partners],
+    ['Households',A.hhs,B.hhs],
+    ['Individuals',A.individuals,B.individuals],
   ];
   $('#q1q2Table').innerHTML=q1q2Rows.map(([l,a,b])=>`<tr>
     <td>${esc(l)}</td><td class="ctr">${fmt(a)}</td><td class="ctr" style="font-weight:700">${fmt(b)}</td></tr>`).join('');
-  $('#coverageNote').textContent=DATA.coverageNote;
+  const recount=pv&&pv.catchments!=null&&other.kpi.catchments!=null&&pv.catchments!==other.kpi.catchments;
+  $('#coverageNote').textContent=DATA.coverageNote+(recount
+    ? ` ${other.id} figures here are as recounted in the ${p.id} report on the same basis (catchment areas = mapped CA polygons with an assessed site: ${fmt(pv.catchments)}); the ${other.id} report itself counted ${fmt(other.kpi.catchments)}.`
+    : '');
   if(p.full) renderSectorDiverge();
 }
 function renderSectorDiverge(){
@@ -298,11 +312,9 @@ const gfActive=()=>['state','region','district','catchment','partner','sector','
 
 function opCatchments(){
   /* Operational catchment rows for the selected period, or the nearest available one. */
-  if(!OP_DATA||!OP_DATA.quarters) return {rows:[],label:null};
-  const keys=Object.keys(OP_DATA.quarters);
-  if(!keys.length) return {rows:[],label:null};
-  const k=keys.includes(CUR_PERIOD)?CUR_PERIOD:keys[keys.length-1];
-  return {rows:(OP_DATA.quarters[k].catchments||[]),label:k};
+  // Strictly the selected quarter — never another quarter's field data under this label.
+  const q=OP_DATA&&OP_DATA.quarters&&OP_DATA.quarters[CUR_PERIOD];
+  return q?{rows:(q.catchments||[]),label:CUR_PERIOD}:{rows:[],label:null};
 }
 
 function buildMapShell(){
@@ -369,12 +381,8 @@ function wireGlobalFilter(){
 
 /* ---------------- IDP site points (live operational feed) ---------------- */
 function opSites(){
-  if(!OP_DATA||!OP_DATA.quarters) return {rows:[],order:[]};
-  const keys=Object.keys(OP_DATA.quarters);
-  if(!keys.length) return {rows:[],order:[]};
-  const k=keys.includes(CUR_PERIOD)?CUR_PERIOD:keys[keys.length-1];
-  const q=OP_DATA.quarters[k];
-  return {rows:q.sites||[],order:q.sectorsOrder||[]};
+  const q=OP_DATA&&OP_DATA.quarters&&OP_DATA.quarters[CUR_PERIOD];
+  return q?{rows:q.sites||[],order:q.sectorsOrder||[]}:{rows:[],order:[]};
 }
 function siteTip(s,order){
   const dotColor={G:'#3A8D68',Y:'#E9A23B',R:'#D9534F',K:'#8a8f93',NA:'#d4d7d9'};
@@ -462,7 +470,9 @@ function applyGlobalFilter(refit){
   // field data covers fewer catchments than the published total, and an operational
   // count beside the published figure invites a false comparison. The catchment total
   // lives in the catchment-analysis table and the map banner, clearly labelled operational.
-  $('#gfKpis').innerHTML=kpi(fmt(list.length),t('dk.sites'))
+  $('#gfKpis').innerHTML=!all.length&&OP_DATA
+    ? `<p class="empty-note" style="grid-column:1/-1;margin:0">No live field data for ${esc(CUR_PERIOD)} yet — it appears here once the daily refresh picks up this quarter's submissions.</p>`
+    : kpi(fmt(list.length),t('dk.sites'))
     +kpi(fmt(parts.size),t('kpi.partners'))+kpi(fmt(hh),t('dk.hh'))
     +kpi(list.length?`<span class="badge ${sevBand(avg)}">${avg}%</span>`:'—',t('dk.sev'));
   // map points (only when the layer is on)
@@ -767,10 +777,10 @@ function paintDistrictRows(rows){
   });
 }
 function renderDistricts(){
-  // Partner names are published for Q2; the Q1 report gives only a count (9), not names.
-  const pk=period().kpi.partners;
-  $('#partnerChips').innerHTML = period().id==='Q2 2026'
-    ? DATA.partners.map(p=>`<span class="pub-chip-sm" style="padding:5px 11px;font-size:12px">${esc(p)}</span>`).join('')
+  // Partner names are published from Q2 2026 on; the Q1 report gives only a count (9), not names.
+  const pk=period().kpi.partners, pn=period().partners;
+  $('#partnerChips').innerHTML = (pn&&pn.length)
+    ? pn.map(p=>`<span class="pub-chip-sm" style="padding:5px 11px;font-size:12px">${esc(p)}</span>`).join('')
     : `<span style="font-size:12.5px;color:var(--ink-2)">${fmt(pk)} reporting partners assessed sites this period; individual partner names were not published in the ${esc(period().id)} report.</span>`;
   renderOperational().catch(e=>console.error('[public dashboard] "operational" failed:', e));
   if(periodBlocked('#distPeriodNote')){

@@ -1,0 +1,478 @@
+{
+ "schema": 1,
+ "id": "Q3 2026",
+ "key": "2026-Q3",
+ "label": "Q3 2026 (July–September)",
+ "range": "July–September 2026",
+ "source": "CCCM Cluster Somalia Site Monitoring Report Q3 2026 v1.3, published 13 October 2026",
+ "published": "13 October 2026",
+ "version": "1.3",
+ "kpi": {
+  "sites": 1333,
+  "catchments": 47,
+  "catchmentsTotal": 68,
+  "hhs": null,
+  "individuals": 814293,
+  "partners": 6,
+  "districts": 17,
+  "severity": 43.9,
+  "matchedSites": 1117
+ },
+ "previous": {
+  "id": "Q2 2026",
+  "kpi": {
+   "sites": 1275,
+   "catchments": 49,
+   "partners": 7,
+   "districts": 16,
+   "severity": 44.3
+  }
+ },
+ "partners": [
+  "ACTED",
+  "DRC",
+  "IOM",
+  "IRW",
+  "NoFYL",
+  "SCC"
+ ],
+ "sectors": [
+  {
+   "name": "Shelter",
+   "code": "Shel",
+   "gap": 57,
+   "cov": 43,
+   "fewIndicators": true
+  },
+  {
+   "name": "WASH",
+   "code": "WASH",
+   "gap": 51,
+   "cov": 39,
+   "fewIndicators": false
+  },
+  {
+   "name": "Housing, Land & Property",
+   "code": "HLP",
+   "gap": 48,
+   "cov": 52,
+   "fewIndicators": false
+  },
+  {
+   "name": "Child Protection",
+   "code": "CP",
+   "gap": 47,
+   "cov": 53,
+   "fewIndicators": true
+  },
+  {
+   "name": "Food Security & Livelihoods",
+   "code": "FSL",
+   "gap": 46,
+   "cov": 38,
+   "fewIndicators": false
+  },
+  {
+   "name": "Health",
+   "code": "Hlth",
+   "gap": 43,
+   "cov": 52,
+   "fewIndicators": false
+  },
+  {
+   "name": "GBV",
+   "code": "GBV",
+   "gap": 37,
+   "cov": 63,
+   "fewIndicators": false
+  },
+  {
+   "name": "Non-Food Items",
+   "code": "NFI",
+   "gap": 36,
+   "cov": 64,
+   "fewIndicators": true
+  },
+  {
+   "name": "Protection",
+   "code": "Prot",
+   "gap": 34,
+   "cov": 66,
+   "fewIndicators": false
+  },
+  {
+   "name": "Nutrition",
+   "code": "Nutr",
+   "gap": 32,
+   "cov": 56,
+   "fewIndicators": false
+  },
+  {
+   "name": "CCCM",
+   "code": "CCCM",
+   "gap": 31,
+   "cov": 69,
+   "fewIndicators": false
+  },
+  {
+   "name": "Education",
+   "code": "Educ",
+   "gap": 29,
+   "cov": 67,
+   "fewIndicators": false
+  }
+ ],
+ "topRed": [
+  {
+   "rank": 1,
+   "indicator": "Gender-separated WASH facilities",
+   "pct": 84,
+   "lc": false,
+   "sector": "WASH"
+  },
+  {
+   "rank": 2,
+   "indicator": "On-site food/cash distribution",
+   "pct": 80,
+   "lc": false,
+   "sector": "FSL"
+  },
+  {
+   "rank": 3,
+   "indicator": "Hygiene kits distributed",
+   "pct": 80,
+   "lc": false,
+   "sector": "WASH"
+  },
+  {
+   "rank": 4,
+   "indicator": "Shelter repair kits available",
+   "pct": 77,
+   "lc": false,
+   "sector": "Shel"
+  },
+  {
+   "rank": 5,
+   "indicator": "School feeding programmes",
+   "pct": 76,
+   "lc": true,
+   "sector": "Educ"
+  },
+  {
+   "rank": 6,
+   "indicator": "Ambulance service available",
+   "pct": 76,
+   "lc": false,
+   "sector": "Hlth"
+  },
+  {
+   "rank": 7,
+   "indicator": "Site decongestion activities",
+   "pct": 73,
+   "lc": false,
+   "sector": "CCCM"
+  },
+  {
+   "rank": 8,
+   "indicator": "WASH waste-management kits",
+   "pct": 69,
+   "lc": false,
+   "sector": "WASH"
+  },
+  {
+   "rank": 9,
+   "indicator": "Waste management system in place",
+   "pct": 65,
+   "lc": false,
+   "sector": "WASH"
+  },
+  {
+   "rank": 10,
+   "indicator": "Psychosocial support available",
+   "pct": 60,
+   "lc": false,
+   "sector": "Prot"
+  }
+ ],
+ "topGreen": [
+  {
+   "rank": 1,
+   "indicator": "Functional & inclusive CMC",
+   "pct": 98,
+   "lc": false,
+   "sector": "CCCM"
+  },
+  {
+   "rank": 2,
+   "indicator": "Accessible functioning CFM",
+   "pct": 94,
+   "lc": false,
+   "sector": "CCCM"
+  },
+  {
+   "rank": 3,
+   "indicator": "Learning-centre latrines",
+   "pct": 93,
+   "lc": true,
+   "sector": "Educ"
+  },
+  {
+   "rank": 4,
+   "indicator": "CMC resolves issues",
+   "pct": 90,
+   "lc": false,
+   "sector": "CCCM"
+  },
+  {
+   "rank": 5,
+   "indicator": "Community in school management",
+   "pct": 87,
+   "lc": true,
+   "sector": "Educ"
+  },
+  {
+   "rank": 6,
+   "indicator": "School support committees",
+   "pct": 86,
+   "lc": true,
+   "sector": "Educ"
+  },
+  {
+   "rank": 7,
+   "indicator": "Enough trained teachers",
+   "pct": 84,
+   "lc": true,
+   "sector": "Educ"
+  },
+  {
+   "rank": 8,
+   "indicator": "Community-led risk sessions",
+   "pct": 81,
+   "lc": false,
+   "sector": "CCCM"
+  },
+  {
+   "rank": 9,
+   "indicator": "Protection awareness campaigns",
+   "pct": 75,
+   "lc": false,
+   "sector": "Prot"
+  },
+  {
+   "rank": 10,
+   "indicator": "Community uses GBV referral",
+   "pct": 74,
+   "lc": false,
+   "sector": "GBV"
+  }
+ ],
+ "lcNote": "Learning-centre sites only (n=798)",
+ "districts": [
+  {
+   "district": "Xudun",
+   "region": "Sool",
+   "n": 10,
+   "gap": 70,
+   "cov": 30,
+   "bands": {
+    "Severe": 8,
+    "High": 2,
+    "Moderate": 0,
+    "Low": 0
+   },
+   "pc": "SO1404"
+  },
+  {
+   "district": "Afgooye",
+   "region": "Lower Shabelle",
+   "n": 12,
+   "gap": 66,
+   "cov": 34,
+   "bands": {
+    "Severe": 12,
+    "High": 0,
+    "Moderate": 0,
+    "Low": 0
+   },
+   "pc": "SO2302"
+  },
+  {
+   "district": "Xudur",
+   "region": "Bakool",
+   "n": 69,
+   "gap": 63,
+   "cov": 37,
+   "bands": {
+    "Severe": 49,
+    "High": 17,
+    "Moderate": 3,
+    "Low": 0
+   },
+   "pc": "SO2501"
+  },
+  {
+   "district": "Baardheere",
+   "region": "Gedo",
+   "n": 30,
+   "gap": 62,
+   "cov": 38,
+   "bands": {
+    "Severe": 21,
+    "High": 6,
+    "Moderate": 3,
+    "Low": 0
+   },
+   "pc": "SO2602"
+  },
+  {
+   "district": "Afmadow",
+   "region": "Lower Juba",
+   "n": 11,
+   "gap": 55,
+   "cov": 45,
+   "bands": {
+    "Severe": 6,
+    "High": 5,
+    "Moderate": 0,
+    "Low": 0
+   },
+   "pc": "SO2802"
+  },
+  {
+   "district": "Kahda",
+   "region": "Banadir",
+   "n": 156,
+   "gap": 55,
+   "cov": 45,
+   "bands": {
+    "Severe": 75,
+    "High": 57,
+    "Moderate": 24,
+    "Low": 0
+   },
+   "pc": "SO2210"
+  },
+  {
+   "district": "Gaalkacyo",
+   "region": "Mudug",
+   "n": 83,
+   "gap": 55,
+   "cov": 45,
+   "bands": {
+    "Severe": 43,
+    "High": 22,
+    "Moderate": 13,
+    "Low": 5
+   },
+   "pc": "SO1801"
+  },
+  {
+   "district": "Luuq",
+   "region": "Gedo",
+   "n": 39,
+   "gap": 53,
+   "cov": 47,
+   "bands": {
+    "Severe": 20,
+    "High": 13,
+    "Moderate": 3,
+    "Low": 3
+   },
+   "pc": "SO2606"
+  },
+  {
+   "district": "Daynile",
+   "region": "Banadir",
+   "n": 189,
+   "gap": 45,
+   "cov": 55,
+   "bands": {
+    "Severe": 40,
+    "High": 43,
+    "Moderate": 106,
+    "Low": 0
+   },
+   "pc": "SO2203"
+  },
+  {
+   "district": "Baydhaba",
+   "region": "Bay",
+   "n": 587,
+   "gap": 38,
+   "cov": 62,
+   "bands": {
+    "Severe": 88,
+    "High": 173,
+    "Moderate": 152,
+    "Low": 174
+   },
+   "pc": "SO2401"
+  },
+  {
+   "district": "Kismaayo",
+   "region": "Lower Juba",
+   "n": 123,
+   "gap": 25,
+   "cov": 75,
+   "bands": {
+    "Severe": 0,
+    "High": 0,
+    "Moderate": 64,
+    "Low": 59
+   },
+   "pc": "SO2801"
+  }
+ ],
+ "districtsBelowThreshold": {
+  "districts": 6,
+  "sites": 24
+ },
+ "mogadishu": {
+  "total": 26,
+  "unassessed": [
+   "CA01",
+   "CA02",
+   "CA03",
+   "CA04",
+   "CA05",
+   "CA08",
+   "CA11",
+   "CA14",
+   "CA15",
+   "CA24",
+   "CA25",
+   "CA26"
+  ]
+ },
+ "keyFindings": [
+  [
+   "Widest sector gap",
+   "Shelter",
+   "57% of its indicator results scored Red (based on 3 or fewer indicators — interpret with caution)"
+  ],
+  [
+   "Highest-priority district (≥10 sites)",
+   "Xudun",
+   "70% average severity — 10 assessed sites"
+  ],
+  [
+   "Strongest service coverage",
+   "Functional & inclusive CMC",
+   "98% of assessed sites scored Green"
+  ],
+  [
+   "Main assessment-coverage limitation",
+   "Mogadishu catchment coverage",
+   "12 of 26 Mogadishu catchment areas were not assessed this quarter"
+  ]
+ ],
+ "keyFindingSentences": [
+  "Shelter has the widest sector gap: 57% of its results are Red (only 3 indicators). 62% of sites report households needing emergency shelter; 77% have no shelter repair kits.",
+  "60% of sites have no psychosocial support. 29% (380 sites) report unaccompanied or separated children.",
+  "84% of sites have latrines and bathing spaces not separated by gender. 37% of latrines are not functional; about 106 people share each functional latrine (Sphere standard: 20).",
+  "69% of sites (919) have never received an on-site food or cash distribution.",
+  "Data gap: 84 of 302 sites did not answer one question (using cash without restrictions), so that indicator rests on 218 sites only.",
+  "Highest severity (districts with 10 or more sites): Xudun 70% (10 sites), Afgooye 66% (12 sites), Xudur 63% (69 sites).",
+  "Strengths: 98% of sites have an inclusive Camp Management Committee, and 94% a functioning complaints and feedback mechanism."
+ ]
+}
