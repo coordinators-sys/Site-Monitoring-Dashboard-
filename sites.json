@@ -13203,33 +13203,6 @@
   }
  },
  {
-  "region": "Gedo",
-  "district": "Baardheere",
-  "ca": "Fulayley",
-  "site": "Fulayley",
-  "code": "CCCM-SO2602-0104",
-  "partner": "IOM",
-  "source": "Zite/IOM",
-  "hh": 200.0,
-  "individuals": 400.0,
-  "severity": 41,
-  "band": "High",
-  "scores": {
-   "CCCM": "Y",
-   "Protection": "Y",
-   "CP": "Y",
-   "GBV": "Y",
-   "HLP": "Y",
-   "NFI": "G",
-   "Shelter": "Y",
-   "WASH": "Y",
-   "Health": "Y",
-   "FSL": "G",
-   "Nutrition": "G",
-   "Education": "K"
-  }
- },
- {
   "region": "Banadir",
   "district": "Kahda",
   "ca": "Catchment Area 17",
