@@ -538,11 +538,13 @@ function renderMap(){
     attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
   }).addTo(MAP);
   const swap=r=>r.map(([x,y])=>[y,x]);   // geo.json stores [lon,lat]; Leaflet wants [lat,lng]
+  // boundaries arrive as `parts` (multipolygon, from the report pipeline's geo export) or legacy `rings`
+  const ll=g=>g.parts?g.parts.map(p=>p.map(swap)):g.rings.map(swap);
   const distPolys=[];
   const gDist=L.layerGroup().addTo(MAP);
   geo.districts.forEach(d=>{
     const a=agg[d.pc];
-    const poly=L.polygon(d.rings.map(swap),{color:'#fff',weight:.8,fillColor:distFill(d.pc),fillOpacity:.55});
+    const poly=L.polygon(ll(d),{color:'#fff',weight:.8,fillColor:distFill(d.pc),fillOpacity:.55});
     poly.bindTooltip(a?`<b>${d.n}</b> · ${d.r}<br>${a.n} sites assessed · avg severity ${(a.sev/a.n).toFixed(1)}%`
                       :`<b>${d.n}</b> · ${d.r}<br>Not assessed this quarter`,{sticky:true});
     poly._pc=d.pc; distPolys.push(poly); poly.addTo(gDist);
@@ -555,15 +557,15 @@ function renderMap(){
   const gCA=L.layerGroup();
   geo.catchments.forEach(c=>{
     const a=caAgg[(c.pc||'').toUpperCase()+'|'+(caNorm(c.ca)||c.ca)];
-    const poly=L.polygon(c.rings.map(swap),
+    const poly=L.polygon(ll(c),
       a?{color:'#104E5D',weight:1.2,dashArray:'4 3',fillColor:bandColor(a.avgSev),fillOpacity:.62}
        :{color:'#8a938f',weight:1,dashArray:'4 3',fillColor:'#E2E5E0',fillOpacity:.35});
     poly.bindTooltip(a
-      ?`<b>${esc(c.ca)}</b> · ${esc(c.d)} district<br>${a.n} sites assessed · avg severity <b>${a.avgSev}%</b>
+      ?`<b>${esc(c.label||c.ca)}</b> · ${esc(c.d)} district<br>${a.n} sites assessed · avg severity <b>${a.avgSev}%</b>
         <br>HH ${fmt(a.hh)} · Individuals ${fmt(a.ind)}<br>Partners: ${esc(a.partners.join(', '))||'—'}
-        <br><span style="font-size:10px">CCCM agency (shapefile): ${esc(c.agency||'—')}</span>`
-      :`<b>${esc(c.ca)}</b> · ${esc(c.d)} district<br>No assessed sites this quarter
-        <br><span style="font-size:10px">CCCM agency (shapefile): ${esc(c.agency||'—')} · HH ${fmt(c.hh)} · ind ${fmt(c.ind)}</span>`,
+        <br><span style="font-size:10px">Managing partner: ${esc(c.partner||c.agency||'—')}</span>`
+      :`<b>${esc(c.label||c.ca)}</b> · ${esc(c.d)} district<br>No assessed sites this quarter
+        <br><span style="font-size:10px">Managing partner: ${esc(c.partner||c.agency||'—')}</span>`,
       {sticky:true});
     poly.addTo(gCA);
   });

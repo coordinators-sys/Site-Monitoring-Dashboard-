@@ -155,6 +155,9 @@ function PD(){
     districtFootnote: p.districtFootnote||DATA.districtFootnote,
     keyFindings: p.keyFindings||DATA.keyFindings,
     lcNote: p.lcNote!=null?p.lcNote:DATA.lcNote,
+    // published map layers (pipeline quarters only): every district with an assessed site
+    // and every catchment polygon, on the same basis as the report's severity map
+    map: p.map||null,
   };
 }
 function setPeriodChips(){
@@ -304,6 +307,10 @@ function renderSectorDiverge(){
 let MAP_FILL='sev', MAP_HOME=null, MAP_D_LAYER=null, MAP_CA_LAYER=null, MAP_INDEX=[], MAP_FOCUS=[];
 let SHOW_SITES=false, SITE_LAYER=null, SITE_RENDERER=null;
 const swapRing=r=>r.map(([x,y])=>[y,x]);
+// Boundaries come as `parts` (multipolygon: [[outer, hole…], …]) from the report pipeline's
+// geo export, or as legacy `rings`. Leaflet reads a 3-deep array as a multipolygon.
+const toLL=g=>g.parts?g.parts.map(p=>p.map(swapRing)):g.rings.map(swapRing);
+const caPubKey=(pc,ca,ng)=>`${pc}|${ca}|${ng||''}`;
 const caKey=(pc,ca)=>String(pc||'').toUpperCase()+String(ca||'').toUpperCase();
 
 /* ---- global cross-filter (operational site-level data only) ---- */
@@ -483,11 +490,29 @@ function applyGlobalFilter(refit){
   // field data covers fewer catchments than the published total, and an operational
   // count beside the published figure invites a false comparison. The catchment total
   // lives in the catchment-analysis table and the map banner, clearly labelled operational.
-  $('#gfKpis').innerHTML=!all.length&&OP_DATA
+  // Unfiltered on a published quarter the strip shows the published headline, so it can never
+  // contradict the report (live field data differs: e.g. Q3 2026 1,319 live vs 1,333 published
+  // sites). Filters slice site-level records, which only the live feed has — labelled as such.
+  const pk=period().full&&!gfActive().length?period().kpi:null;
+  const kn=$('#gfKpiNote');
+  if(pk){
+    $('#gfKpis').innerHTML=kpi(fmt(pk.sites),t('dk.sites'))
+      +kpi(pk.partners!=null?fmt(pk.partners):'—',t('kpi.partners'))
+      +kpi(pk.hhs!=null?fmt(pk.hhs):'—',t('dk.hh'))
+      +kpi(pk.severity!=null?`<span class="badge ${sevBand(pk.severity)}">${pk.severity}%</span>`:'—',t('dk.sev'));
+    if(kn){ kn.className='gf-kpi-note pub'; kn.textContent=`Published ${CUR_PERIOD} report figures`
+      +(period().popNote?` (${period().popNote.replace(/\.$/,'')})`:'')
+      +'. Choose a filter to explore the live field data by area, partner, sector or site.'; }
+  }else{
+    $('#gfKpis').innerHTML=!all.length&&OP_DATA
     ? `<p class="empty-note" style="grid-column:1/-1;margin:0">No live field data for ${esc(CUR_PERIOD)} yet — it appears here once the daily refresh picks up this quarter's submissions.</p>`
     : kpi(fmt(list.length),t('dk.sites'))
     +kpi(fmt(parts.size),t('kpi.partners'))+kpi(fmt(hh),t('dk.hh'))
     +kpi(list.length?`<span class="badge ${sevBand(avg)}">${avg}%</span>`:'—',t('dk.sev'));
+    if(kn){ kn.className='gf-kpi-note'; kn.textContent=all.length
+      ? 'Live field data (operational) for the selected filters — not yet reviewed by Information Management and not comparable with the published report figures.'
+      : ''; }
+  }
   // map points (only when the layer is on)
   drawSitePoints(list,order,refit);
   // filtered site table
@@ -574,6 +599,7 @@ async function renderMap(){
   MAP_D_LAYER.clearLayers(); MAP_CA_LAYER.clearLayers(); MAP_INDEX=[]; MAP_FOCUS=[];
   const caMode=MAP_FILL==='ca';
   const p=period();
+  const pm=PD().map;                 // published map layers for this quarter, if exported
 
   // The published district layers only exist for a period published at that granularity.
   const blocked=!caMode && !p.full;
@@ -582,10 +608,18 @@ async function renderMap(){
   $('#caBanner').hidden=!caMode;
   $('#caPanel').hidden=!caMode;
   $('#mapIntro').textContent=caMode
-    ? 'Catchment severity from the live operational feed. Catchments with a published boundary are shaded as areas; the rest are shown as points at the centre of their assessed sites.'
-    : 'District severity from published results. Grey districts were not individually reported.';
+    ? (pm ? 'Catchment severity from the published report: the average severity of the assessed sites in each catchment area, on the report\'s own catchment boundaries. Grey catchments had no assessed site this quarter.'
+          : 'Catchment severity from the live operational feed. Catchments with a published boundary are shaded as areas; the rest are shown as points at the centre of their assessed sites.')
+    : (pm ? 'District severity from the published report: every district with an assessed site is shaded, as on the report\'s severity map. Districts with fewer than 10 sites are shaded but not ranked.'
+          : 'District severity from published results. Grey districts were not individually reported.');
+  const pub=!!(caMode&&pm);
+  $('#caBanner').classList.toggle('pub',pub);
+  const cab=$('#caBadge');
+  if(cab){ cab.classList.toggle('pub',pub); cab.textContent=pub?'PUBLISHED REPORT':'OPERATIONAL — LIVE FIELD DATA'; }
 
-  if(caMode){
+  if(caMode && pm){
+    renderPublishedCatchments(pm,geo);
+  }else if(caMode){
     await ensureOperational();
     const {rows,label}=opCatchments();
     const byKey={}; rows.forEach(r=>{ byKey[String(r.catchment).toUpperCase()]=r; });
@@ -598,7 +632,7 @@ async function renderMap(){
     let asPoly=0;
     (geo.catchments||[]).forEach(gc=>{
       const rec=byKey[caKey(gc.pc,gc.ca)];
-      const poly=L.polygon(gc.rings.map(swapRing),{
+      const poly=L.polygon(toLL(gc),{
         color:'#fff',weight:.8,
         fillColor:rec?bandColor(sevBand(rec.avgSeverity)):'#E2E5E0',
         fillOpacity:rec?.65:.22});
@@ -629,7 +663,12 @@ async function renderMap(){
       +(noShape?`; ${noShape} without GPS appear in the table only.`:'.');
     renderCatchmentPanel(rows,geo,label);
   }else if(!blocked){
-    const byPc={}; PD().districts.forEach(d=>{ if(d.pc) byPc[d.pc]=d; });
+    // With a published map layer every district with an assessed site is shaded (as on the
+    // report's map), at one decimal so band edges match it (Kismaayo 24.6% is Low, not 25%).
+    // Older quarters fall back to the ranked districts only.
+    const byPc={};
+    if(pm) pm.districts.forEach(d=>{ byPc[d.pc]={...d, gap:d.sev, cov:Math.round((100-d.sev)*10)/10}; });
+    else PD().districts.forEach(d=>{ if(d.pc) byPc[d.pc]=d; });
     const fillFor=pc=>{
       const d=byPc[(alias[pc]||pc||'').toUpperCase()];
       if(!d || (MAP_FILL==='cov'?d.cov:d.gap)==null) return '#E2E5E0';
@@ -638,11 +677,13 @@ async function renderMap(){
     };
     geo.districts.forEach(gd=>{
       const d=byPc[(alias[gd.pc]||gd.pc||'').toUpperCase()];
-      const poly=L.polygon(gd.rings.map(swapRing),
+      const poly=L.polygon(toLL(gd),
         {color:'#fff',weight:.8,fillColor:fillFor(gd.pc),fillOpacity:.6});
       const gv=d&&d.gap!=null?`Gap ${d.gap}%`:'', cvv=d&&d.cov!=null?`Coverage ${d.cov}%`:'';
+      const nn=d&&d.n?` · ${fmt(d.n)} assessed site${d.n>1?'s':''}`:'';
+      const unr=d&&d.ranked===false?'<br>Fewer than 10 sites — not in the district ranking':'';
       poly.bindTooltip(d
-        ? `<b>${esc(gd.n)}</b><br>${[gv,cvv].filter(Boolean).join(' / ')||'Ranked this period'}<br><i>Click for full profile</i>`
+        ? `<b>${esc(gd.n)}</b><br>${[gv,cvv].filter(Boolean).join(' / ')||'Ranked this period'}${nn}${unr}<br><i>Click for full profile</i>`
         : `<b>${esc(gd.n)}</b><br>Not individually reported this period<br><i>Click for operational detail</i>`,{sticky:true});
       // Clicking a district opens its profile drawer; strong border marks the selection.
       poly.on('mouseover',()=>poly.setStyle({weight:2.4,color:'#104E5D'}));
@@ -671,7 +712,58 @@ async function renderMap(){
   setTimeout(()=>map.invalidateSize(),60);
 }
 
-function renderCatchmentPanel(rows,geo,label){
+/* Published catchment layer: one polygon per area of the cluster's catchment layer, shaded by
+   the average severity of the sites the report placed in it (GPS inside a polygon of the site's
+   own district, else its reported CA code). Same figures as the report's severity-map insets. */
+function renderPublishedCatchments(pm,geo){
+  const byKey={}; pm.catchments.forEach(c=>{ byKey[caPubKey(c.pc,c.ca,c.neigh)]=c; });
+  const chip=$('#caPeriodChip'); if(chip) chip.textContent=CUR_PERIOD;
+  let shaded=0;
+  (geo.catchments||[]).forEach(gc=>{
+    const rec=byKey[caPubKey(gc.pc,gc.ca,gc.neigh)];
+    const has=!!(rec&&rec.n>0);
+    const poly=L.polygon(toLL(gc),{color:'#fff',weight:.8,
+      fillColor:has?bandColor(sevBand(rec.sev)):'#E2E5E0',fillOpacity:has?.65:.22});
+    const name=`${esc(gc.label||gc.ca)} — ${esc(gc.d)}`;
+    const mgr=rec&&rec.partner?`<br>Managing partner: ${esc(rec.partner)}`:'';
+    poly.bindTooltip(has
+      ? `<b>${name}</b><br>${fmt(rec.n)} assessed site${rec.n>1?'s':''} · Avg. severity ${rec.sev}%`
+        +`<br>Severe ${rec.bands.Severe} · High ${rec.bands.High} · Moderate ${rec.bands.Moderate} · Low ${rec.bands.Low}`
+        +mgr+(rec.reportedBy&&rec.reportedBy.length?`<br>Reported by: ${esc(rec.reportedBy.join(', '))}`:'')
+      : `<b>${name}</b><br>No assessed site this quarter${mgr}`,{sticky:true});
+    poly.addTo(MAP_CA_LAYER);
+    if(has){ shaded++; MAP_FOCUS.push(poly.getBounds()); }
+    MAP_INDEX.push({hay:`${gc.label||gc.ca} ${gc.d}`.toLowerCase(),bounds:poly.getBounds()});
+  });
+  const k=period().kpi||{};
+  const placed=pm.catchments.reduce((a,c)=>a+c.n,0);
+  $('#caBanner').innerHTML=`<b>Published — ${esc(CUR_PERIOD)} report</b> — the same catchment figures as the report's severity map. `
+    +`${fmt(k.catchments)} of ${fmt(k.catchmentsTotal)} catchment areas had an assessed site `
+    +`(${shaded} boundary areas shaded; a few catchment areas are mapped as two neighbourhoods). `
+    +`${fmt(placed)} of ${fmt(k.sites)} sites lie in a catchment area; the other ${fmt(pm.unplacedSites)} are in districts `
+    +'without catchment boundaries, or have no usable location or catchment code.';
+  renderCatchmentPanel(null,geo,CUR_PERIOD,pm);
+}
+
+function renderCatchmentPanel(rows,geo,label,pm){
+  if(pm){
+    const reg={}; (geo.districts||[]).forEach(g=>{ reg[g.n]=g.r; });
+    const sorted=pm.catchments.filter(c=>c.n>0).sort((a,b)=>b.sev-a.sev);
+    const k=period().kpi||{};
+    $('#caPanelNote').textContent=`${k.catchments} of ${k.catchmentsTotal} catchment areas had assessed sites in ${label}. `
+      +`They are listed as ${sorted.length} map areas (a few catchment areas are mapped as two neighbourhoods), `
+      +'ranked by average severity — the share of applicable indicators scoring Red, averaged over the sites in '
+      +'that area. Published report figures.';
+    $('#caTable').innerHTML=sorted.map(c=>`<tr>
+        <td style="font-weight:600">${esc(c.label)}</td><td>${esc(c.district)}</td><td>${esc(reg[c.district]||'')}</td>
+        <td class="ctr">${fmt(c.n)}</td>
+        <td class="ctr"><span class="badge ${sevBand(c.sev)}">${c.sev}%</span></td>
+        <td class="ctr">${fmt(c.bands.Severe)}</td><td class="ctr">${fmt(c.bands.High)}</td>
+        <td class="ctr">${fmt(c.bands.Moderate)}</td><td class="ctr">${fmt(c.bands.Low)}</td>
+        <td class="ctr" style="font-size:11px">Area</td>
+      </tr>`).join('');
+    return;
+  }
   const hasGeo=k=>(geo.catchments||[]).some(gc=>caKey(gc.pc,gc.ca)===String(k).toUpperCase());
   const onMap=c=>hasGeo(c.catchment)?'Area':(c.la!=null?'Point':'<span class="dash">—</span>');
   const sorted=[...rows].sort((a,b)=>b.avgSeverity-a.avgSeverity);

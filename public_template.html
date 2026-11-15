@@ -141,6 +141,11 @@ th.sortable .sarrow{display:inline-block;width:12px;color:var(--teal);font-weigh
 .gf-kpis{margin-top:12px;grid-template-columns:repeat(4,1fr)}
 .gf-kpis .kpi{padding:11px 13px}
 .gf-kpis .kpi .k-val{font-size:20px}
+.gf-kpi-note{font-size:11.5px;color:#9A5B13;margin:8px 0 0;line-height:1.5}
+.gf-kpi-note.pub{color:var(--teal-d)}
+.gf-kpi-note:empty{display:none}
+.period-note.pub{color:var(--teal-d);background:var(--teal-l);border-color:var(--teal)}
+.op-badge.pub{background:var(--teal-l);color:var(--teal-d);border-color:var(--teal)}
 @media(max-width:900px){.gf-kpis{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:560px){.gf-kpis{grid-template-columns:repeat(2,1fr)}}
 .drawer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:16px 18px;
@@ -505,6 +510,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
         </div>
         <div id="gfChips" class="gf-chips"></div>
         <div class="grid kpis gf-kpis" id="gfKpis"></div>
+        <p class="gf-kpi-note" id="gfKpiNote"></p>
       </div>
     </div>
     <div class="card p">
@@ -560,7 +566,7 @@ dl.gloss dt{font-weight:700;margin-top:10px} dl.gloss dd{margin:2px 0 0;color:va
     <div class="card p block" id="caPanel" style="margin-top:16px" hidden>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
         <h3 data-i18n="h.caanalysis">Catchment analysis</h3>
-        <span class="op-badge">OPERATIONAL — LIVE FIELD DATA</span>
+        <span class="op-badge" id="caBadge">OPERATIONAL — LIVE FIELD DATA</span>
         <span class="period-chip" id="caPeriodChip"></span>
       </div>
       <p style="font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 12px" id="caPanelNote"></p>

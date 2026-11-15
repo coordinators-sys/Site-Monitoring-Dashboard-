@@ -39,6 +39,13 @@ OUT = "operational.json"
 
 FIRST_QUARTER = (2026, 1)                     # monitoring rounds on this pipeline start in Q1 2026
 
+# District extents (generated from data/geo.json by make_district_bounds.py) and the
+# plausibility limits for self-reported site figures. Largest genuine site seen: 41,844
+# people / 6,979 households; genuine people-per-household ratios stay under ~15.
+from district_bounds import BOUNDS as DISTRICT_BOUNDS
+BOUNDS_MARGIN = 0.15                          # degrees (~17 km) tolerance around a district
+MAX_SITE_IND, MAX_SITE_HH, MAX_PEOPLE_PER_HH = 100_000, 30_000, 25
+
 def quarters_through(today=None):
     """(label, start, end_excl) for every calendar quarter from FIRST_QUARTER up to the one
     containing `today` — a new quarter appears on its own, no code edit needed."""
@@ -247,7 +254,11 @@ def build_quarter(label, start, end_excl, ko_all, zi_all):
     # shelter — and sanity-checked against Somalia's bounding box: enumerator GPS errors
     # (swapped fields, degenerate values like lon=2°) otherwise stretch the map across
     # half a continent. Out-of-bounds pairs are nulled, never "corrected" by guessing.
-    def _coords(la, lo):
+    # The Somalia box alone is not enough: Daynile sites entered as 12.09N instead of
+    # 2.09N sit inside it (northern Somalia reaches 12N) yet ~1,100 km from Mogadishu.
+    # So a point must also fall within its own district's extent (+ ~17 km margin);
+    # otherwise it is nulled — the site still counts, it just isn't drawn.
+    def _coords(la, lo, district=""):
         try:
             la, lo = float(la), float(lo)
         except (TypeError, ValueError):
@@ -256,13 +267,30 @@ def build_quarter(label, start, end_excl, ko_all, zi_all):
             return None, None
         if not (-2.0 <= la <= 12.5 and 40.5 <= lo <= 51.5):
             return None, None
+        bb = DISTRICT_BOUNDS.get(str(district or "").strip())
+        if bb and not (bb[0] - BOUNDS_MARGIN <= lo <= bb[2] + BOUNDS_MARGIN
+                       and bb[1] - BOUNDS_MARGIN <= la <= bb[3] + BOUNDS_MARGIN):
+            return None, None
         return round(la, 4), round(lo, 4)
+
+    # Self-reported population: an impossible people-per-household ratio is a typing error
+    # (one Gaalkacyo site reported 61,982,552 people in 150 households). The implausible
+    # value is dropped, never guessed: the site keeps its household count.
+    def _pop(hh, ind):
+        hh = int(hh) if hh else None
+        ind = int(ind) if ind else None
+        if hh is not None and hh > MAX_SITE_HH:
+            hh = None
+        if ind is not None and (ind > MAX_SITE_IND or (hh and ind > MAX_PEOPLE_PER_HH * hh)):
+            ind = None
+        return hh, ind
 
     # Site-level records first; catchment/district rollups are derived FROM them so the
     # catchment key on a point and on its aggregate always agree.
     site_rows = []
     for s in sites:
-        la, lo = _coords(s["_lat"], s["_lon"])
+        la, lo = _coords(s["_lat"], s["_lon"], s["d"])
+        s["_hh"], s["_ind"] = _pop(s["_hh"], s["_ind"])
         raw_ck = (s["c"] or "").strip()
         # Only a real CA code counts as a catchment; anything else (blank, "...none",
         # or a free-text site/place name) rolls into "(catchment not recorded)".

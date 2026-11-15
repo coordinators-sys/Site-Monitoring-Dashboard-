@@ -14,6 +14,7 @@ api/__pycache__
 # api/operational.py's own runtime dependencies — nothing broader than this.
 !live_fetch.py
 !build_operational.py
+!district_bounds.py
 !build_dashboard_from_live_data.py
 !zite_map.json
 !data

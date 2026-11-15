@@ -4,9 +4,9 @@
  "key": "2026-Q3",
  "label": "Q3 2026 (July–September)",
  "range": "July–September 2026",
- "source": "CCCM Cluster Somalia Site Monitoring Report Q3 2026 v1.3, published 13 October 2026",
- "published": "13 October 2026",
- "version": "1.3",
+ "source": "CCCM Cluster Somalia Site Monitoring Report Q3 2026, published 19 October 2026",
+ "published": "19 October 2026",
+ "version": "",
  "kpi": {
   "sites": 1333,
   "catchments": 47,
@@ -9917,5 +9917,1657 @@
     ]
    }
   ]
+ },
+ "map": {
+  "basis": "Same site scores and catchment rule as the published report's severity map (district = mean site severity by district p-code; catchment = mean severity of the sites placed in that catchment polygon).",
+  "districts": [
+   {
+    "pc": "SO1401",
+    "district": "Laas Caanood",
+    "region": "Sool",
+    "n": 1,
+    "sev": 87.5,
+    "ranked": false,
+    "bands": {
+     "Severe": 1,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    }
+   },
+   {
+    "pc": "SO1805",
+    "district": "Xarardheere",
+    "region": "Mudug",
+    "n": 2,
+    "sev": 75.7,
+    "ranked": false,
+    "bands": {
+     "Severe": 2,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    }
+   },
+   {
+    "pc": "SO1404",
+    "district": "Xudun",
+    "region": "Sool",
+    "n": 10,
+    "sev": 70.2,
+    "ranked": true,
+    "bands": {
+     "Severe": 8,
+     "High": 2,
+     "Moderate": 0,
+     "Low": 0
+    }
+   },
+   {
+    "pc": "SO2302",
+    "district": "Afgooye",
+    "region": "Lower Shabelle",
+    "n": 12,
+    "sev": 65.6,
+    "ranked": true,
+    "bands": {
+     "Severe": 12,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    }
+   },
+   {
+    "pc": "SO2501",
+    "district": "Xudur",
+    "region": "Bakool",
+    "n": 69,
+    "sev": 63.3,
+    "ranked": true,
+    "bands": {
+     "Severe": 49,
+     "High": 17,
+     "Moderate": 3,
+     "Low": 0
+    }
+   },
+   {
+    "pc": "SO2602",
+    "district": "Baardheere",
+    "region": "Gedo",
+    "n": 30,
+    "sev": 61.7,
+    "ranked": true,
+    "bands": {
+     "Severe": 21,
+     "High": 6,
+     "Moderate": 3,
+     "Low": 0
+    }
+   },
+   {
+    "pc": "SO2601",
+    "district": "Garbahaarey",
+    "region": "Gedo",
+    "n": 5,
+    "sev": 60.0,
+    "ranked": false,
+    "bands": {
+     "Severe": 5,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    }
+   },
+   {
+    "pc": "SO1402",
+    "district": "Caynabo",
+    "region": "Sool",
+    "n": 7,
+    "sev": 57.7,
+    "ranked": false,
+    "bands": {
+     "Severe": 4,
+     "High": 2,
+     "Moderate": 0,
+     "Low": 1
+    }
+   },
+   {
+    "pc": "SO2210",
+    "district": "Kahda",
+    "region": "Banadir",
+    "n": 156,
+    "sev": 55.4,
+    "ranked": true,
+    "bands": {
+     "Severe": 75,
+     "High": 57,
+     "Moderate": 24,
+     "Low": 0
+    }
+   },
+   {
+    "pc": "SO2802",
+    "district": "Afmadow",
+    "region": "Lower Juba",
+    "n": 11,
+    "sev": 55.4,
+    "ranked": true,
+    "bands": {
+     "Severe": 6,
+     "High": 5,
+     "Moderate": 0,
+     "Low": 0
+    }
+   },
+   {
+    "pc": "SO1801",
+    "district": "Gaalkacyo",
+    "region": "Mudug",
+    "n": 83,
+    "sev": 55.2,
+    "ranked": true,
+    "bands": {
+     "Severe": 43,
+     "High": 22,
+     "Moderate": 13,
+     "Low": 5
+    }
+   },
+   {
+    "pc": "SO2606",
+    "district": "Luuq",
+    "region": "Gedo",
+    "n": 39,
+    "sev": 53.5,
+    "ranked": true,
+    "bands": {
+     "Severe": 20,
+     "High": 13,
+     "Moderate": 3,
+     "Low": 3
+    }
+   },
+   {
+    "pc": "SO2203",
+    "district": "Daynile",
+    "region": "Banadir",
+    "n": 189,
+    "sev": 45.3,
+    "ranked": true,
+    "bands": {
+     "Severe": 40,
+     "High": 43,
+     "Moderate": 106,
+     "Low": 0
+    }
+   },
+   {
+    "pc": "SO2605",
+    "district": "Doolow",
+    "region": "Gedo",
+    "n": 5,
+    "sev": 40.0,
+    "ranked": false,
+    "bands": {
+     "Severe": 1,
+     "High": 1,
+     "Moderate": 2,
+     "Low": 1
+    }
+   },
+   {
+    "pc": "SO2401",
+    "district": "Baydhaba",
+    "region": "Bay",
+    "n": 587,
+    "sev": 37.6,
+    "ranked": true,
+    "bands": {
+     "Severe": 88,
+     "High": 173,
+     "Moderate": 152,
+     "Low": 174
+    }
+   },
+   {
+    "pc": "SO2804",
+    "district": "Jamaame",
+    "region": "Lower Juba",
+    "n": 4,
+    "sev": 25.5,
+    "ranked": false,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 3,
+     "Low": 1
+    }
+   },
+   {
+    "pc": "SO2801",
+    "district": "Kismaayo",
+    "region": "Lower Juba",
+    "n": 123,
+    "sev": 24.6,
+    "ranked": true,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 64,
+     "Low": 59
+    }
+   }
+  ],
+  "districtsNoPcode": [],
+  "catchments": [
+   {
+    "pc": "SO1801",
+    "ca": "CA03",
+    "neigh": "",
+    "label": "CA03",
+    "district": "Gaalkacyo",
+    "partner": "NoFYL",
+    "n": 24,
+    "sev": 60.5,
+    "bands": {
+     "Severe": 15,
+     "High": 6,
+     "Moderate": 2,
+     "Low": 1
+    },
+    "reportedBy": [
+     "NoFYL"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO1801",
+    "ca": "CA02",
+    "neigh": "",
+    "label": "CA02",
+    "district": "Gaalkacyo",
+    "partner": "DRC",
+    "n": 23,
+    "sev": 50.7,
+    "bands": {
+     "Severe": 9,
+     "High": 6,
+     "Moderate": 6,
+     "Low": 2
+    },
+    "reportedBy": [
+     "NoFYL"
+    ],
+    "status": "Reported by other partner"
+   },
+   {
+    "pc": "SO1801",
+    "ca": "CA05",
+    "neigh": "",
+    "label": "CA05",
+    "district": "Gaalkacyo",
+    "partner": "DRC",
+    "n": 3,
+    "sev": 61.4,
+    "bands": {
+     "Severe": 3,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [
+     "NoFYL"
+    ],
+    "status": "Reported by other partner"
+   },
+   {
+    "pc": "SO1801",
+    "ca": "CA04",
+    "neigh": "",
+    "label": "CA04",
+    "district": "Gaalkacyo",
+    "partner": "NoFYL",
+    "n": 9,
+    "sev": 49.4,
+    "bands": {
+     "Severe": 3,
+     "High": 5,
+     "Moderate": 1,
+     "Low": 0
+    },
+    "reportedBy": [
+     "NoFYL"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO1801",
+    "ca": "CA08",
+    "neigh": "",
+    "label": "CA08",
+    "district": "Gaalkacyo",
+    "partner": "DRC",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "Not reported"
+   },
+   {
+    "pc": "SO1801",
+    "ca": "CA07",
+    "neigh": "",
+    "label": "CA07",
+    "district": "Gaalkacyo",
+    "partner": "DRC",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "Not reported"
+   },
+   {
+    "pc": "SO1801",
+    "ca": "CA06",
+    "neigh": "",
+    "label": "CA06",
+    "district": "Gaalkacyo",
+    "partner": "DRC",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "Not reported"
+   },
+   {
+    "pc": "SO1801",
+    "ca": "CA01",
+    "neigh": "",
+    "label": "CA01",
+    "district": "Gaalkacyo",
+    "partner": "NoFYL",
+    "n": 13,
+    "sev": 52.9,
+    "bands": {
+     "Severe": 6,
+     "High": 5,
+     "Moderate": 2,
+     "Low": 0
+    },
+    "reportedBy": [
+     "NoFYL"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA08",
+    "neigh": "Salamey",
+    "label": "CA08",
+    "district": "Baydhaba",
+    "partner": "IRW",
+    "n": 1,
+    "sev": 29.0,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 1,
+     "Low": 0
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported by other partner"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA06",
+    "neigh": "Howl Wadaag",
+    "label": "CA06",
+    "district": "Baydhaba",
+    "partner": "No partner on record",
+    "n": 2,
+    "sev": 20.6,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 1,
+     "Low": 1
+    },
+    "reportedBy": [
+     "DRC"
+    ],
+    "status": "Reported (no partner on record)"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA09",
+    "neigh": "Horseed",
+    "label": "CA09",
+    "district": "Baydhaba",
+    "partner": "IOM",
+    "n": 43,
+    "sev": 37.4,
+    "bands": {
+     "Severe": 5,
+     "High": 19,
+     "Moderate": 5,
+     "Low": 14
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA16",
+    "neigh": "Durasalam",
+    "label": "CA16",
+    "district": "Baydhaba",
+    "partner": "IOM",
+    "n": 35,
+    "sev": 39.9,
+    "bands": {
+     "Severe": 3,
+     "High": 7,
+     "Moderate": 25,
+     "Low": 0
+    },
+    "reportedBy": [
+     "DRC"
+    ],
+    "status": "Reported by other partner"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA17",
+    "neigh": "Isha",
+    "label": "CA17",
+    "district": "Baydhaba",
+    "partner": "IOM",
+    "n": 80,
+    "sev": 48.2,
+    "bands": {
+     "Severe": 25,
+     "High": 32,
+     "Moderate": 2,
+     "Low": 21
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA10",
+    "neigh": "Horseed",
+    "label": "CA10",
+    "district": "Baydhaba",
+    "partner": "AMARD",
+    "n": 2,
+    "sev": 18.6,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 1,
+     "Low": 1
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported by other partner"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA11",
+    "neigh": "Horseed",
+    "label": "CA11",
+    "district": "Baydhaba",
+    "partner": "IOM",
+    "n": 42,
+    "sev": 30.7,
+    "bands": {
+     "Severe": 4,
+     "High": 4,
+     "Moderate": 17,
+     "Low": 17
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA12",
+    "neigh": "Weberi",
+    "label": "CA12",
+    "district": "Baydhaba",
+    "partner": "ACTED",
+    "n": 3,
+    "sev": 14.0,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 3
+    },
+    "reportedBy": [
+     "DRC",
+     "IOM"
+    ],
+    "status": "Reported by other partner"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA14",
+    "neigh": "Adaado",
+    "label": "CA14",
+    "district": "Baydhaba",
+    "partner": "IRW",
+    "n": 23,
+    "sev": 73.3,
+    "bands": {
+     "Severe": 20,
+     "High": 0,
+     "Moderate": 2,
+     "Low": 1
+    },
+    "reportedBy": [
+     "DRC",
+     "IOM",
+     "IRW"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA15",
+    "neigh": "Adaado",
+    "label": "CA15",
+    "district": "Baydhaba",
+    "partner": "IRW",
+    "n": 16,
+    "sev": 33.8,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 16,
+     "Low": 0
+    },
+    "reportedBy": [
+     "DRC"
+    ],
+    "status": "Reported by other partner"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA04",
+    "neigh": "Wadajiir",
+    "label": "CA04",
+    "district": "Baydhaba",
+    "partner": "IOM",
+    "n": 61,
+    "sev": 38.4,
+    "bands": {
+     "Severe": 3,
+     "High": 20,
+     "Moderate": 34,
+     "Low": 4
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA01",
+    "neigh": "Wadajiir",
+    "label": "CA01 Wadajiir",
+    "district": "Baydhaba",
+    "partner": "IOM",
+    "n": 104,
+    "sev": 42.7,
+    "bands": {
+     "Severe": 15,
+     "High": 59,
+     "Moderate": 13,
+     "Low": 17
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA03",
+    "neigh": "Wadajiir",
+    "label": "CA03",
+    "district": "Baydhaba",
+    "partner": "IOM",
+    "n": 65,
+    "sev": 12.9,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 4,
+     "Low": 61
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA02",
+    "neigh": "Wadajiir",
+    "label": "CA02 Wadajiir",
+    "district": "Baydhaba",
+    "partner": "IRW",
+    "n": 15,
+    "sev": 49.1,
+    "bands": {
+     "Severe": 7,
+     "High": 3,
+     "Moderate": 2,
+     "Low": 3
+    },
+    "reportedBy": [
+     "DRC",
+     "IOM",
+     "IRW"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA05",
+    "neigh": "Wadajiir",
+    "label": "CA05",
+    "district": "Baydhaba",
+    "partner": "IOM",
+    "n": 33,
+    "sev": 28.8,
+    "bands": {
+     "Severe": 1,
+     "High": 8,
+     "Moderate": 9,
+     "Low": 15
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA07",
+    "neigh": "Howl Wadaag",
+    "label": "CA07",
+    "district": "Baydhaba",
+    "partner": "DRC",
+    "n": 51,
+    "sev": 33.8,
+    "bands": {
+     "Severe": 0,
+     "High": 20,
+     "Moderate": 18,
+     "Low": 13
+    },
+    "reportedBy": [
+     "DRC"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA13",
+    "neigh": "Weberi",
+    "label": "CA13",
+    "district": "Baydhaba",
+    "partner": "IOM",
+    "n": 3,
+    "sev": 43.1,
+    "bands": {
+     "Severe": 1,
+     "High": 1,
+     "Moderate": 0,
+     "Low": 1
+    },
+    "reportedBy": [
+     "DRC",
+     "IOM",
+     "IRW"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA26",
+    "neigh": "Daynile",
+    "label": "CA26",
+    "district": "Daynile",
+    "partner": "No partner on record",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "No partner on record"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA25",
+    "neigh": "Daynile",
+    "label": "CA25",
+    "district": "Daynile",
+    "partner": "No partner on record",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "No partner on record"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA23",
+    "neigh": "Daynile",
+    "label": "CA23",
+    "district": "Daynile",
+    "partner": "NoFYL",
+    "n": 6,
+    "sev": 83.3,
+    "bands": {
+     "Severe": 6,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [
+     "NoFYL"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA24",
+    "neigh": "Daynile",
+    "label": "CA24",
+    "district": "Daynile",
+    "partner": "No partner on record",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "No partner on record"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA19",
+    "neigh": "Daynile",
+    "label": "CA19",
+    "district": "Daynile",
+    "partner": "NoFYL",
+    "n": 2,
+    "sev": 56.9,
+    "bands": {
+     "Severe": 1,
+     "High": 1,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [
+     "NoFYL"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA12",
+    "neigh": "Kahda",
+    "label": "CA12",
+    "district": "Daynile",
+    "partner": "SCC",
+    "n": 3,
+    "sev": 74.6,
+    "bands": {
+     "Severe": 3,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [
+     "SCC"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA11",
+    "neigh": "Daynile",
+    "label": "CA11",
+    "district": "Daynile",
+    "partner": "IOM",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "Not reported"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA13",
+    "neigh": "Kahda",
+    "label": "CA13",
+    "district": "Daynile",
+    "partner": "IOM",
+    "n": 96,
+    "sev": 53.6,
+    "bands": {
+     "Severe": 47,
+     "High": 26,
+     "Moderate": 23,
+     "Low": 0
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA09",
+    "neigh": "Daynile",
+    "label": "CA09",
+    "district": "Daynile",
+    "partner": "IOM",
+    "n": 85,
+    "sev": 38.0,
+    "bands": {
+     "Severe": 1,
+     "High": 13,
+     "Moderate": 71,
+     "Low": 0
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA10",
+    "neigh": "Daynile",
+    "label": "CA10",
+    "district": "Daynile",
+    "partner": "IOM",
+    "n": 2,
+    "sev": 51.8,
+    "bands": {
+     "Severe": 0,
+     "High": 2,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA02",
+    "neigh": "Daynile",
+    "label": "CA02",
+    "district": "Daynile",
+    "partner": "No partner on record",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "No partner on record"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA08",
+    "neigh": "Kahda",
+    "label": "CA08",
+    "district": "Daynile",
+    "partner": "DRC",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "Not reported"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA18",
+    "neigh": "Daynile",
+    "label": "CA18",
+    "district": "Daynile",
+    "partner": "NoFYL",
+    "n": 9,
+    "sev": 68.3,
+    "bands": {
+     "Severe": 9,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [
+     "NoFYL"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA04",
+    "neigh": "Kahda",
+    "label": "CA04",
+    "district": "Daynile",
+    "partner": "No partner on record",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "No partner on record"
+   },
+   {
+    "pc": "SO2210",
+    "ca": "CA03",
+    "neigh": "Kahda",
+    "label": "CA03",
+    "district": "Kahda",
+    "partner": "No partner on record",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "No partner on record"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA01",
+    "neigh": "Daynile",
+    "label": "CA01",
+    "district": "Daynile",
+    "partner": "No partner on record",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "No partner on record"
+   },
+   {
+    "pc": "SO2210",
+    "ca": "CA05",
+    "neigh": "Kahda",
+    "label": "CA05",
+    "district": "Kahda",
+    "partner": "SCC",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "Not reported"
+   },
+   {
+    "pc": "SO2210",
+    "ca": "CA06",
+    "neigh": "Kahda",
+    "label": "CA06",
+    "district": "Kahda",
+    "partner": "SCC",
+    "n": 24,
+    "sev": 72.3,
+    "bands": {
+     "Severe": 24,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [
+     "SCC"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2210",
+    "ca": "CA07",
+    "neigh": "Kahda",
+    "label": "CA07",
+    "district": "Kahda",
+    "partner": "SCC",
+    "n": 1,
+    "sev": 74.3,
+    "bands": {
+     "Severe": 1,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [
+     "SCC"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2210",
+    "ca": "CA15",
+    "neigh": "Kahda",
+    "label": "CA15",
+    "district": "Kahda",
+    "partner": "ACTED",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "Not reported"
+   },
+   {
+    "pc": "SO2210",
+    "ca": "CA14",
+    "neigh": "Kahda",
+    "label": "CA14",
+    "district": "Kahda",
+    "partner": "ACTED",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "Not reported"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA22",
+    "neigh": "Daynile",
+    "label": "CA22",
+    "district": "Daynile",
+    "partner": "NoFYL",
+    "n": 11,
+    "sev": 46.4,
+    "bands": {
+     "Severe": 3,
+     "High": 5,
+     "Moderate": 3,
+     "Low": 0
+    },
+    "reportedBy": [
+     "NoFYL"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA17",
+    "neigh": "Kahda",
+    "label": "CA17",
+    "district": "Daynile",
+    "partner": "IOM",
+    "n": 30,
+    "sev": 46.2,
+    "bands": {
+     "Severe": 1,
+     "High": 28,
+     "Moderate": 1,
+     "Low": 0
+    },
+    "reportedBy": [
+     "IOM",
+     "NoFYL"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2210",
+    "ca": "CA16",
+    "neigh": "Kahda",
+    "label": "CA16",
+    "district": "Kahda",
+    "partner": "IOM",
+    "n": 3,
+    "sev": 44.9,
+    "bands": {
+     "Severe": 0,
+     "High": 3,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA20",
+    "neigh": "Daynile",
+    "label": "CA20",
+    "district": "Daynile",
+    "partner": "NoFYL",
+    "n": 44,
+    "sev": 45.5,
+    "bands": {
+     "Severe": 7,
+     "High": 17,
+     "Moderate": 20,
+     "Low": 0
+    },
+    "reportedBy": [
+     "NoFYL"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2203",
+    "ca": "CA21",
+    "neigh": "Daynile",
+    "label": "CA21",
+    "district": "Daynile",
+    "partner": "NoFYL",
+    "n": 29,
+    "sev": 49.3,
+    "bands": {
+     "Severe": 12,
+     "High": 5,
+     "Moderate": 12,
+     "Low": 0
+    },
+    "reportedBy": [
+     "NoFYL"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2001",
+    "ca": "CA01",
+    "neigh": "Koshin",
+    "label": "CA01",
+    "district": "Belet Weyne",
+    "partner": "DRC",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "Not reported"
+   },
+   {
+    "pc": "SO2001",
+    "ca": "CA02",
+    "neigh": "Bundoweyn",
+    "label": "CA02",
+    "district": "Belet Weyne",
+    "partner": "DRC",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "Not reported"
+   },
+   {
+    "pc": "SO2001",
+    "ca": "CA03",
+    "neigh": "Xawatako",
+    "label": "CA03",
+    "district": "Belet Weyne",
+    "partner": "DRC",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "Not reported"
+   },
+   {
+    "pc": "SO2001",
+    "ca": "CA04",
+    "neigh": "Koshin",
+    "label": "CA04",
+    "district": "Belet Weyne",
+    "partner": "DRC",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "Not reported"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA02",
+    "neigh": "Berdale Town",
+    "label": "CA02 Berdale Town",
+    "district": "Baydhaba",
+    "partner": "No partner on record",
+    "n": 4,
+    "sev": 23.7,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 2,
+     "Low": 2
+    },
+    "reportedBy": [
+     "DRC",
+     "IOM"
+    ],
+    "status": "Reported (no partner on record)"
+   },
+   {
+    "pc": "SO2401",
+    "ca": "CA01",
+    "neigh": "Berdale Town",
+    "label": "CA01 Berdale Town",
+    "district": "Baydhaba",
+    "partner": "CESDO",
+    "n": 1,
+    "sev": 62.3,
+    "bands": {
+     "Severe": 1,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported by other partner"
+   },
+   {
+    "pc": "SO2605",
+    "ca": "CA01",
+    "neigh": "Qurdubey",
+    "label": "CA01",
+    "district": "Doolow",
+    "partner": "IOM",
+    "n": 1,
+    "sev": 57.7,
+    "bands": {
+     "Severe": 1,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2605",
+    "ca": "CA02",
+    "neigh": "Ladan",
+    "label": "CA02",
+    "district": "Doolow",
+    "partner": "IOM",
+    "n": 1,
+    "sev": 38.2,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 1,
+     "Low": 0
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2605",
+    "ca": "CA03",
+    "neigh": "Kabasa",
+    "label": "CA03",
+    "district": "Doolow",
+    "partner": "IOM",
+    "n": 1,
+    "sev": 17.0,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 1
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2605",
+    "ca": "CA04",
+    "neigh": "Qansaxley",
+    "label": "CA04",
+    "district": "Doolow",
+    "partner": "IOM",
+    "n": 1,
+    "sev": 50.6,
+    "bands": {
+     "Severe": 0,
+     "High": 1,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2605",
+    "ca": "CA05",
+    "neigh": "Kaxareey",
+    "label": "CA05",
+    "district": "Doolow",
+    "partner": "IOM",
+    "n": 1,
+    "sev": 36.7,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 1,
+     "Low": 0
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2801",
+    "ca": "CA01",
+    "neigh": "Galbeet",
+    "label": "CA01",
+    "district": "Kismaayo",
+    "partner": "ACTED",
+    "n": 12,
+    "sev": 28.7,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 11,
+     "Low": 1
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported by other partner"
+   },
+   {
+    "pc": "SO2801",
+    "ca": "CA02",
+    "neigh": "Fanole",
+    "label": "CA02",
+    "district": "Kismaayo",
+    "partner": "IOM",
+    "n": 21,
+    "sev": 28.4,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 21,
+     "Low": 0
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2801",
+    "ca": "CA05",
+    "neigh": "Kismayo West",
+    "label": "CA05",
+    "district": "Kismaayo",
+    "partner": "No partner on record",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "No partner on record"
+   },
+   {
+    "pc": "SO2801",
+    "ca": "CA06",
+    "neigh": "Kismayo North",
+    "label": "CA06",
+    "district": "Kismaayo",
+    "partner": "ACTED",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "Not reported"
+   },
+   {
+    "pc": "SO2501",
+    "ca": "CA04",
+    "neigh": "Sheikh Awes, Horseed",
+    "label": "CA04",
+    "district": "Xudur",
+    "partner": "IOM",
+    "n": 45,
+    "sev": 63.8,
+    "bands": {
+     "Severe": 32,
+     "High": 12,
+     "Moderate": 1,
+     "Low": 0
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2501",
+    "ca": "CA03",
+    "neigh": "Shidoole",
+    "label": "CA03 Shidoole",
+    "district": "Xudur",
+    "partner": "IOM",
+    "n": 19,
+    "sev": 60.9,
+    "bands": {
+     "Severe": 12,
+     "High": 5,
+     "Moderate": 2,
+     "Low": 0
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2801",
+    "ca": "CA03",
+    "neigh": "Central",
+    "label": "CA03 Central",
+    "district": "Kismaayo",
+    "partner": "IOM",
+    "n": 35,
+    "sev": 31.8,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 31,
+     "Low": 4
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2801",
+    "ca": "CA03",
+    "neigh": "Dalxiska",
+    "label": "CA03 Dalxiska",
+    "district": "Kismaayo",
+    "partner": "IOM",
+    "n": 55,
+    "sev": 17.6,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 1,
+     "Low": 54
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported"
+   },
+   {
+    "pc": "SO2501",
+    "ca": "CA03",
+    "neigh": "Moorogaabey",
+    "label": "CA03 Moorogaabey",
+    "district": "Xudur",
+    "partner": "IOM",
+    "n": 0,
+    "sev": null,
+    "bands": {
+     "Severe": 0,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [],
+    "status": "Not reported"
+   },
+   {
+    "pc": "SO2501",
+    "ca": "CA01",
+    "neigh": "Buulow",
+    "label": "CA01",
+    "district": "Xudur",
+    "partner": "ACTED",
+    "n": 5,
+    "sev": 67.7,
+    "bands": {
+     "Severe": 5,
+     "High": 0,
+     "Moderate": 0,
+     "Low": 0
+    },
+    "reportedBy": [
+     "IOM"
+    ],
+    "status": "Reported by other partner"
+   }
+  ],
+  "unplacedSites": 135
  }
 }

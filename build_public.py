@@ -107,6 +107,8 @@ for fn in sorted(os.listdir(PUB_DIR)) if os.path.isdir(PUB_DIR) else []:
         "previous": f.get("previous"), "popNote": f.get("popNote"),
         # per-area indicator counts for the Gap Finder (aggregates only; national = report's indicator table)
         "gapFinder": f.get("gapFinder"),
+        # map layers on the published report's basis (district + catchment aggregates, no site data)
+        "map": f.get("map"),
         "sectors": [{k: s[k] for k in ("name", "code", "gap", "cov")} for s in f["sectors"]],
         "topRed": f["topRed"], "topGreen": f["topGreen"], "lcNote": f["lcNote"],
         "districts": [{**d, "pc": d.get("pc") or PCODE_BY_NAME.get(d["district"])} for d in f["districts"]],
@@ -237,10 +239,29 @@ for _p in data["periods"]:
         for _d in _p["districts"]:
             check(sum(_d["bands"].values()) == _d["n"], f"{_p['id']} {_d['district']} bands != site count")
             check(bool(_d["pc"]), f"{_p['id']} {_d['district']} has no p-code for the map")
+    # Every district the period publishes must have a boundary to draw on the map.
+    _geo_pcs = {g["pc"] for g in (GEO or {}).get("districts", [])}
+    for _d in _p["districts"]:
+        _pc = (GEO or {}).get("pcodeAlias", {}).get(_d.get("pc"), _d.get("pc"))
+        check(_pc in _geo_pcs, f"{_p['id']} {_d['district']} ({_d.get('pc')}) has no boundary in data/geo.json")
+    _m = _p.get("map")
+    if _m:                                             # published map layers reconcile with the headline
+        check(sum(_d["n"] for _d in _m["districts"]) == _p["kpi"]["sites"], f"{_p['id']} map district sites != KPI sites")
+        check(all(_d["pc"] in _geo_pcs for _d in _m["districts"]), f"{_p['id']} map district without a boundary")
+        _ca_geo = {(c["pc"], c["ca"], c["neigh"]) for c in (GEO or {}).get("catchments", [])}
+        _ca_map = {(c["pc"], c["ca"], c["neigh"]) for c in _m["catchments"]}
+        check(_ca_map == _ca_geo, f"{_p['id']} map catchments do not match the catchment boundaries in data/geo.json")
+        check(len({(c["pc"], c["ca"]) for c in _m["catchments"] if c["n"]}) == _p["kpi"]["catchments"],
+              f"{_p['id']} assessed catchments on the map != KPI catchments")
     # Q1's district union must equal its 17-district KPI.
     if _p["id"] == "Q1 2026":
         check(len(_p["districts"]) == _p["kpi"]["districts"],
               "Q1 district-ranking count does not equal the 17-district KPI")
+# The live endpoint rejects misplaced GPS with district_bounds.py; it must match data/geo.json.
+if GEO:
+    import district_bounds, make_district_bounds
+    check(district_bounds.BOUNDS == make_district_bounds.bounds_from_geo(GEO),
+          "district_bounds.py is stale — run: python make_district_bounds.py")
 for d in districts:
     if d["bands"]:
         check(sum(d["bands"].values()) == d["n"],
