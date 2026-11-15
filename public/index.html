@@ -1753,8 +1753,10 @@ function buildMapShell(){
   const map=L.map('pubMap',{zoomSnap:.5});
   window.__pubMap=map;
   const ld=$('#mapLoading'); if(ld) ld.hidden=false;   // shown until first tiles arrive
-  const tiles=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-    maxZoom:17,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
+  // OSM's tile policy requires a Referer header; requests without one get a 403
+  // "Access blocked" tile. Send only the origin (no path/query) for tile requests.
+  const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    maxZoom:17,referrerPolicy:'strict-origin-when-cross-origin',attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
   }).addTo(map);
   tiles.on('load',()=>{ const l=$('#mapLoading'); if(l) l.hidden=true; });
   // Safety: never leave the overlay stuck if the 'load' event is missed.
