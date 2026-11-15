@@ -302,7 +302,7 @@ for lit in ("zitemanager", "kf.kobo.iom.int", "/api/v2/", "reports-file",
            "reconciliation", "matching-method", "name-pending"):
     if lit in low:
         hits.append(f"internal-term:{lit}")
-ok_urls = ("https://www.w3.org", "http://www.w3.org", "https://{s}.tile.openstreetmap.org",
+ok_urls = ("https://www.w3.org", "http://www.w3.org", "https://tile.openstreetmap.org",
           "https://www.openstreetmap.org", "https://leafletjs.com",
           "https://site-monitoring.cccmclustersomalia.org", "https://github.com/leaflet")
 low2 = low
