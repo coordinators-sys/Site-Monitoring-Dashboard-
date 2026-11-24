@@ -12393,33 +12393,6 @@
   }
  },
  {
-  "region": "Bay",
-  "district": "Baydhaba",
-  "ca": "Catchment Area 01",
-  "site": "Buulo Gumar- 1",
-  "code": "CCCM-SO2401-0648",
-  "partner": "IOM",
-  "source": "Zite/IOM",
-  "hh": 120.0,
-  "individuals": 443.0,
-  "severity": 38,
-  "band": "Moderate",
-  "scores": {
-   "CCCM": "G",
-   "Protection": "G",
-   "CP": "K",
-   "GBV": "G",
-   "HLP": "G",
-   "NFI": "G",
-   "Shelter": "Y",
-   "WASH": "G",
-   "Health": "K",
-   "FSL": "G",
-   "Nutrition": "R",
-   "Education": "K"
-  }
- },
- {
   "region": "Mudug",
   "district": "Gaalkacyo",
   "ca": "SO1801CA03_gs",
