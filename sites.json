@@ -12474,33 +12474,6 @@
   }
  },
  {
-  "region": "Bay",
-  "district": "Baydhaba",
-  "ca": "Catchment Area 01",
-  "site": "Abduruq",
-  "code": "CCCM-BDA-SO2401-01-0040",
-  "partner": "IOM",
-  "source": "Zite/IOM",
-  "hh": 115.0,
-  "individuals": 575.0,
-  "severity": 21,
-  "band": "Low",
-  "scores": {
-   "CCCM": "Y",
-   "Protection": "G",
-   "CP": "G",
-   "GBV": "G",
-   "HLP": "G",
-   "NFI": "NA",
-   "Shelter": "Y",
-   "WASH": "Y",
-   "Health": "Y",
-   "FSL": "G",
-   "Nutrition": "G",
-   "Education": "G"
-  }
- },
- {
   "region": "Lower Juba",
   "district": "Kismaayo",
   "ca": "Catchment Area 01",
